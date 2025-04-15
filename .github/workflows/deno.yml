@@ -40,9 +40,9 @@ jobs:
       - name: Run tests
         run: deno test -A
 
-      # - name: Upload to Deno Deploy
-      #   uses: denoland/deployctl@v1
-      #   with:
-      #     project: "ashishkumar-ttt-server-66"
-      #     entrypoint: "src/server.js"
-      #     root: "."
+      - name: Upload to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: "amankumarbh-carcassone-69"
+          entrypoint: "src/server.js"
+          root: "."
