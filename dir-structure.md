@@ -9,6 +9,6 @@
 │   ├── handlers
 │   └── models
 └── test
-    ├── handlers_test
-    ├── model_test
+    ├── handlers-test
+    ├── model-test
     
