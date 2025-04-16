@@ -16,7 +16,6 @@ const createHandler = () => {
 
   app.use(serveStatic({ root: "./public" }));
   app.post("/joinRoom", handleJoinReq);
-  app.post("/host", handle);
 
   return app;
 };
