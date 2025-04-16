@@ -22,8 +22,14 @@ interface Tile {
   // CCCC-C.jpg
 }
 
-interface GameLobby {
-  games: MapConstructor; // every Carcassonne game maps to its gameId
+interface RoomManager {
+  rooms: MapConstructor; // every GameManager maps to its roomId
+}
+
+interface GameRoom {
+  maxPlayers: number;
+  game: null | Carcassonne;
+  players: Player[];
 }
 
 interface User {
@@ -36,6 +42,7 @@ interface Player {
   noOfMeeples: number;
   points: number;
   meepleColor: string;
+  isHost: boolean;
 }
 
 interface TileHandler {
