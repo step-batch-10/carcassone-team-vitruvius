@@ -6,16 +6,25 @@ class GameRoom {
   game: null | Carcassonne;
   players: Player[];
   noOfMeeples: number;
+  roomId: string;
 
-  constructor(maxPlayers: number, host: string) {
+  constructor(maxPlayers: number, host: string, roomId: string) {
+    this.roomId = roomId;
     this.noOfMeeples = 7;
     this.maxPlayers = maxPlayers;
     this.game = null;
-    this.players = [new Player(host, 7, "red", true)];
+    this.players = [];
+    this.addPlayer(host, true);
   }
 
   addPlayer(playerName: string, isHost: boolean = false): Player {
-    const newPlayer = new Player(playerName, this.noOfMeeples, "red", isHost);
+    const newPlayer = new Player(
+      playerName,
+      this.noOfMeeples,
+      "red",
+      isHost,
+      this.roomId
+    );
 
     this.players.push(newPlayer);
 

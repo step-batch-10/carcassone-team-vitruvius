@@ -4,10 +4,12 @@ interface PlayerJson {
   points: number;
   meepleColor: string;
   isHost: boolean;
+  roomId: string;
 }
 
 class Player {
   readonly username: string;
+  readonly roomId;
   noOfMeeples: number;
   points: number;
   readonly meepleColor: string;
@@ -17,13 +19,15 @@ class Player {
     username: string,
     meepleCount: number,
     meepleColor: string,
-    isHost: boolean
+    isHost: boolean,
+    roomId: string
   ) {
     this.username = username;
     this.noOfMeeples = meepleCount;
     this.points = 0;
     this.meepleColor = meepleColor;
     this.isHost = isHost;
+    this.roomId = roomId;
   }
 
   json(): PlayerJson {
@@ -33,6 +37,7 @@ class Player {
       points: this.points,
       meepleColor: this.meepleColor,
       isHost: this.isHost,
+      roomId: this.roomId,
     };
   }
 }
