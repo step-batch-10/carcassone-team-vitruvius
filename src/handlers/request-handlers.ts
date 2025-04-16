@@ -24,5 +24,5 @@ export const handleLogin = async (ctx: Context) => {
 
   setCookie(ctx, "session-id", sessionID);
 
-  return ctx.redirect("/room", 303);
+  return ctx.redirect("/join-page", 303);
 };

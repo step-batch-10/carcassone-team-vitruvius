@@ -18,7 +18,7 @@ const createHandler = (context: MyContext) => {
 
   app.use(setContext(context));
   app.get(
-    "/room",
+    "/join-page",
     serveStatic({ path: "/html/join-host.html", root: "public" })
   );
 
