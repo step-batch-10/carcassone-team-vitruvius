@@ -28,7 +28,7 @@ This is an online version of the game, enhanced with interactive features and mu
 ## 🎮 How to Play
 
 To learn about the rules
-📘[click here](https://cdn.svc.asmodee.net/production-zman/uploads/2024/09/carcassonne_v3_rulesheet_en-1.pdf)
+📘[click here](https://github.com/step-batch-10/carcassone-team-vitruvius/wiki/Rules)
 
 ---
 
