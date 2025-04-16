@@ -70,5 +70,6 @@ interface Cell {
 }
 
 export interface MyContext {
-  sessions: Map<string, User>;
+  sessions: Map<string, string>;
+  users: Map<string, User>;
 }

@@ -2,8 +2,9 @@ import createHandler from "./app.ts";
 import { User } from "./models/models.ts";
 
 const main = () => {
-  const sessions = new Map<string, User>();
-  const context = { sessions };
+  const users = new Map<string, User>();
+  const sessions = new Map<string, string>();
+  const context = { sessions, users };
 
   Deno.serve(createHandler(context).fetch);
 };

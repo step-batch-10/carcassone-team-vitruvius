@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>login</title>
+    <link rel="stylesheet" href="/assets/css/login.css" />
+    <script src="/assets/script/login.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>login</title>
-  <link rel="stylesheet" href="assets/css/login.css">
-  <script src="assets/script/login.js"></script>
-</head>
+  <body>
+    <div class="main-container">
+      <header>
+        <h1>CARCASSONNE</h1>
+      </header>
 
-<body>
-  <div class="main-container">
-    <header>
-      <h1>CARCASSONNE</h1>
-    </header>
-
-    <div class="form-container">
-
-      <form>
-        <div class="username">
-          <input type="text" name="username" id="username" placeholder="Username" required/>
-        </div>
-        <div class="dob">
-          <input type="date" name="dob" placeholder="Date of Birth" id="dob" <input type="date">
-        </div>
-        <button type="submit">Start</button>
-      </form>
-
+      <div class="form-container">
+        <form>
+          <div class="username">
+            <input
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div class="dob">
+            <input
+              type="date"
+              name="dob"
+              placeholder="Date of Birth"
+              id="dob"
+              type="date"
+              required
+            />
+          </div>
+          <button type="submit">Start</button>
+        </form>
+      </div>
     </div>
-  </div>
-
-</body>
-
+  </body>
 </html>
