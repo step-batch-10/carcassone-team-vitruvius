@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Host and Join</title>
+  </head>
+  <body>
+    <h1>Carcossanne</h1>
+    <form action="">
+      <label for="noOfPlayers">No.of Players</label>
+      <input list="numbers" name="noOfPlayers" id="noOfPlayers" />
+
+      <datalist id="numbers">
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+        <option value="5"></option>
+      </datalist>
+      <button class="host">Host</button>
+    </form>
+    <script>
+      const hostRequest = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        // const response = fetch("", { method: "POST", body: formData });
+        console.log(formData.get("noOfPlayers"));
+      };
+
+      const form = document.querySelector("form");
+      form.addEventListener("submit", hostRequest);
+    </script>
+  </body>
+</html>
