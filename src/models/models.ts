@@ -32,7 +32,7 @@ interface GameRoom {
   players: Player[];
 }
 
-interface User {
+export interface User {
   username: string;
   dob: Date;
 }
