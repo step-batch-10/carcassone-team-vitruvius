@@ -1,3 +1,5 @@
+import Player from "./player.ts";
+
 enum Feature {
   CITY = "city",
   RIVER = "river",
@@ -35,14 +37,6 @@ interface GameRoom {
 export interface User {
   username: string;
   dob: Date;
-}
-
-interface Player {
-  username: string;
-  noOfMeeples: number;
-  points: number;
-  meepleColor: string;
-  isHost: boolean;
 }
 
 interface TileHandler {
