@@ -1,8 +1,11 @@
 #!/bin/sh
-
 set -e
-
-deno task test-coverage
 deno lint
+echo "-------------------------------no lint issue---------------------------------"
 
-echo "----------------------------all tests passed-----------------------------"
+echo "------------------------tests-------------------------------"
+deno test --coverage --clean
+echo "--------------------------------every tests passed--------------------------------"
+
+deno run -A jsr:@ashishkujoy/deno-coverage-checker
+echo "---------------------------------test coverage covers the threshold---------------------------------"
