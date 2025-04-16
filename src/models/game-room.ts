@@ -6,7 +6,7 @@ class GameRoom {
   game: null | Carcassonne;
   players: Player[];
   noOfMeeples: number;
-  roomId: string;
+  readonly roomId: string;
 
   constructor(maxPlayers: number, host: string, roomId: string) {
     this.roomId = roomId;
