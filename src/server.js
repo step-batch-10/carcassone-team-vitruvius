@@ -1,7 +1,10 @@
 import createHandler from "./app.js";
 
 const main = () => {
-  Deno.serve(createHandler().fetch);
+  const users = new Map();
+  const context = { users };
+
+  Deno.serve(createHandler(context).fetch);
 };
 
 main();

@@ -13,9 +13,17 @@ const handleJoinReq = async (ctx) => {
   return ctx.redirect("waitingRoom");
 };
 
-const createHandler = () => {
+const setContext = (context) => {
+  return (ctx, next) => {
+    ctx.set("context", context);
+    next();
+  };
+};
+
+const createHandler = (context) => {
   const app = new Hono();
 
+  app.use(setContext(context));
   app.use(serveStatic({ root: "./public" }));
   app.post("/joinRoom", handleJoinReq);
 
