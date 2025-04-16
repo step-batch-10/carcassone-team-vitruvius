@@ -4,12 +4,16 @@ import { getCookie, setCookie } from "hono/cookie";
 export const handleJoinReq = async (ctx: Context) => {
   const { roomId } = await ctx.req.parseBody();
   const { sessionId } = getCookie(ctx);
+
   const context = ctx.get("context");
-  const player = context.sessions.get(sessionId);
+  const playerName = context.sessions.get(sessionId);
 
-  context.gameRoom.get(roomId).addPlayer(player);
+  const player = context.users.get(playerName);
 
-  return ctx.redirect("waitingRoom");
+  // context.gameRoom.get(roomId).addPlayer(player);
+  console.log(player, roomId);
+
+  return ctx.json({ isRoomJoined: true }, 200);
 };
 
 const generateSessionID = () => String(Date.now());
