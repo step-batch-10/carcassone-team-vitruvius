@@ -32,7 +32,7 @@ interface GameRoom {
   players: Player[];
 }
 
-interface User {
+export interface User {
   username: string;
   dob: Date;
 }
@@ -67,4 +67,8 @@ interface PlacedMeeple {
 interface Cell {
   tile: null | Tile;
   placedMeeple: PlacedMeeple | null;
+}
+
+export interface MyContext {
+  sessions: Map<string, User>;
 }

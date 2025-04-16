@@ -1,4 +1,4 @@
-import createHandler from "./app.js";
+import createHandler from "./app.ts";
 import { User } from "./models/models.ts";
 
 const main = () => {
