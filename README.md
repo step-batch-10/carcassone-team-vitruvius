@@ -1,3 +1,5 @@
+[![master](https://github.com/step-batch-10/carcassone-team-vitruvius/actions/workflows/deno.yml/badge.svg)](https://github.com/step-batch-10/carcassone-team-vitruvius/actions/workflows/deno.yml)
+
 # Carcassonne
 
 **Carcassonne** is a strategic tile-placement board game where players place tiles to build cities, roads, monasteries, and fields to score points.  
