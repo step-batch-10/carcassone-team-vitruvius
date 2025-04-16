@@ -1,6 +1,16 @@
 [![master](https://github.com/step-batch-10/carcassone-team-vitruvius/actions/workflows/deno.yml/badge.svg)](https://github.com/step-batch-10/carcassone-team-vitruvius/actions/workflows/deno.yml)
 
-# Carcassonne
+## Table of Contents
+
+- [About](#carcassonne)
+- [Build With](#-built-with)
+- [Features](#-features)
+- [How to Play](#-how-to-play)
+- [Play Online](#play-online)
+- [Build & Contribute](#️-build--contribute)
+- [Contribute](#-contributors)
+
+## About
 
 **Carcassonne** is a strategic tile-placement board game where players place tiles to build cities, roads, monasteries, and fields to score points.  
 This is an online version of the game, enhanced with interactive features and multiplayer support.
@@ -40,7 +50,7 @@ To play online 🕹️[click here](https://amankumarbh-carcassone-69.deno.dev)
 
 ---
 
-## 🛠️ Build
+## 🛠️ Build & Contribute
 
 To build the game on your machine follow the steps:
 
