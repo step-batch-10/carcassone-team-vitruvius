@@ -4,14 +4,17 @@ import GameRoom from "../../src/models/game-room.ts";
 
 describe("GameRoom", () => {
   it("should create a room and add host in players", () => {
-    const room = new GameRoom(2, "mounika", "roomId");
+    const meepleColorGenerator = () => "red";
+    const room = new GameRoom(2, "mounika", "roomId", meepleColorGenerator);
 
     assertEquals(room.totalJoinedPlayers(), 1);
   });
 
   describe("addPlayer", () => {
     it("should add new player to game room", () => {
-      const room = new GameRoom(3, "mounika", "roomId");
+      const meepleColorGenerator = () => "red";
+
+      const room = new GameRoom(3, "mounika", "roomId", meepleColorGenerator);
 
       const addedPlayer = room.addPlayer("prasad");
       const addedPlayerJson = {

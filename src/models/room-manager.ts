@@ -18,7 +18,7 @@ class RoomManager {
 
   createRoom(host: string): string {
     const roomId = this.idGenerator();
-    const room = new GameRoom(3, host, roomId);
+    const room = new GameRoom(3, host, roomId, this.meepleColorGenerator);
 
     this.rooms.set(roomId, room);
 
