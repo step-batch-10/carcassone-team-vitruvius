@@ -17,14 +17,16 @@ export const handleJoinReq = async (ctx: Context) => {
 };
 
 const generateSessionID = () => String(Date.now());
+const generateUserID = () => String(Date.now() * Math.random() * 10);
 
 export const handleLogin = async (ctx: Context) => {
   const { sessions, users } = ctx.get("context");
-  const { username, dob } = await ctx.req.parseBody();
+  const { username } = await ctx.req.parseBody();
   const sessionID = generateSessionID();
+  const userID = generateUserID();
 
-  users.set(username, { username, dob });
-  sessions.set(sessionID, username);
+  users.set(userID, { username, roomID: null });
+  sessions.set(sessionID, userID);
 
   setCookie(ctx, "session-id", sessionID);
 

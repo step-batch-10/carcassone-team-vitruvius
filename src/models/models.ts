@@ -36,7 +36,7 @@ interface RoomManager {
 
 export interface User {
   username: string;
-  dob: Date;
+  roomID: string | null;
 }
 
 interface TileHandler {

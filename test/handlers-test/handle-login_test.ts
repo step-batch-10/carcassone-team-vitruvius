@@ -11,7 +11,6 @@ describe("handleLogin", () => {
     const context: MyContext = { sessions, users };
     const formData = new FormData();
     formData.set("username", "Alice");
-    formData.set("dob", "2011-11-03");
 
     const app: Hono = createHandler(context);
     const request: Request = new Request("http:localhost/login", {
