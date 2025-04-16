@@ -9,6 +9,8 @@ const handleJoinReq = async (ctx) => {
   const player = context.sessions.get(sessionId);
 
   context.gameRoom.get(roomId).addPlayer(player);
+
+  return ctx.redirect("waitingRoom");
 };
 
 const createHandler = () => {
