@@ -4,11 +4,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>login</title>
+  <link rel="stylesheet" href="css/login.css">
+  <script src="js/login.js"></script>
 </head>
 
 <body>
-  <h1>welcome to carcassone-team-vitruvius</h1>
+  <div class="main-container">
+    <header>
+      <h1>CARCASSONNE</h1>
+    </header>
+
+    <div class="form-container">
+
+      <form>
+        <div class="username">
+          <input type="text" name="username" id="username" placeholder="Username" required/>
+        </div>
+        <div class="dob">
+          <input type="date" name="dob" placeholder="Date of Birth" <input type="date" min="2023-01-01"
+            max="2025-12-31">
+        </div>
+        <button type="submit">Start</button>
+      </form>
+
+    </div>
+  </div>
+
 </body>
 
 </html>
