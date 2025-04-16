@@ -11,9 +11,12 @@
       const displayRoom = (roomId) => {
         const body = document.querySelector("body");
         const roomNumber = document.createElement("p");
+        roomNumber.textContent = `Room Id : ${roomId}`;
         body.appendChild(roomNumber);
       };
+
       const roomId = 12345;
+
       displayRoom(roomId);
     </script>
   </body>
