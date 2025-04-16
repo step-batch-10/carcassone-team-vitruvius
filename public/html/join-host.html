@@ -8,15 +8,14 @@
   <body>
     <h1>Carcossanne</h1>
     <form action="">
-      <label for="noOfPlayers">No.of Players</label>
-      <input list="numbers" name="noOfPlayers" id="noOfPlayers" />
+      <label for="numbers">No.of Players</label>
 
-      <datalist id="numbers">
-        <option value="2"></option>
-        <option value="3"></option>
-        <option value="4"></option>
-        <option value="5"></option>
-      </datalist>
+      <select id="numbers" name="noOfPlayers">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
       <button class="host">Host</button>
     </form>
     <script>
