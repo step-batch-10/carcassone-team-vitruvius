@@ -1,3 +1,11 @@
+interface PlayerJson {
+  username: string;
+  noOfMeeples: number;
+  points: number;
+  meepleColor: string;
+  isHost: boolean;
+}
+
 class Player {
   readonly username: string;
   noOfMeeples: number;
@@ -16,6 +24,16 @@ class Player {
     this.points = 0;
     this.meepleColor = meepleColor;
     this.isHost = isHost;
+  }
+
+  json(): PlayerJson {
+    return {
+      username: this.username,
+      noOfMeeples: this.noOfMeeples,
+      points: this.points,
+      meepleColor: this.meepleColor,
+      isHost: this.isHost,
+    };
   }
 }
 

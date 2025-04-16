@@ -28,11 +28,11 @@ interface RoomManager {
   rooms: MapConstructor; // every GameManager maps to its roomId
 }
 
-interface GameRoom {
-  maxPlayers: number;
-  game: null | Carcassonne;
-  players: Player[];
-}
+// interface GameRoom {
+//   maxPlayers: number;
+//   game: null | Carcassonne;
+//   players: Player[];
+// }
 
 export interface User {
   username: string;
@@ -43,7 +43,7 @@ interface TileHandler {
   tiles: Tile[];
 }
 
-interface Carcassonne {
+export interface Carcassonne {
   tileHandler: TileHandler;
   players: Player[];
   board: Cell[][];
