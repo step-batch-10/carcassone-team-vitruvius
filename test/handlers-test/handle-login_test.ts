@@ -22,7 +22,7 @@ describe("handleLogin", () => {
     const response: Response = await app.request(request);
 
     assertEquals(response.status, 303);
-    assertEquals(response.headers.get("location"), "/join-page");
+    assertEquals(response.headers.get("location"), "/game-options");
     assert(response.headers.has("set-cookie"));
   });
 });

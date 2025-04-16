@@ -28,5 +28,5 @@ export const handleLogin = async (ctx: Context) => {
 
   setCookie(ctx, "session-id", sessionID);
 
-  return ctx.redirect("/join-page", 303);
+  return ctx.redirect("/game-options", 303);
 };

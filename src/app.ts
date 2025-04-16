@@ -18,8 +18,8 @@ const createHandler = (context: MyContext) => {
 
   app.use(setContext(context));
   app.get(
-    "/join-page",
-    serveStatic({ path: "/html/join-host.html", root: "public" })
+    "/game-options",
+    serveStatic({ path: "/html/game-options.html", root: "public" })
   );
 
   app.post("/login", handleLogin);
