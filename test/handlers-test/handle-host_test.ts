@@ -6,8 +6,9 @@ import { MyContext, User } from "../../src/models/models.ts";
 
 describe("handleHost", () => {
   it("should return ok", async () => {
-    const sessions = new Map<string, User>();
-    const context: MyContext = { sessions };
+    const sessions = new Map<string, string>();
+    const users = new Map<string, User>();
+    const context: MyContext = { sessions, users };
 
     const app: Hono = createHandler(context);
     const request: Request = new Request("http://localhost/host", {

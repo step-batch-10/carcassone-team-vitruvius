@@ -44,5 +44,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "amankumarbh-carcassone-69"
-          entrypoint: "src/server.js"
+          entrypoint: "src/server.ts"
           root: "."
