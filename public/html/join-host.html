@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Host and Join</title>
+    <script src="/assets/script/join-host.js"></script>
   </head>
   <body>
     <h1>Carcossanne</h1>
@@ -18,16 +19,7 @@
       </select>
       <button class="host">Host</button>
     </form>
-    <script>
-      const hostRequest = (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        // const response = fetch("", { method: "POST", body: formData });
-        console.log(formData.get("noOfPlayers"));
-      };
-
-      const form = document.querySelector("form");
-      form.addEventListener("submit", hostRequest);
-    </script>
+    <button class="quickPlay">Quick Play</button>
+    <button class="join">Join</button>
   </body>
 </html>
