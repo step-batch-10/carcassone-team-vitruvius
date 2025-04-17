@@ -1,14 +1,29 @@
+## Directory Structure
+
+```
 .
+├── deno.json
+├── deno.lock
+├── dir-structure.md
 ├── hooks
-│   └── pre-commit
-├── main.js
-├── private
+│   ├── pre-commit
+│   └── pre-push
 ├── public
+│   ├── assets
+│   │   ├── css
+│   │   ├── images
+│   │   └── script
+│   ├── html
+│   └── index.html
+├── README.md
+├── setup.sh
 ├── src
-│   ├── app.js
-│   ├── handlers
-│   └── models
+│   ├── app.ts
+│   ├── handlers
+│   ├── models
+│   └── server.ts
 └── test
     ├── handlers-test
-    ├── model-test
-    
+    └── models-test
+
+```
