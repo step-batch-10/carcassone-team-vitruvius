@@ -17,11 +17,11 @@ describe("handleJoinReq", () => {
       () => "red"
     );
 
-    roomManager.createRoom("hostUser",3);
+    roomManager.createRoom("hostUser", 3);
 
     const context: MyContext = { sessions, users, roomManager };
     const formData = new FormData();
-    formData.set("roomId", "1");
+    formData.set("roomID", "1");
 
     const app = createHandler(context);
 
@@ -47,11 +47,11 @@ describe("handleJoinReq", () => {
       () => "red"
     );
 
-    roomManager.createRoom("hostUser",3);
+    roomManager.createRoom("hostUser", 3);
 
     const context: MyContext = { sessions, users, roomManager };
     const formData = new FormData();
-    formData.set("roomId", "2");
+    formData.set("roomID", "2");
 
     const app = createHandler(context);
 

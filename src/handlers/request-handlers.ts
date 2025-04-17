@@ -2,20 +2,23 @@ import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
 export const handleJoinReq = async (ctx: Context) => {
-  const { roomId } = await ctx.req.parseBody();
-  const sessionId = getCookie(ctx, "session-id");
+  const fd = await ctx.req.formData();
+  const roomID = fd.get("roomID");
+  console.log(roomID);
+
+  const sessionID = getCookie(ctx, "session-id");
 
   const context = ctx.get("context");
 
-  const userID = context.sessions.get(sessionId);
+  const userID = context.sessions.get(sessionID);
 
   const { username } = context.users.get(userID);
 
-  if (!context.roomManager.hasRoom(roomId)) {
+  if (!context.roomManager.hasRoom(roomID)) {
     return ctx.json({ isRoomJoined: false }, 200);
   }
 
-  context.roomManager.getRoom(roomId).addPlayer(username);
+  context.roomManager.getRoom(roomID).addPlayer(username);
 
   return ctx.json({ isRoomJoined: true }, 200);
 };

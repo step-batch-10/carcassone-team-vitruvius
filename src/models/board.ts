@@ -35,7 +35,7 @@ export class Board {
   static createPosition() {
     return { feature: null, occupiedBy: [] };
   }
-
+  
   getBoard() {
     return this.board;
   }
