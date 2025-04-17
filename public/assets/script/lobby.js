@@ -47,6 +47,12 @@ const redirectToGame = async () => {
   }, 5000);
 };
 
+const updateMessage = (maxPlayers, players) => {
+  const message = document.querySelector("#waiting-message");
+
+  message.textContent = `Waiting for ${maxPlayers - players.length} player(s)`;
+};
+
 const startRoom = () => {
   const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
@@ -60,6 +66,8 @@ const startRoom = () => {
       clearInterval(intervalID);
       redirectToGame();
     }
+
+    updateMessage(maxPlayers, players);
   }, 1000);
 };
 
