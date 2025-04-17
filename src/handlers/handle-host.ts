@@ -23,7 +23,7 @@ const handleHost = (ctx: Context) => {
 
   setCookie(ctx, "roomId", roomId);
 
-  return ctx.redirect("/lobby.html", 303);
+  return ctx.redirect("/lobby", 303);
 };
 
 export { handleHost };

@@ -42,7 +42,7 @@ describe("handleHost", () => {
     const cookies = "roomId=1; Path=/";
 
     assertEquals(response.status, 303);
-    assertEquals(response.headers.get("location"), "/lobby.html");
+    assertEquals(response.headers.get("location"), "/lobby");
     assertEquals(response.headers.get("set-cookie"), cookies);
 
     const room = roomManager.getRoom("1");
