@@ -6,9 +6,6 @@ import RoomManager from "../../src/models/room-manager.ts";
 
 describe("handleLogin", () => {
   it("should return a redirection response", async () => {
-    const uniqueId = () => "1";
-    const uniqueMeepleColor = () => "red";
-
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const roomManager = new RoomManager(

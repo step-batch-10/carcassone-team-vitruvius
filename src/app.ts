@@ -2,7 +2,7 @@ import { Context, Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import { handleHost } from "./handlers/handle-host.ts";
 import { MyContext } from "./models/models.ts";
-import { Bindings, Next, Variables } from "hono/types";
+import { Next } from "hono/types";
 import { handleLogin, handleJoinReq } from "./handlers/request-handlers.ts";
 
 const setContext = (context: MyContext) => {
