@@ -6,12 +6,16 @@ export const handleJoinReq = async (ctx: Context) => {
   const { sessionId } = getCookie(ctx);
 
   const context = ctx.get("context");
-  const playerName = context.sessions.get(sessionId);
 
-  const player = context.users.get(playerName);
+  const userID = context.sessions.get(sessionId);
 
-  // context.gameRoom.get(roomId).addPlayer(player);
-  console.log(player, roomId);
+  const { username } = context.users.get(userID);
+
+  if (!context.roomManager.hasRoom(roomId)) {
+    return ctx.json({ isRoomJoined: false }, 200);
+  }
+
+  context.roomManager.getRoom(roomId).addPlayer(username);
 
   return ctx.json({ isRoomJoined: true }, 200);
 };
