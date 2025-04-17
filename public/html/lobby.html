@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lobby</title>
-    <script src="/public/assets/script/lobby.js"></script>
-  </head>
 
-  <body>
-    <div class="main-container">
-      <header>
-        <h1>CARCASSONNE</h1>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lobby</title>
+  <script src="/assets/script/lobby.js"></script>
+</head>
 
-      <div id="game-details">
-        <p id="room-id">Room ID:123456</p>
-        <div id="players">
-          <table>
-            <tr class="player-info">
-              <td>1</td>
-              <td>Alice</td>
-              <td>red</td>
-            </tr>
-          </table>
-        </div>
-        <p>Waiting for all players to join</p>
-        <button type="submit">Leave</button>
+<body>
+  <div class="main-container">
+    <header>
+      <h1>CARCASSONNE</h1>
+    </header>
+
+    <div id="game-details">
+      <p id="room-id">Room ID:123456</p>
+      <div id="players">
       </div>
+      <p id="waiting-message">Waiting for all players to join</p>
+      <button id="leave-button" type="button">Leave</button>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
