@@ -3,7 +3,7 @@ import { getCookie, setCookie } from "hono/cookie";
 
 export const handleJoinReq = async (ctx: Context) => {
   const { roomId } = await ctx.req.parseBody();
-  const { sessionId } = getCookie(ctx);
+  const sessionId = getCookie(ctx, "session-id");
 
   const context = ctx.get("context");
 
