@@ -38,10 +38,10 @@ const appendRow = (table) => {
 };
 
 const startRoom = () => {
-  const intervalID = setInterval(async () => {
+  setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
     const table = newTable();
-    const { maxPlayers, roomID, players } = await fetchRoomData();
+    const { roomID, players } = await fetchRoomData();
 
     players.forEach(appendRow(table));
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;
@@ -53,7 +53,7 @@ const main = () => {
 
   const leave = document.querySelector("#leave-button");
 
-  leave.addEventListener("click", async (event) => {
+  leave.addEventListener("click", async (_event) => {
     await fetch("/leave", { method: "POST" });
 
     globalThis.location = "/game-options";
