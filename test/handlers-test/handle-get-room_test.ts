@@ -1,11 +1,6 @@
-import { assert, assertEquals } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import {
-  GameRoomJson,
-  GameStatus,
-  MyContext,
-  User,
-} from "../../src/models/models.ts";
+import { GameRoomJson, GameStatus, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
 import createHandler from "../../src/app.ts";
 
