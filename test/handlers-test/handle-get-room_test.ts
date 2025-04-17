@@ -21,7 +21,7 @@ describe("handleGetRoom", () => {
     const app = createHandler(context);
 
     const request = new Request("http://localhost/room", {
-      headers: { cookie: "roomId=1; session-id=sId" },
+      headers: { cookie: "room-id=1; session-id=sId" },
     });
 
     const response = await app.request(request);
@@ -45,5 +45,30 @@ describe("handleGetRoom", () => {
 
     assertEquals(response.status, 200);
     assertEquals(await response.json(), roomJson);
+  });
+
+  it("should return null when invalid room id given", async () => {
+    const sessions = new Map<string, string>();
+    const users = new Map<string, User>();
+    sessions.set("sId", "uId");
+    users.set("uId", { username: "Mounika", roomID: null });
+    const roomManager = new RoomManager(
+      () => "1",
+      () => "red"
+    );
+
+    roomManager.createRoom("Mounika", 3);
+
+    const context = { sessions, users, roomManager };
+    const app = createHandler(context);
+
+    const request = new Request("http://localhost/room", {
+      headers: { cookie: "room-id=0; session-id=sId" },
+    });
+
+    const response = await app.request(request);
+
+    assertEquals(response.status, 404);
+    assertEquals(await response.json(), null);
   });
 });
