@@ -24,6 +24,7 @@ const createHandler = (context: MyContext) => {
     "/game-options",
     serveStatic({ path: "/html/game-options.html", root: "public" })
   );
+  app.get("/lobby", serveStatic({ path: "/html/lobby.html", root: "public" }));
 
   app.post("/login", handleLogin);
   app.post("/host", handleHost);
