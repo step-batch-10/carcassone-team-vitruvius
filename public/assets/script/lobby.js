@@ -13,14 +13,6 @@ const createRow = (index, { username, meepleColor }) => {
   return row;
 };
 
-const newTable = () => {
-  const playerDetails = document.querySelector("#players");
-  const table = document.createElement("table");
-  playerDetails.replaceChildren(table);
-
-  return table;
-};
-
 const fetchRoomData = async () => {
   const roomData = await fetch("/room");
 
@@ -29,12 +21,10 @@ const fetchRoomData = async () => {
   return { maxPlayers, roomID, players };
 };
 
-const appendRow = (table) => {
-  return (player, index) => {
-    const row = createRow(index + 1, player);
+const playerRows = (player, index) => {
+  const row = createRow(index + 1, player);
 
-    table.appendChild(row);
-  };
+  return row;
 };
 
 const isRoomFull = (players, maxPlayers) => players.length === maxPlayers;
@@ -56,10 +46,10 @@ const updateMessage = (maxPlayers, players) => {
 const startRoom = () => {
   const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
-    const table = newTable();
     const { maxPlayers, roomID, players } = await fetchRoomData();
 
-    players.forEach(appendRow(table));
+    const table = document.querySelector("#table");
+    table.replaceChildren(...players.map(playerRows));
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;
 
     if (isRoomFull(players, maxPlayers)) {
