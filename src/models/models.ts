@@ -1,4 +1,5 @@
 import Player from "./player.ts";
+import RoomManager from "./room-manager.ts";
 
 enum Feature {
   CITY = "city",
@@ -24,9 +25,9 @@ interface Tile {
   // CCCC-C.jpg
 }
 
-interface RoomManager {
-  rooms: MapConstructor; // every GameManager maps to its roomId
-}
+// interface RoomManager {
+//   rooms: MapConstructor; // every GameManager maps to its roomId
+// }
 
 // interface GameRoom {
 //   maxPlayers: number;
@@ -66,4 +67,5 @@ interface Cell {
 export interface MyContext {
   sessions: Map<string, string>;
   users: Map<string, User>;
+  roomManager: RoomManager;
 }

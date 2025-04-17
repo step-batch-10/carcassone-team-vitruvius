@@ -12,9 +12,12 @@ const setContext = (context: MyContext) => {
     return next();
   };
 };
+type variables = {
+  context: MyContext;
+};
 
 const createHandler = (context: MyContext) => {
-  const app = new Hono();
+  const app = new Hono<{ Variables: variables }>();
 
   app.use(setContext(context));
   app.get(
