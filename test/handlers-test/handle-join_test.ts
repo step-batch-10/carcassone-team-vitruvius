@@ -28,7 +28,7 @@ describe("handleJoinReq", () => {
     const response = await app.request("/joinRoom", {
       method: "post",
       body: formData,
-      headers: new Headers({ cookie: "sessionId=123" }),
+      headers: new Headers({ cookie: "session-id=123" }),
     });
 
     assertEquals(response.status, 200);
@@ -58,7 +58,7 @@ describe("handleJoinReq", () => {
     const response = await app.request("/joinRoom", {
       method: "post",
       body: formData,
-      headers: new Headers({ cookie: "sessionId=123" }),
+      headers: new Headers({ cookie: "session-id=123" }),
     });
 
     assertEquals(response.status, 200);

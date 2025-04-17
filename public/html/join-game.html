@@ -7,7 +7,7 @@
     <script>
       const joinRoom = async (event) => {
         event.preventDefault();
-        const response = fetch("/joinRoom", {
+        const response = await fetch("/joinRoom", {
           method: "POST",
         });
 
