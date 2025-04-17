@@ -1,26 +1,24 @@
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
-export const handleJoinReq = async (ctx: Context) => {
-  const fd = await ctx.req.formData();
-  const roomID = fd.get("roomID");
-  console.log(roomID);
+export const handleJoin = async (ctx: Context) => {
+  const { roomID } = await ctx.req.parseBody();
 
   const sessionID = getCookie(ctx, "session-id");
 
-  const context = ctx.get("context");
+  const { sessions, users, roomManager } = ctx.get("context");
 
-  const userID = context.sessions.get(sessionID);
+  const userID = sessions.get(sessionID);
+  const { username } = users.get(userID);
 
-  const { username } = context.users.get(userID);
+  if (roomManager.hasRoom(roomID)) {
+    roomManager.getRoom(roomID).addPlayer(username);
+    setCookie(ctx, "room-id", String(roomID));
 
-  if (!context.roomManager.hasRoom(roomID)) {
-    return ctx.json({ isRoomJoined: false }, 200);
+    return ctx.json({ isRoomJoined: true }, 200);
   }
 
-  context.roomManager.getRoom(roomID).addPlayer(username);
-
-  return ctx.json({ isRoomJoined: true }, 200);
+  return ctx.json({ isRoomJoined: false }, 200);
 };
 
 const generateSessionID = () => String(Date.now());

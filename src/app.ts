@@ -5,7 +5,7 @@ import { MyContext } from "./models/models.ts";
 import { Next } from "hono/types";
 import {
   handleLogin,
-  handleJoinReq,
+  handleJoin,
   handleGetLobbyDetails,
 } from "./handlers/request-handlers.ts";
 
@@ -33,7 +33,7 @@ const createHandler = (context: MyContext) => {
   app.post("/login", handleLogin);
   app.post("/host", handleHost);
   app.get("/room", handleGetLobbyDetails);
-  app.post("/joinRoom", handleJoinReq);
+  app.post("/joinRoom", handleJoin);
   app.use(serveStatic({ root: "./public" }));
 
   return app;

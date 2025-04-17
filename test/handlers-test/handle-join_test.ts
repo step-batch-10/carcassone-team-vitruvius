@@ -31,8 +31,11 @@ describe("handleJoinReq", () => {
       headers: new Headers({ cookie: "session-id=123" }),
     });
 
+    const setCookies = "room-id=1; Path=/";
+
     assertEquals(response.status, 200);
     assertEquals(await response.json(), { isRoomJoined: true });
+    assertEquals(response.headers.get("set-cookie"), setCookies);
   });
 
   it("should return not join room if roomId is valid", async () => {
