@@ -21,7 +21,7 @@ const handleHost = (ctx: Context) => {
   const maxPlayers = getMaxPlayers(ctx);
   const roomId = roomManager.createRoom(host, maxPlayers);
 
-  setCookie(ctx, "roomId", roomId);
+  setCookie(ctx, "room-id", roomId);
 
   return ctx.redirect("/lobby", 303);
 };

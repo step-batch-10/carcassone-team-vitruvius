@@ -34,6 +34,26 @@ export interface User {
   username: string;
   roomID: string | null;
 }
+export interface PlayerJson {
+  username: string;
+  noOfMeeples: number;
+  points: number;
+  meepleColor: string;
+  isHost: boolean;
+  roomID: string;
+}
+
+export enum GameStatus {
+  WAITING = "waiting",
+  IN_PLAY = "inPlay",
+}
+export interface GameRoomJson {
+  maxPlayers: number;
+  players: PlayerJson[];
+  roomID: string;
+  host: string;
+  gameStatus: GameStatus;
+}
 
 interface TileHandler {
   tiles: Tile[];

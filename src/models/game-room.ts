@@ -1,11 +1,7 @@
 import { Carcassonne } from "./models.ts";
 import Player from "./player.ts";
-
+import { GameRoomJson, GameStatus } from "./models.ts";
 type stringIdentity = () => string;
-enum GameStatus {
-  WAITING = "waiting",
-  IN_PLAY = "inPlay",
-}
 
 class GameRoom {
   private maxPlayers: number;
@@ -15,15 +11,15 @@ class GameRoom {
   private noOfMeeples: number;
   private meepleColorGenerator: stringIdentity;
   readonly gameStatus: GameStatus;
-  readonly roomId: string;
+  readonly roomID: string;
 
   constructor(
     maxPlayers: number,
     host: string,
-    roomId: string,
+    roomID: string,
     meepleColorGenerator: stringIdentity
   ) {
-    this.roomId = roomId;
+    this.roomID = roomID;
     this.host = host;
     this.noOfMeeples = 7;
     this.maxPlayers = maxPlayers;
@@ -34,13 +30,17 @@ class GameRoom {
     this.addPlayer(host, true);
   }
 
-  addPlayer(playerName: string, isHost: boolean = false): Player {
+  private isMaxPlayerLimitExtended(): boolean {
+    return this.maxPlayers === this.players.length;
+  }
+
+  private joinPlayerInGame(playerName: string, isHost: boolean) {
     const newPlayer = new Player(
       playerName,
       this.noOfMeeples,
       this.meepleColorGenerator(),
       isHost,
-      this.roomId
+      this.roomID
     );
 
     this.players.push(newPlayer);
@@ -48,8 +48,28 @@ class GameRoom {
     return newPlayer;
   }
 
+  addPlayer(playerName: string, isHost: boolean = false): Player | null {
+    if (this.isMaxPlayerLimitExtended()) {
+      return null;
+    }
+
+    return this.joinPlayerInGame(playerName, isHost);
+  }
+
   totalJoinedPlayers(): number {
     return this.players.length;
+  }
+
+  json(): GameRoomJson {
+    const playersJson = this.players.map((player) => player.json());
+
+    return {
+      maxPlayers: 3,
+      players: playersJson,
+      roomID: this.roomID,
+      host: this.host,
+      gameStatus: GameStatus.WAITING,
+    };
   }
 }
 

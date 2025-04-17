@@ -36,3 +36,11 @@ export const handleLogin = async (ctx: Context) => {
 
   return ctx.redirect("/game-options", 303);
 };
+
+export const handleGetLobbyDetails = (ctx: Context) => {
+  const { roomManager } = ctx.get("context");
+  const roomId = getCookie(ctx, "roomId");
+  const room = roomManager.getRoom(roomId);
+
+  return ctx.json(room.json(), 200);
+};

@@ -1,12 +1,4 @@
-interface PlayerJson {
-  username: string;
-  noOfMeeples: number;
-  points: number;
-  meepleColor: string;
-  isHost: boolean;
-  roomId: string;
-}
-
+import { PlayerJson } from "./models.ts";
 class Player {
   readonly username: string;
   readonly roomId;
@@ -37,7 +29,7 @@ class Player {
       points: this.points,
       meepleColor: this.meepleColor,
       isHost: this.isHost,
-      roomId: this.roomId,
+      roomID: this.roomId,
     };
   }
 }

@@ -49,7 +49,7 @@ describe("RoomManager", () => {
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
       lobby.createRoom("host", 3);
 
-      assertEquals(lobby.getRoom(roomId)?.roomId, roomId);
+      assertEquals(lobby.getRoom(roomId)?.roomID, roomId);
     });
 
     it("should return null if GameRoom is not created", () => {

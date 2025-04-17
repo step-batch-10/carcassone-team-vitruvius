@@ -11,7 +11,7 @@ describe("Player", () => {
         points: 0,
         meepleColor: "red",
         isHost: false,
-        roomId: "roomId",
+        roomID: "roomId",
       };
 
       const player = new Player("prasad", 7, "red", false, "roomId");

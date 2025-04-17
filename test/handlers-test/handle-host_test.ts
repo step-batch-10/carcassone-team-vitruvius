@@ -39,7 +39,7 @@ describe("handleHost", () => {
     });
 
     const response = await app.request(hostRequest);
-    const cookies = "roomId=1; Path=/";
+    const cookies = "room-id=1; Path=/";
 
     assertEquals(response.status, 303);
     assertEquals(response.headers.get("location"), "/lobby");
