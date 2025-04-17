@@ -37,14 +37,29 @@ const appendRow = (table) => {
   };
 };
 
+const isRoomFull = (players, maxPlayers) => players.length === maxPlayers;
+
+const redirectToGame = async () => {
+  const response = await fetch("/game");
+
+  setTimeout(() => {
+    globalThis.location = response.url;
+  }, 5000);
+};
+
 const startRoom = () => {
-  setInterval(async () => {
+  const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
     const table = newTable();
-    const { roomID, players } = await fetchRoomData();
+    const { maxPlayers, roomID, players } = await fetchRoomData();
 
     players.forEach(appendRow(table));
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;
+
+    if (isRoomFull(players, maxPlayers)) {
+      clearInterval(intervalID);
+      redirectToGame();
+    }
   }, 1000);
 };
 
