@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>joinGamePage</title>
-    <script>
-      const joinRoom = async (event) => {
-        event.preventDefault();
-        const response = await fetch("/joinRoom", {
-          method: "POST",
-        });
 
-        const { isRoomJoined } = await response.json();
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>joinGamePage</title>
+  <script>
+    const joinRoom = async (event) => {
+      event.preventDefault();
+      const response = await fetch("/joinRoom", {
+        method: "POST",
+      });
 
-        if (!isRoomJoined) {
-          alert("invalid room Id");
-          return;
-        }
+      const { isRoomJoined } = await response.json();
 
-        document.location = fetch("lobby.html");
-      };
+      if (!isRoomJoined) {
+        alert("invalid room Id");
+        return;
+      }
 
-      const main = () => {
-        const form = document.getElementById("roomJoiningForm");
-        form.addEventListener("submit", joinRoom);
-      };
-      globalThis.onload = main;
-    </script>
-  </head>
-  <body>
-    <form id="roomJoiningForm">
-      <input type="text" name="roomId" />
-      <button type="submit">Join</button>
-    </form>
-  </body>
+      globalThis.location = (await fetch("/lobby")).url;
+    };
+
+    const main = () => {
+      const form = document.getElementById("roomJoiningForm");
+      form.addEventListener("submit", joinRoom);
+    };
+    globalThis.onload = main;
+  </script>
+</head>
+
+<body>
+  <form id="roomJoiningForm">
+    <input type="text" name="roomId" />
+    <button type="submit">Join</button>
+  </form>
+</body>
+
 </html>

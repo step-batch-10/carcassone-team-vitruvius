@@ -1,7 +1,7 @@
 import Player from "./player.ts";
 import RoomManager from "./room-manager.ts";
 
-enum Feature {
+export enum Feature {
   CITY = "city",
   RIVER = "river",
   ROAD = "road",
@@ -12,9 +12,14 @@ enum Feature {
 
 type Edges = [Feature, Feature, Feature, Feature];
 
-type CardinalDegrees = 0 | 90 | 180 | 270;
+export enum CardinalDegrees {
+  zero = 0,
+  ninety = 90,
+  oneEighty = 180,
+  twoSeventy = 270,
+}
 
-interface Tile {
+export interface Tile {
   id: string;
   orientation: CardinalDegrees;
   hasShield: boolean;
