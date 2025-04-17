@@ -10,7 +10,7 @@ enum GameStatus {
 class GameRoom {
   private maxPlayers: number;
   private game: null | Carcassonne;
-  private host: string;
+  readonly host: string;
   private players: Player[];
   private noOfMeeples: number;
   private meepleColorGenerator: stringIdentity;

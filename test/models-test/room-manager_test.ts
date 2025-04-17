@@ -11,7 +11,7 @@ describe("RoomManager", () => {
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
-      const createdRoomId = lobby.createRoom("host");
+      const createdRoomId = lobby.createRoom("host", 3);
 
       assertEquals(createdRoomId, roomId);
     });
@@ -34,7 +34,7 @@ describe("RoomManager", () => {
       const meepleColorGenerator = () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
-      lobby.createRoom("host");
+      lobby.createRoom("host", 3);
 
       assert(lobby.hasRoom(roomId));
     });
@@ -47,7 +47,7 @@ describe("RoomManager", () => {
       const meepleColorGenerator = () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
-      lobby.createRoom("host");
+      lobby.createRoom("host", 3);
 
       assertEquals(lobby.getRoom(roomId)?.roomId, roomId);
     });

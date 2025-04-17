@@ -25,16 +25,6 @@ interface Tile {
   // CCCC-C.jpg
 }
 
-// interface RoomManager {
-//   rooms: MapConstructor; // every GameManager maps to its roomId
-// }
-
-// interface GameRoom {
-//   maxPlayers: number;
-//   game: null | Carcassonne;
-//   players: Player[];
-// }
-
 export interface User {
   username: string;
   roomID: string | null;

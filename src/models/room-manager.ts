@@ -16,9 +16,14 @@ class RoomManager {
     this.meepleColorGenerator = meepleColorGenerator;
   }
 
-  createRoom(host: string): string {
+  createRoom(host: string, maxPlayers: number): string {
     const roomId = this.idGenerator();
-    const room = new GameRoom(3, host, roomId, this.meepleColorGenerator);
+    const room = new GameRoom(
+      maxPlayers,
+      host,
+      roomId,
+      this.meepleColorGenerator
+    );
 
     this.rooms.set(roomId, room);
 

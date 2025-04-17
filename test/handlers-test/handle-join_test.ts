@@ -17,7 +17,7 @@ describe("handleJoinReq", () => {
       () => "red"
     );
 
-    roomManager.createRoom("hostUser");
+    roomManager.createRoom("hostUser",3);
 
     const context: MyContext = { sessions, users, roomManager };
     const formData = new FormData();
@@ -47,7 +47,7 @@ describe("handleJoinReq", () => {
       () => "red"
     );
 
-    roomManager.createRoom("hostUser");
+    roomManager.createRoom("hostUser",3);
 
     const context: MyContext = { sessions, users, roomManager };
     const formData = new FormData();
