@@ -6,12 +6,8 @@
   },
   "lint": {
     "rules": {
-      "tags": [
-        "recommended"
-      ],
-      "include": [
-        "eqeqeq"
-      ]
+      "tags": ["recommended"],
+      "include": ["eqeqeq"]
     }
   },
   "tasks": {
@@ -23,16 +19,13 @@
     "test-coverage": "deno test -A --coverage=coverage",
     "coverage": {
       "command": "deno coverage --html",
-      "dependencies": [
-        "test-coverage"
-      ]
-    }
+      "dependencies": ["test-coverage"]
+    },
+    "qa-deploy": "deployctl deploy --project=sireeshauda-carcassone-qa --entrypoint='./src/server.ts' --org='team-virtuvius'"
   },
   "deploy": {
     "project": "d479aa3d-b6a2-4ba0-bfbf-d02d846037e3",
-    "exclude": [
-      "**/node_modules"
-    ],
+    "exclude": ["**/node_modules"],
     "include": [],
     "entrypoint": "src/server.ts"
   }
