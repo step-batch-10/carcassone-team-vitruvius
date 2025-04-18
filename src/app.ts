@@ -1,12 +1,12 @@
 import { Context, Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { handleHost } from "./handlers/handle-host.ts";
 import { AppContext } from "./models/models.ts";
 import { Next } from "hono/types";
 import {
   handleLogin,
   handleJoin,
   handleGetLobbyDetails,
+  handleHost,
 } from "./handlers/request-handlers.ts";
 
 const setContext = (context: AppContext) => {

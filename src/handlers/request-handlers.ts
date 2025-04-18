@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
-export const handleJoin = async (ctx: Context) => {
+const handleJoin = async (ctx: Context) => {
   const { roomID } = await ctx.req.parseBody();
 
   const sessionID = getCookie(ctx, "session-id");
@@ -24,7 +24,7 @@ export const handleJoin = async (ctx: Context) => {
 const generateSessionID = () => String(Date.now());
 const generateUserID = () => String(Date.now() * Math.random() * 10);
 
-export const handleLogin = async (ctx: Context) => {
+const handleLogin = async (ctx: Context) => {
   const { sessions, users } = ctx.get("context");
   const { username } = await ctx.req.parseBody();
   const sessionID = generateSessionID();
@@ -38,7 +38,7 @@ export const handleLogin = async (ctx: Context) => {
   return ctx.redirect("/game-options", 303);
 };
 
-export const handleGetLobbyDetails = (ctx: Context) => {
+const handleGetLobbyDetails = (ctx: Context) => {
   const { roomManager } = ctx.get("context");
   const roomId = getCookie(ctx, "room-id");
   if (roomManager.hasRoom(roomId)) {
@@ -49,3 +49,30 @@ export const handleGetLobbyDetails = (ctx: Context) => {
 
   return ctx.json(null, 404);
 };
+
+const getHostName = (ctx: Context): string => {
+  const sessionId = getCookie(ctx, "session-id");
+  const { users, sessions } = ctx.get("context");
+
+  const userId = sessions.get(sessionId);
+  return users.get(userId).username;
+};
+
+const getMaxPlayers = async (ctx: Context): Promise<number> => {
+  const { maxPlayers } = await ctx.req.parseBody();
+
+  return Number(maxPlayers);
+};
+
+const handleHost = async (ctx: Context) => {
+  const { roomManager } = ctx.get("context");
+  const host = getHostName(ctx);
+  const maxPlayers = await getMaxPlayers(ctx);
+  const roomId = roomManager.createRoom(host, maxPlayers);
+
+  setCookie(ctx, "room-id", roomId);
+
+  return ctx.redirect("/lobby", 303);
+};
+
+export { handleHost, handleGetLobbyDetails, handleJoin, handleLogin };
