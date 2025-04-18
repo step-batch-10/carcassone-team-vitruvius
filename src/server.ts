@@ -10,21 +10,25 @@ const idGenerator = (): string => {
   const id = timestamp.slice(-5) + randomPart;
   return id;
 };
-
-const meepleColorGenerator = () => {
-  const meeplesColor = ["red", "green", "yellow", "blue", "black"];
-  let count = 0;
-  return (): string => {
-    const meeple = meeplesColor[count];
-    count = (count + 1) % meeplesColor.length;
-    return meeple;
+const createMeepleColorGenerator = () => {
+  return () => {
+    const meeplesColor = ["red", "green", "yellow", "blue", "black"];
+    let count = 0;
+    return (): string => {
+      const meeple = meeplesColor[count];
+      count = (count + 1) % meeplesColor.length;
+      return meeple;
+    };
   };
 };
 
 const main = () => {
   const users = new Map<string, User>();
   const sessions = new Map<string, string>();
-  const roomManager = new RoomManager(idGenerator, meepleColorGenerator());
+  const roomManager = new RoomManager(
+    idGenerator,
+    createMeepleColorGenerator()
+  );
   const context = { sessions, users, roomManager };
 
   Deno.serve(createApp(context).fetch);

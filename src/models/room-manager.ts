@@ -5,15 +5,15 @@ type stringIdentity = () => string;
 class RoomManager {
   private rooms: Map<string, GameRoom>;
   private idGenerator: stringIdentity;
-  private meepleColorGenerator: stringIdentity;
+  private createMeepleColorGenerator: () => stringIdentity;
 
   constructor(
     idGenerator: stringIdentity,
-    meepleColorGenerator: stringIdentity
+    createMeepleColorGenerator: () => stringIdentity
   ) {
     this.rooms = new Map();
     this.idGenerator = idGenerator;
-    this.meepleColorGenerator = meepleColorGenerator;
+    this.createMeepleColorGenerator = createMeepleColorGenerator;
   }
 
   createRoom(host: string, maxPlayers: number): string {
@@ -22,7 +22,7 @@ class RoomManager {
       maxPlayers,
       host,
       roomId,
-      this.meepleColorGenerator
+      this.createMeepleColorGenerator()
     );
 
     this.rooms.set(roomId, room);

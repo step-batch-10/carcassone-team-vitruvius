@@ -10,7 +10,7 @@ describe("handleHost", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => "1"
+      () => () => "red"
     );
 
     const context: AppContext = { sessions, users, roomManager };

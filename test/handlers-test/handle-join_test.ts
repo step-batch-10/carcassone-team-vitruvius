@@ -14,7 +14,7 @@ describe("handleJoinReq", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => "red"
+      () => () => "red"
     );
 
     roomManager.createRoom("hostUser", 3);
@@ -47,7 +47,7 @@ describe("handleJoinReq", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => "red"
+      () => () => "red"
     );
 
     roomManager.createRoom("hostUser", 3);

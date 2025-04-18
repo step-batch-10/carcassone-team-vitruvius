@@ -7,7 +7,7 @@ describe("RoomManager", () => {
     it("should create a room with a host", () => {
       const roomId = "1";
       const idGenerator = () => roomId;
-      const meepleColorGenerator = () => "red";
+      const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
@@ -21,7 +21,7 @@ describe("RoomManager", () => {
     it("should return false if room is not present in RoomManager", () => {
       const roomId = "1";
       const idGenerator = () => roomId;
-      const meepleColorGenerator = () => "red";
+      const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
@@ -31,7 +31,7 @@ describe("RoomManager", () => {
     it("should return true if room is present in RoomManager", () => {
       const roomId = "1";
       const idGenerator = () => roomId;
-      const meepleColorGenerator = () => "red";
+      const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
       lobby.createRoom("host", 3);
@@ -44,7 +44,7 @@ describe("RoomManager", () => {
     it("should return GameRoom instance if it is created", () => {
       const roomId = "1";
       const idGenerator = () => roomId;
-      const meepleColorGenerator = () => "red";
+      const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
       lobby.createRoom("host", 3);
@@ -55,7 +55,7 @@ describe("RoomManager", () => {
     it("should return null if GameRoom is not created", () => {
       const roomId = "1";
       const idGenerator = () => roomId;
-      const meepleColorGenerator = () => "red";
+      const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
