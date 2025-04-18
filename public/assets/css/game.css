@@ -1,0 +1,98 @@
+body {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  width: 100vw;
+  height: 100vh;
+}
+
+.grid div {
+  border: 1px dotted black;
+  box-sizing: border-box;
+  aspect-ratio: 1 / 1;
+  width: 150px;
+  height: 150px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.tileMoves {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  pointer-events: none;
+  display: block;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  position: fixed;
+  width: 360px;
+  height: 80px;
+
+  & > img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+#options {
+  bottom: 8px;
+  right: 460px;
+}
+
+#status {
+  bottom: 8px;
+  right: 0px;
+  background-color: aqua;
+}
+
+.arrow {
+  width: 30px;
+  height: 24px;
+}
+
+#a-top {
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  transform: rotate(180deg);
+}
+
+#a-right {
+  position: fixed;
+  top: 50%;
+  right: 0px;
+  transform: rotate(270deg);
+}
+
+#a-bottom {
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+  transform: rotate(0deg);
+}
+
+#a-left {
+  position: fixed;
+  top: 50%;
+  left: 0px;
+  transform: rotate(90deg);
+}

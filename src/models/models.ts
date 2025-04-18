@@ -43,7 +43,7 @@ export enum Feature {
   ROAD = "road",
   FIELD = "field",
   MONASTERY = "monastery",
-  ROAD_END = "roadEnd",
+  ROAD_END = "endOfRoad",
 }
 
 type Edges = [Feature, Feature, Feature, Feature];
