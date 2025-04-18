@@ -8,6 +8,7 @@
     "rules": { "tags": ["recommended"], "include": ["eqeqeq"] }
   },
   "tasks": {
+    "commit": "./commit.sh",
     "start": "deno run -A --watch src/server.ts",
     "open-app": "open -a 'Google Chrome' https://amankumarbh-carcassone-69.deno.dev/",
     "test": "deno test -A",
