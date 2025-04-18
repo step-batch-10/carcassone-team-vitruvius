@@ -9,8 +9,13 @@ import {
 
 export class Board {
   private board: TileBox[][];
-  constructor(tileBoxes: TileBox[][]) {
+  private maxRow: number;
+  private maxCol: number;
+
+  constructor(tileBoxes: TileBox[][], row: number, col: number) {
     this.board = tileBoxes;
+    this.maxRow = row;
+    this.maxCol = col;
   }
 
   private static firstTile(): Tile {
@@ -32,7 +37,7 @@ export class Board {
     tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)].tile =
       Board.firstTile();
 
-    return new Board(tileBoxes);
+    return new Board(tileBoxes, rows, cols);
   }
 
   static createTileBox() {
@@ -58,7 +63,12 @@ export class Board {
   }
 
   getTile(position: Position) {
-    return this.board[position.row][position.col].tile;
+    const { row, col } = position;
+    if (row < 0 || col < 0 || row >= this.maxRow || col >= this.maxCol) {
+      return null;
+    }
+
+    return this.board[row][col].tile;
   }
 
   respectivePosition(position: Position) {
@@ -147,5 +157,10 @@ export class Board {
 
     this.getTileBox(position).tile = tile;
     return true;
+  }
+
+  isBoxUnlockToPlace(position: Position) {
+    const resTile = this.respectiveTile(position);
+    return !this.areAllResEmpty(resTile);
   }
 }

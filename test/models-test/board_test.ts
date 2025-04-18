@@ -1,39 +1,11 @@
 import { Board } from "./../../src/models/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { Feature, Tile, TileBox } from "../../src/models/models.ts";
-
-export const createTile = (
-  id: string,
-  edges: [Feature, Feature, Feature, Feature],
-  center: Feature
-): Tile => {
-  return {
-    hasShield: false,
-    id,
-    orientation: 0,
-    tileCenter: center,
-    tileEdges: edges,
-  };
-};
-
-const createATileBox = (
-  id: string,
-  edges: [Feature, Feature, Feature, Feature],
-  center: Feature
-): TileBox => {
-  return {
-    tile: createTile(id, edges, center),
-    mapple: { color: null, playerName: null, region: null },
-    occupiedRegion: {
-      left: { feature: null, occupiedBy: [] },
-      top: { feature: null, occupiedBy: [] },
-      right: { feature: null, occupiedBy: [] },
-      bottom: { feature: null, occupiedBy: [] },
-      middle: { feature: null, occupiedBy: [] },
-    },
-  };
-};
+import { Feature } from "../../src/models/models.ts";
+import {
+  createATileBox,
+  createTile,
+} from "../../src/models/dummy-data-for-test.ts";
 
 describe("testing static method 'create' of board to create board", () => {
   it("should create an empty board of given size with first tile already present", () => {
@@ -49,6 +21,50 @@ describe("testing static method 'create' of board to create board", () => {
         ),
       ],
     ]);
+  });
+});
+
+describe("testing is isBoxUnlockToPlace", () => {
+  it("should return true when it have any of corresponding tile present", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: 2, col: 3 });
+
+    assertEquals(isPlaceable, true);
+  });
+
+  it("should return false when it have no corresponding tile present", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: 1 });
+
+    assertEquals(isPlaceable, false);
+  });
+
+  it("should return false when it is out of the board", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: -1, col: 1 });
+
+    assertEquals(isPlaceable, false);
+  });
+
+  it("should return false when it is out of the board", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: -1 });
+
+    assertEquals(isPlaceable, false);
+  });
+
+  it("should return false when it is out of the board", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: 5, col: 1 });
+
+    assertEquals(isPlaceable, false);
+  });
+
+  it("should return false when it is out of the board", () => {
+    const board = Board.create(5, 5);
+    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: 5 });
+
+    assertEquals(isPlaceable, false);
   });
 });
 

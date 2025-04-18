@@ -8,6 +8,7 @@ import {
   handleGetLobbyDetails,
   handleHost,
   serveGameBoard,
+  drawATile,
 } from "./handlers/request-handlers.ts";
 
 const setContext = (context: AppContext) => {
@@ -21,6 +22,14 @@ type variables = {
   context: AppContext;
 };
 
+const createGameApp = () => {
+  const gameApp = new Hono();
+  gameApp.get("/", serveStatic({ path: "/html/game/html", root: "public" }));
+  gameApp.get("/board", serveGameBoard);
+  gameApp.get("/draw-tile", drawATile);
+  return gameApp;
+};
+
 const createApp = (context: AppContext) => {
   const app = new Hono<{ Variables: variables }>();
 
@@ -29,8 +38,10 @@ const createApp = (context: AppContext) => {
     "/game-options",
     serveStatic({ path: "/html/game-options.html", root: "public" })
   );
+  app.route("/game", createGameApp());
+
   app.get("/lobby", serveStatic({ path: "/html/lobby.html", root: "public" }));
-  app.get("/game/board", serveGameBoard);
+  // /game/valid-positions
   app.post("/login", handleLogin);
   app.post("/host", handleHost);
   app.get("/room", handleGetLobbyDetails);

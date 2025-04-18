@@ -1,42 +1,54 @@
-import { createTile } from "./../../test/models-test/board_test.ts";
 import { TileManager, shuffler } from "./tile-Manager.ts";
 import { Board } from "./board.ts";
 import Player from "./player.ts";
-import { Feature, Tile } from "./models.ts";
+import { Tile, Position, CardinalDegrees } from "./models.ts";
+import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
 
-const tiles = [
-  createTile(
-    "2",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.MONASTERY],
-    Feature.ROAD
-  ),
-
-  createTile(
-    "3",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.MONASTERY],
-    Feature.ROAD
-  ),
-];
 export class Carcassonne {
   private readonly board: Board;
   private readonly players: Player[];
   private turn: number;
   private tileManager: TileManager;
   private currentTile: Tile | null;
+  private unlockedPositions: Position[];
 
-  constructor(players: Player[], tileManager: TileManager, board: Board) {
+  constructor(
+    players: Player[],
+    tileManager: TileManager,
+    board: Board,
+    unlockedPosition: Position[]
+  ) {
     this.players = players;
     this.turn = 0;
     this.board = board;
     this.currentTile = null;
     this.tileManager = tileManager;
+    this.unlockedPositions = unlockedPosition;
   }
 
-  static initGame(players: Player[]) {
-    const tileManager = new TileManager(tiles, shuffler);
-    const board = Board.create(84, 84);
+  static getAllUnlockedPosition(board: Board): Position[] {
+    const unlockedPosition = [];
+    for (let row = 0; row < 84; row++) {
+      for (let col = 0; col < 84; col++) {
+        if (board.isBoxUnlockToPlace({ row, col })) {
+          unlockedPosition.push({ row, col });
+        }
+      }
+    }
 
-    return new Carcassonne(players, tileManager, board);
+    return unlockedPosition;
+  }
+
+  static initGame(
+    players: Player[],
+    tileShuffler = shuffler,
+    tilesArr = tiles
+  ) {
+    const tileManager = new TileManager(tilesArr, tileShuffler);
+    const board = Board.create(84, 84);
+    const unlockedPositions = Carcassonne.getAllUnlockedPosition(board);
+
+    return new Carcassonne(players, tileManager, board, unlockedPositions);
   }
 
   getBoard() {
@@ -51,8 +63,39 @@ export class Carcassonne {
     this.turn = (this.turn + 1) % this.players.length;
   }
 
-  isValidTileToPlace(_tile: Tile) {
-    return true;
+  rotateTile(tile: Tile): Tile {
+    tile.orientation = (tile.orientation + CardinalDegrees.ninety) % 360;
+    const tempEdge = tile.tileEdges.pop();
+
+    if (tempEdge) {
+      tile.tileEdges.unshift(tempEdge);
+    }
+
+    return tile;
+  }
+
+  private isTilePlacableAtUnlockedPos(tile: Tile) {
+    return this.unlockedPositions.some((position) =>
+      this.board.isTilePlacable(tile, position)
+    );
+  }
+
+  isValidTileToPlace(tile: Tile) {
+    for (let i = 0; i < 4; i++) {
+      if (this.isTilePlacableAtUnlockedPos(tile)) {
+        return true;
+      }
+
+      this.rotateTile(tile);
+    }
+
+    return false;
+  }
+
+  rotateCurrentTile() {
+    if (this.currentTile) {
+      return this.rotateTile(this.currentTile);
+    }
   }
 
   drawATile(): Tile | null {
@@ -62,6 +105,7 @@ export class Carcassonne {
       this.tileManager.pushTile(drawnTile);
       return this.drawATile();
     }
+
     this.currentTile = drawnTile;
     return drawnTile;
   }

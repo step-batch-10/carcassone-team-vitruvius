@@ -51,6 +51,14 @@ describe("testing pickTile", () => {
     assertEquals(tileManager.getStack().at(-1), tile);
   });
 
+  it("when picked a tile from empty stack it shuld return null", () => {
+    const tiles: Tile[] = [];
+
+    const tileManager = new TileManager(tiles, (tile) => tile);
+
+    assertEquals(tileManager.pickTile(), null);
+  });
+
   it("when picked a tile the remaining tile should be less", () => {
     const tiles: Tile[] = [
       {

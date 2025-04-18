@@ -1,3 +1,4 @@
+import { Carcassonne } from "./../models/carcassone.ts";
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
@@ -79,12 +80,19 @@ const serveGameBoard = (ctx: Context) => {
   const { games } = ctx.get("context");
 
   const roomID = getCookie(ctx, "room-id");
-  console.log(roomID);
-  const game = games.get(roomID);
+  const game: Carcassonne = games.get(roomID);
   if (!game) {
     return ctx.json({ desc: "invalid game Id" }, 200);
   }
   return ctx.json(game.getBoard(), 200);
+};
+
+const drawATile = (ctx: Context) => {
+  const { games } = ctx.get("context");
+  const roomID = getCookie(ctx, "room-id");
+  const game: Carcassonne = games.get(roomID);
+
+  return ctx.json(game.drawATile(), 200);
 };
 
 export {
@@ -93,4 +101,5 @@ export {
   handleJoin,
   handleLogin,
   serveGameBoard,
+  drawATile,
 };
