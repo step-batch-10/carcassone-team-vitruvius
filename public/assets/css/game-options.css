@@ -1,0 +1,74 @@
+body {
+  background-image: url("/assets/images/login.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+  font-family: "MedievalSharp", cursive;
+  font-weight: 300;
+  font-size: 2rem;
+  color: goldenrod;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-shadow: 2px 2px 4px #000;
+}
+
+header {
+  margin-top: 20px;
+  font-size: 2.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 25px 40px;
+  border-radius: 15px;
+  border: 2px solid goldenrod;
+  margin-bottom: 20px;
+}
+
+label {
+  margin-bottom: 15px;
+}
+
+select {
+  font-size: 1.5rem;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 20px;
+  background: goldenrod;
+  color: #000;
+  font-family: inherit;
+}
+
+button {
+  font-size: 1.5rem;
+  padding: 10px 25px;
+  margin: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: goldenrod;
+  color: black;
+  font-family: inherit;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  background-color: #ffcc33;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10%;
+}

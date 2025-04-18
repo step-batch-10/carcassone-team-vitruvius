@@ -1,23 +1,54 @@
-.main-container{
+body {
+  background-image: url("../images/login.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   width: 100vw;
-  height: 100vh; 
+  height: 100vh;
+  font-family: "MedievalSharp", cursive;
+  text-shadow: 2px 2px 4px #000;
+  font-weight: 400;
+  font-size: 2.5rem;
+  color: goldenrod;
+  margin: 0;
+  padding: 0;
+}
+
+header {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.form-container{
+.form-container {
+  margin-top: 240px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+input[type="text"],
+button[type="submit"] {
+  width: 320px;
+  height: 50px;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: none;
+  box-sizing: border-box;
+  box-shadow: 2px 2px rgb(112, 23, 23);
+  background-color: rgb(244, 231, 202);
+}
+
+button[type="submit"] {
+  background-color: goldenrod;
+  color: rgb(255, 255, 255);
+  font-size: 1.5rem;
+}
+
+button[type="submit"]:hover {
+  background-color: darkgoldenrod;
 }

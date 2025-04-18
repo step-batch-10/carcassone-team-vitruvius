@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Host and Join</title>
-    <script src="/assets/script/join-host.js"></script>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host and Join</title>
+  <script src="/assets/script/join-host.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/game-options.css">
+</head>
+
+<body>
+  <header>
     <h1>Carcossanne</h1>
+  </header>
+  <div class="form-container">
     <form action="/host" method="POST">
       <label for="numbers">No.of Players</label>
 
@@ -17,9 +24,13 @@
         <option value="4">4</option>
         <option value="5">5</option>
       </select>
-      <button class="host">Host</button>
+      <div>
+        <button class="host">Host</button>
+        <button class="quickPlay">Quick Play</button>
+      </div>
     </form>
-    <button class="quickPlay">Quick Play</button>
     <button id="join-btn">Join</button>
-  </body>
+  </div>
+</body>
+
 </html>
