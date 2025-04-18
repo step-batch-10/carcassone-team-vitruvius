@@ -1,4 +1,4 @@
-import Player from "./player.ts";
+import { Carcassonne } from "./carcassone.ts";
 import RoomManager from "./room-manager.ts";
 
 export type Position = { row: number; col: number };
@@ -89,16 +89,6 @@ export interface GameRoomJson {
   gameStatus: GameStatus;
 }
 
-interface TileHandler {
-  tiles: Tile[];
-}
-
-export interface Carcassonne {
-  tileHandler: TileHandler;
-  players: Player[];
-  board: Cell[][];
-}
-
 type SubGrid = "left" | "top" | "right" | "bottom" | "center";
 
 interface PlacedMeeple {
@@ -108,13 +98,9 @@ interface PlacedMeeple {
   subGrid: SubGrid;
 }
 
-interface Cell {
-  tile: null | Tile;
-  placedMeeple: PlacedMeeple | null;
-}
-
 export interface AppContext {
   sessions: Map<string, string>;
   users: Map<string, User>;
   roomManager: RoomManager;
+  games: Map<string, Carcassonne>;
 }

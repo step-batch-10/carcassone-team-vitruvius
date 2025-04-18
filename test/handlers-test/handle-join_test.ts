@@ -3,6 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
+import { Carcassonne } from "../../src/models/carcassone.ts";
 
 describe("handleJoinReq", () => {
   it("should join room if roomId is valid", async () => {
@@ -18,8 +19,9 @@ describe("handleJoinReq", () => {
     );
 
     roomManager.createRoom("hostUser", 3);
+    const games = new Map<string, Carcassonne>();
 
-    const context: AppContext = { sessions, users, roomManager };
+    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("roomID", "1");
 
@@ -51,8 +53,9 @@ describe("handleJoinReq", () => {
     );
 
     roomManager.createRoom("hostUser", 3);
+    const games = new Map<string, Carcassonne>();
 
-    const context: AppContext = { sessions, users, roomManager };
+    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("roomID", "2");
 

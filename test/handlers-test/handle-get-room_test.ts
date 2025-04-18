@@ -3,6 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import { GameRoomJson, GameStatus, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
 import createApp from "../../src/app.ts";
+import { Carcassonne } from "../../src/models/carcassone.ts";
 
 describe("handleGetRoom", () => {
   it("should return json data of room", async () => {
@@ -14,10 +15,11 @@ describe("handleGetRoom", () => {
       () => "1",
       () => () => "red"
     );
+    const games = new Map<string, Carcassonne>();
 
     roomManager.createRoom("Mounika", 3);
 
-    const context = { sessions, users, roomManager };
+    const context = { sessions, users, roomManager, games };
     const app = createApp(context);
 
     const request = new Request("http://localhost/room", {
@@ -58,8 +60,9 @@ describe("handleGetRoom", () => {
     );
 
     roomManager.createRoom("Mounika", 3);
+    const games = new Map<string, Carcassonne>();
 
-    const context = { sessions, users, roomManager };
+    const context = { sessions, users, roomManager, games };
     const app = createApp(context);
 
     const request = new Request("http://localhost/room", {

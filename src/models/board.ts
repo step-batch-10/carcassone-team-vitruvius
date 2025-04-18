@@ -18,7 +18,7 @@ export class Board {
       id: "1",
       orientation: 0,
       hasShield: false,
-      tileEdges: [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
+      tileEdges: [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
       tileCenter: Feature.ROAD,
     };
   }

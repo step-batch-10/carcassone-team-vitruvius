@@ -14,7 +14,7 @@ describe("Player", () => {
         roomID: "roomId",
       };
 
-      const player = new Player("prasad", 7, "red", false, "roomId");
+      const player = new Player("prasad", "red", false, "roomId");
 
       assertEquals(player.json(), playerJson);
     });

@@ -7,6 +7,7 @@ import {
   handleJoin,
   handleGetLobbyDetails,
   handleHost,
+  serveGameBoard,
 } from "./handlers/request-handlers.ts";
 
 const setContext = (context: AppContext) => {
@@ -29,7 +30,7 @@ const createApp = (context: AppContext) => {
     serveStatic({ path: "/html/game-options.html", root: "public" })
   );
   app.get("/lobby", serveStatic({ path: "/html/lobby.html", root: "public" }));
-
+  app.get("/game/board", serveGameBoard);
   app.post("/login", handleLogin);
   app.post("/host", handleHost);
   app.get("/room", handleGetLobbyDetails);

@@ -9,13 +9,12 @@ class Player {
 
   constructor(
     username: string,
-    meepleCount: number,
     meepleColor: string,
     isHost: boolean,
     roomId: string
   ) {
     this.username = username;
-    this.noOfMeeples = meepleCount;
+    this.noOfMeeples = 7;
     this.points = 0;
     this.meepleColor = meepleColor;
     this.isHost = isHost;

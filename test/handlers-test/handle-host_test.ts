@@ -3,6 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
+import { Carcassonne } from "../../src/models/carcassone.ts";
 
 describe("handleHost", () => {
   it("should redirect to lobby page and create room for host", async () => {
@@ -12,8 +13,9 @@ describe("handleHost", () => {
       () => "1",
       () => () => "red"
     );
+    const games = new Map<string, Carcassonne>();
 
-    const context: AppContext = { sessions, users, roomManager };
+    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("username", "Alice");
 

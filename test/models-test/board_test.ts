@@ -44,7 +44,7 @@ describe("testing static method 'create' of board to create board", () => {
       [
         createATileBox(
           "1",
-          [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
+          [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
           Feature.ROAD
         ),
       ],

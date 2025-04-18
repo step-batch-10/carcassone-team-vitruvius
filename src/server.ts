@@ -1,4 +1,5 @@
 import createApp from "./app.ts";
+import { Carcassonne } from "./models/carcassone.ts";
 import { User } from "./models/models.ts";
 import RoomManager from "./models/room-manager.ts";
 
@@ -23,7 +24,8 @@ const main = () => {
     roomIdGenerator,
     createMeepleColorGenerator()
   );
-  const context = { sessions, users, roomManager };
+  const games = new Map<string, Carcassonne>();
+  const context = { sessions, users, roomManager, games };
 
   Deno.serve(createApp(context).fetch);
 };

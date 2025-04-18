@@ -1,14 +1,12 @@
-import { Carcassonne } from "./models.ts";
 import Player from "./player.ts";
 import { GameRoomJson, GameStatus } from "./models.ts";
 type stringIdentity = () => string;
 
 class GameRoom {
   private maxPlayers: number;
-  private game: null | Carcassonne;
   readonly host: string;
   private players: Player[];
-  private noOfMeeples: number;
+
   private meepleColorGenerator: stringIdentity;
   readonly gameStatus: GameStatus;
   readonly roomID: string;
@@ -21,9 +19,7 @@ class GameRoom {
   ) {
     this.roomID = roomID;
     this.host = host;
-    this.noOfMeeples = 7;
     this.maxPlayers = maxPlayers;
-    this.game = null;
     this.players = [];
     this.gameStatus = GameStatus.WAITING;
     this.meepleColorGenerator = meepleColorGenerator;
@@ -37,7 +33,6 @@ class GameRoom {
   private joinPlayerInGame(playerName: string, isHost: boolean) {
     const newPlayer = new Player(
       playerName,
-      this.noOfMeeples,
       this.meepleColorGenerator(),
       isHost,
       this.roomID

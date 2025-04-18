@@ -75,4 +75,22 @@ const handleHost = async (ctx: Context) => {
   return ctx.redirect("/lobby", 303);
 };
 
-export { handleHost, handleGetLobbyDetails, handleJoin, handleLogin };
+const serveGameBoard = (ctx: Context) => {
+  const { games } = ctx.get("context");
+
+  const roomID = getCookie(ctx, "room-id");
+  console.log(roomID);
+  const game = games.get(roomID);
+  if (!game) {
+    return ctx.json({ desc: "invalid game Id" }, 200);
+  }
+  return ctx.json(game.getBoard(), 200);
+};
+
+export {
+  handleHost,
+  handleGetLobbyDetails,
+  handleJoin,
+  handleLogin,
+  serveGameBoard,
+};

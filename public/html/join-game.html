@@ -5,32 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>joinGamePage</title>
-  <script>
-    const joinRoom = async (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const response = await fetch("/joinRoom", {
-        method: "POST",
-        body: formData
-
-      });
-
-      const { isRoomJoined } = await response.json();
-
-      if (!isRoomJoined) {
-        alert("invalid room Id");
-        return;
-      }
-
-      globalThis.location = (await fetch("/lobby")).url;
-    };
-
-    const main = () => {
-      const form = document.getElementById("roomJoiningForm");
-      form.addEventListener("submit", joinRoom);
-    };
-    globalThis.onload = main;
-  </script>
+  <script src="/assets/script/join-room.js"></script>
 </head>
 
 <body>
