@@ -113,7 +113,7 @@ interface Cell {
   placedMeeple: PlacedMeeple | null;
 }
 
-export interface MyContext {
+export interface AppContext {
   sessions: Map<string, string>;
   users: Map<string, User>;
   roomManager: RoomManager;

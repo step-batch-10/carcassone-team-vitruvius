@@ -1,7 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createHandler from "../../src/app.ts";
-import { MyContext, User } from "../../src/models/models.ts";
+import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
 
 describe("handleLogin", () => {
@@ -12,7 +12,7 @@ describe("handleLogin", () => {
       () => "1",
       () => "1"
     );
-    const context: MyContext = { sessions, users, roomManager };
+    const context: AppContext = { sessions, users, roomManager };
     const formData = new FormData();
     formData.set("username", "Alice");
 
