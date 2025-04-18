@@ -2,14 +2,8 @@ import createApp from "./app.ts";
 import { User } from "./models/models.ts";
 import RoomManager from "./models/room-manager.ts";
 
-const idGenerator = (): string => {
-  const timestamp = Date.now().toString();
-  const randomPart = Math.floor(Math.random() * 1000)
-    .toString()
-    .padStart(3, "0");
-  const id = timestamp.slice(-5) + randomPart;
-  return id;
-};
+const roomIdGenerator = (): string => Date.now().toString().slice(-6);
+
 const createMeepleColorGenerator = () => {
   return () => {
     const meeplesColor = ["red", "green", "yellow", "blue", "black"];
@@ -26,7 +20,7 @@ const main = () => {
   const users = new Map<string, User>();
   const sessions = new Map<string, string>();
   const roomManager = new RoomManager(
-    idGenerator,
+    roomIdGenerator,
     createMeepleColorGenerator()
   );
   const context = { sessions, users, roomManager };
