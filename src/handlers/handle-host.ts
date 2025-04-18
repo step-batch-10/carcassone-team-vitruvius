@@ -15,10 +15,10 @@ const getMaxPlayers = async (ctx: Context): Promise<number> => {
   return Number(maxPlayers);
 };
 
-const handleHost = (ctx: Context) => {
+const handleHost = async (ctx: Context) => {
   const { roomManager } = ctx.get("context");
   const host = getHostName(ctx);
-  const maxPlayers = getMaxPlayers(ctx);
+  const maxPlayers = await getMaxPlayers(ctx);
   const roomId = roomManager.createRoom(host, maxPlayers);
 
   setCookie(ctx, "room-id", roomId);

@@ -17,6 +17,7 @@ const fetchRoomData = async () => {
   const roomData = await fetch("/room");
 
   const { maxPlayers, roomID, players } = await roomData.json();
+  console.log(maxPlayers, "max players i am getting form server");
 
   return { maxPlayers, roomID, players };
 };
@@ -47,7 +48,6 @@ const startRoom = () => {
   const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
     const { maxPlayers, roomID, players } = await fetchRoomData();
-
     const table = document.querySelector("#table");
     table.replaceChildren(...players.map(playerRows));
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;

@@ -41,9 +41,9 @@ export const handleLogin = async (ctx: Context) => {
 export const handleGetLobbyDetails = (ctx: Context) => {
   const { roomManager } = ctx.get("context");
   const roomId = getCookie(ctx, "room-id");
-
   if (roomManager.hasRoom(roomId)) {
     const room = roomManager.getRoom(roomId);
+
     return ctx.json(room.json(), 200);
   }
 

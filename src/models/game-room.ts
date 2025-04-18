@@ -64,7 +64,7 @@ class GameRoom {
     const playersJson = this.players.map((player) => player.json());
 
     return {
-      maxPlayers: 3,
+      maxPlayers: this.maxPlayers,
       players: playersJson,
       roomID: this.roomID,
       host: this.host,
