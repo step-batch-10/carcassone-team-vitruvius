@@ -1,24 +1,19 @@
-import { Tile } from "./models.ts";
-// import Player from "./player.ts";
+import { Board } from "./board.ts";
+import Player from "./player.ts";
 
-interface SubGrid {
-  feature: null | string;
-  occupiedBy: string[];
-}
+export class Carcassonne {
+  private readonly board: Board;
+  private readonly players: Player[];
+  private readonly currentPlayer: Player;
+  // private readonly currentTile: Tile;
 
-export interface TileBox {
-  tile: null | Tile;
-  mapple: {
-    color: null | string;
-    playerName: null | string;
-    region: null | string;
-  };
+  constructor(players: Player[]) {
+    this.players = players;
+    this.currentPlayer = this.players[0];
+    this.board = Board.create(168, 168);
+  }
 
-  occupiedRegion: {
-    left: SubGrid;
-    top: SubGrid;
-    right: SubGrid;
-    bottom: SubGrid;
-    middle: SubGrid;
-  };
+  getBoard() {
+    return this.board.getBoard();
+  }
 }

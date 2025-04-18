@@ -1,6 +1,42 @@
 import Player from "./player.ts";
 import RoomManager from "./room-manager.ts";
 
+export type Position = { row: number; col: number };
+
+interface OcupanceSubGrid {
+  feature: null | string;
+  occupiedBy: string[];
+}
+
+export interface TileBox {
+  tile: null | Tile;
+  mapple: {
+    color: null | string;
+    playerName: null | string;
+    region: null | string;
+  };
+
+  occupiedRegion: {
+    left: OcupanceSubGrid;
+    top: OcupanceSubGrid;
+    right: OcupanceSubGrid;
+    bottom: OcupanceSubGrid;
+    middle: OcupanceSubGrid;
+  };
+}
+export type TileEdges = {
+  top: string;
+  bottom: string;
+  right: string;
+  left: string;
+};
+export type ResTiles = {
+  leftTile: Tile | null;
+  rightTile: Tile | null;
+  topTile: Tile | null;
+  bottomTile: Tile | null;
+};
+
 export enum Feature {
   CITY = "city",
   RIVER = "river",
@@ -26,8 +62,6 @@ export interface Tile {
   //tileEdges: [L,T,R,B]
   tileEdges: Edges;
   tileCenter: Feature;
-  imgPath: string;
-  // CCCC-C.jpg
 }
 
 export interface User {

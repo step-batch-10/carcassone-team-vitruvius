@@ -13,7 +13,6 @@ describe("testing pickTile", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
       {
         id: "124",
@@ -21,7 +20,6 @@ describe("testing pickTile", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
     ];
     const tileManager = new TileManager(tiles, (tile) => tile);
@@ -37,7 +35,6 @@ describe("testing pickTile", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
     ];
 
@@ -47,7 +44,6 @@ describe("testing pickTile", () => {
       hasShield: false,
       tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
       tileCenter: Feature.FIELD,
-      imgPath: "a.jpg",
     };
 
     const tileManager = new TileManager(tiles, (tile) => tile);
@@ -63,7 +59,6 @@ describe("testing pickTile", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
     ];
 
@@ -83,7 +78,6 @@ describe("testing shuffler", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
     ]);
     const expected = [
@@ -93,7 +87,6 @@ describe("testing shuffler", () => {
         hasShield: false,
         tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
         tileCenter: Feature.FIELD,
-        imgPath: "a.jpg",
       },
     ];
     assertEquals(actual, expected);
