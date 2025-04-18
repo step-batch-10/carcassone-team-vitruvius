@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createHandler from "../../src/app.ts";
+import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
 
@@ -23,7 +23,7 @@ describe("handleJoinReq", () => {
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createHandler(context);
+    const app = createApp(context);
 
     const response = await app.request("/joinRoom", {
       method: "post",
@@ -56,7 +56,7 @@ describe("handleJoinReq", () => {
     const formData = new FormData();
     formData.set("roomID", "2");
 
-    const app = createHandler(context);
+    const app = createApp(context);
 
     const response = await app.request("/joinRoom", {
       method: "post",

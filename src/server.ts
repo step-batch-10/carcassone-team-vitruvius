@@ -1,4 +1,4 @@
-import createHandler from "./app.ts";
+import createApp from "./app.ts";
 import { User } from "./models/models.ts";
 import RoomManager from "./models/room-manager.ts";
 
@@ -27,7 +27,7 @@ const main = () => {
   const roomManager = new RoomManager(idGenerator, meepleColorGenerator());
   const context = { sessions, users, roomManager };
 
-  Deno.serve(createHandler(context).fetch);
+  Deno.serve(createApp(context).fetch);
 };
 
 main();

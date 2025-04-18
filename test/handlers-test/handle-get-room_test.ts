@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { GameRoomJson, GameStatus, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
-import createHandler from "../../src/app.ts";
+import createApp from "../../src/app.ts";
 
 describe("handleGetRoom", () => {
   it("should return json data of room", async () => {
@@ -18,7 +18,7 @@ describe("handleGetRoom", () => {
     roomManager.createRoom("Mounika", 3);
 
     const context = { sessions, users, roomManager };
-    const app = createHandler(context);
+    const app = createApp(context);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=1; session-id=sId" },
@@ -60,7 +60,7 @@ describe("handleGetRoom", () => {
     roomManager.createRoom("Mounika", 3);
 
     const context = { sessions, users, roomManager };
-    const app = createHandler(context);
+    const app = createApp(context);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=0; session-id=sId" },

@@ -20,7 +20,7 @@ type variables = {
   context: AppContext;
 };
 
-const createHandler = (context: AppContext) => {
+const createApp = (context: AppContext) => {
   const app = new Hono<{ Variables: variables }>();
 
   app.use(setContext(context));
@@ -39,4 +39,4 @@ const createHandler = (context: AppContext) => {
   return app;
 };
 
-export default createHandler;
+export default createApp;

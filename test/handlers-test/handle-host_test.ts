@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createHandler from "../../src/app.ts";
+import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room-manager.ts";
 
@@ -17,7 +17,7 @@ describe("handleHost", () => {
     const formData = new FormData();
     formData.set("username", "Alice");
 
-    const app = createHandler(context);
+    const app = createApp(context);
     const loginRequest = new Request("http://localhost/login", {
       method: "POST",
       body: formData,
