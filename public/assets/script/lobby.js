@@ -3,10 +3,14 @@ const createRow = (index, { username, meepleColor }) => {
   const serial = document.createElement("td");
   const name = document.createElement("td");
   const color = document.createElement("td");
+  const image = document.createElement("img");
+  image.setAttribute("src", `/assets/images/${meepleColor}-meeple.png`);
+  image.style.width = "40px";
+  image.style.height = "80%";
 
   serial.textContent = index;
   name.textContent = username;
-  color.textContent = meepleColor;
+  color.appendChild(image);
 
   row.append(serial, name, color);
 
@@ -30,18 +34,25 @@ const playerRows = (player, index) => {
 
 const isRoomFull = (players, maxPlayers) => players.length === maxPlayers;
 
-const redirectToGame = async () => {
-  const response = await fetch("/game");
-
-  setTimeout(() => {
-    globalThis.location = response.url;
-  }, 5000);
-};
-
 const updateMessage = (maxPlayers, players) => {
   const message = document.querySelector("#waiting-message");
 
   message.textContent = `Waiting for ${maxPlayers - players.length} player(s)`;
+};
+
+const startGameCountdown = () => {
+  let countdown = 3;
+  const intervalID = setInterval(async () => {
+    const message = document.querySelector("#waiting-message");
+    message.textContent = `Starting in ${countdown} seconds...`;
+    countdown -= 1;
+
+    if (countdown === 0) {
+      clearInterval(intervalID);
+      const response = await fetch("/game");
+      globalThis.location = response.url;
+    }
+  }, 1000);
 };
 
 const startRoom = () => {
@@ -53,8 +64,8 @@ const startRoom = () => {
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;
 
     if (isRoomFull(players, maxPlayers)) {
+      startGameCountdown();
       clearInterval(intervalID);
-      redirectToGame();
     }
 
     updateMessage(maxPlayers, players);
