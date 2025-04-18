@@ -1,5 +1,5 @@
 const tilePlacementListener = (cell) => {
-  const listener = (e) => {
+  const listener = (_) => {
     const img = document.createElement("img");
     img.src = "/assets/images/tiles/rfrf-r.png";
 
@@ -13,7 +13,7 @@ const tilePlacementListener = (cell) => {
 
 let floatingImg;
 
-const tileMovements = (e) => {
+const tileMovements = (_) => {
   if (!floatingImg) {
     floatingImg = document.createElement("img");
     floatingImg.src = "/assets/images/tiles/rfrf-r.png";
@@ -26,12 +26,12 @@ const tileMovements = (e) => {
   floatingImg.style.opacity = "0.75";
 };
 
-const hideFloatingImage = (e) => {
+const hideFloatingImage = (_) => {
   floatingImg.classList.remove("visible");
   floatingImg.classList.add("hidden");
 };
 
-const showFloatingImage = (e) => {
+const showFloatingImage = (_) => {
   if (floatingImg) {
     floatingImg.classList.remove("hidden");
     floatingImg.classList.add("visible");
