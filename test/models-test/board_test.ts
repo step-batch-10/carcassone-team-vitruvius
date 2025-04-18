@@ -3,7 +3,7 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Feature, Tile, TileBox } from "../../src/models/models.ts";
 
-const createTile = (
+export const createTile = (
   id: string,
   edges: [Feature, Feature, Feature, Feature],
   center: Feature

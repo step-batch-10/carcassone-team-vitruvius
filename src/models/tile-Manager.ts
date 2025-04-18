@@ -19,10 +19,10 @@ export class TileManager {
     this.tilesStack.push(tile);
   }
 
-  pickTile(): Tile | undefined {
+  pickTile(): Tile | null {
     const pickedTile = this.tilesStack.shift();
 
-    return pickedTile;
+    return pickedTile || null;
   }
 
   remainingTile(): number {

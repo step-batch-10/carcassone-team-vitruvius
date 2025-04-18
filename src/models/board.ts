@@ -58,7 +58,7 @@ export class Board {
   }
 
   getTile(position: Position) {
-    return this.board[position.row][position.col];
+    return this.board[position.row][position.col].tile;
   }
 
   respectivePosition(position: Position) {
@@ -76,10 +76,10 @@ export class Board {
   respectiveTile(position: Position) {
     const resPosition = this.respectivePosition(position);
     const resTile = {
-      leftTile: this.getTile(resPosition.left).tile,
-      rightTile: this.getTile(resPosition.right).tile,
-      topTile: this.getTile(resPosition.top).tile,
-      bottomTile: this.getTile(resPosition.bottom).tile,
+      leftTile: this.getTile(resPosition.left),
+      rightTile: this.getTile(resPosition.right),
+      topTile: this.getTile(resPosition.top),
+      bottomTile: this.getTile(resPosition.bottom),
     };
 
     return resTile;
@@ -138,10 +138,14 @@ export class Board {
     return this.board;
   }
 
+  getTileBox(position: Position) {
+    return this.board[position.row][position.col];
+  }
+
   putTile(tile: Tile, position: Position): boolean {
     if (!this.isTilePlacable(tile, position)) return false;
 
-    this.getTile(position).tile = tile;
+    this.getTileBox(position).tile = tile;
     return true;
   }
 }
