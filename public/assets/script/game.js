@@ -130,18 +130,11 @@ const main = async () => {
     globalThis.scrollTo({
       top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
       left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
-      behavior: "smooth", 
+      behavior: "smooth",
     });
   }, 2000);
 
-  setInterval(
-    updateGameState,
-    1000,
-    grid,
-    gridSize,
-    currentTile,
-    currentTilePath
-  );
+  await updateGameState(grid, gridSize, currentTile, currentTilePath);
 };
 
 globalThis.onload = main;
