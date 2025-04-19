@@ -42,7 +42,7 @@ describe("testing draw a tile handler", () => {
       id: "2",
       orientation: 0,
       tileCenter: "road",
-      tileEdges: ["road", "field", "road", "monastery"],
+      tileEdges: ["road", "field", "road", "field"],
     });
   });
 });

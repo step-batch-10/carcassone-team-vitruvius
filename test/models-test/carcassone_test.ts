@@ -40,7 +40,7 @@ describe("testing draw a tile", () => {
       id: "2",
       orientation: 0,
       tileCenter: "road",
-      tileEdges: ["road", "field", "road", "monastery"],
+      tileEdges: ["road", "field", "road", "field"],
     });
   });
 
@@ -112,6 +112,10 @@ describe("testing placablePositions", () => {
           col: 43,
           row: 42,
         },
+        {
+          col: 42,
+          row: 43,
+        },
       ],
     });
   });
@@ -147,4 +151,3 @@ describe("testing placablePositions", () => {
     });
   });
 });
-
