@@ -110,12 +110,6 @@ const updateGameState = async (
 
   renderTiles(gridSize, tiles, grid, currentTilePath);
 
-  globalThis.scrollTo({
-    top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
-    left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
-    behavior: "smooth", // optional: adds a smooth scroll effect
-  });
-
   addMouseListeners(grid, currentTilePath, currentTile.orientation);
 };
 
@@ -131,6 +125,14 @@ const main = async () => {
   const currentTile = await tileResponse.json();
 
   const currentTilePath = extractPath({ tile: currentTile });
+
+  setTimeout(() => {
+    globalThis.scrollTo({
+      top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
+      left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
+      behavior: "smooth", 
+    });
+  }, 2000);
 
   setInterval(
     updateGameState,
