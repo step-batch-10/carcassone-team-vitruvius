@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import GameRoom from "../../src/models/game-room.ts";
 import { GameRoomJson, GameStatus } from "../../src/models/models.ts";
@@ -98,6 +98,26 @@ describe("GameRoom", () => {
       };
 
       assertEquals(room.json(), roomJson);
+    });
+  });
+
+  describe("createGame", () => {
+    it("should create carcassonne game instance if max player limit reached", () => {
+      const room = new GameRoom(2, "Mounika", "roomId", () => "red");
+
+      room.addPlayer("Prasad");
+
+      const game = room.createGame();
+
+      assert(game);
+    });
+
+    it("should return null if max player limit is not reached", () => {
+      const room = new GameRoom(2, "Mounika", "roomId", () => "red");
+
+      const game = room.createGame();
+
+      assertEquals(game, null);
     });
   });
 });

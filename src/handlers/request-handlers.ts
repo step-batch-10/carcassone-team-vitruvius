@@ -29,9 +29,14 @@ const joinPlayerInRoom = (
   }
 
   const room = roomManager.getRoom(roomID);
+  const games = ctx.get("games");
 
   room?.addPlayer(String(username));
   setCookie(ctx, "room-id", String(roomID));
+
+  const game = room?.createGame();
+
+  if (game) games.set(roomID, game);
 
   return ctx.json({ isRoomJoined: true }, 200);
 };

@@ -1,5 +1,6 @@
 import Player from "./player.ts";
 import { GameRoomJson, GameStatus } from "./models.ts";
+import { Carcassonne } from "./carcassone.ts";
 type stringIdentity = () => string;
 
 class GameRoom {
@@ -26,7 +27,7 @@ class GameRoom {
     this.addPlayer(host, true);
   }
 
-  private isMaxPlayerLimitExtended(): boolean {
+  isMaxPlayerLimitReached(): boolean {
     return this.maxPlayers === this.players.length;
   }
 
@@ -44,7 +45,7 @@ class GameRoom {
   }
 
   addPlayer(playerName: string, isHost: boolean = false): Player | null {
-    if (this.isMaxPlayerLimitExtended()) {
+    if (this.isMaxPlayerLimitReached()) {
       return null;
     }
 
@@ -53,6 +54,14 @@ class GameRoom {
 
   totalJoinedPlayers(): number {
     return this.players.length;
+  }
+
+  createGame(): Carcassonne | null {
+    if (this.isMaxPlayerLimitReached()) {
+      return Carcassonne.initGame(this.players);
+    }
+
+    return null;
   }
 
   json(): GameRoomJson {
