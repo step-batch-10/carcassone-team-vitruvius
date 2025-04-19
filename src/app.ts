@@ -3,6 +3,7 @@ import { serveStatic } from "hono/deno";
 import { AppContext } from "./models/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
 import { Variables } from "./models/models.ts";
+import { logger } from "hono/logger";
 import {
   handleLogin,
   handleJoin,
@@ -38,6 +39,7 @@ const createGameApp = () => {
 const createApp = (appContext: AppContext) => {
   const app = new Hono<{ Variables: Variables }>();
 
+  app.use(logger());
   app.use(setContext(appContext));
   app.get(
     "/game-options",
