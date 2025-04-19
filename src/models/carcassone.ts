@@ -3,6 +3,11 @@ import { Board } from "./board.ts";
 import Player from "./player.ts";
 import { Tile, Position, CardinalDegrees } from "./models.ts";
 import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
+/*
+- make a function to get all placeable positions and unclocked positions
+- make a route to return all placeable positions and unclocked positions obj
+- and handler for it
+*/
 
 export class Carcassonne {
   private readonly board: Board;
@@ -39,6 +44,23 @@ export class Carcassonne {
     return unlockedPosition;
   }
 
+  private placablePositions(): Position[] {
+    if (!this.currentTile) {
+      return [];
+    }
+
+    return this.unlockedPositions.filter((position: Position) =>
+      this.board.isTilePlacable(this.currentTile, position)
+    );
+  }
+
+  validPositions() {
+    return {
+      unlockedPositions: this.unlockedPositions,
+      placablePositions: this.placablePositions(),
+    };
+  }
+
   static initGame(
     players: Player[],
     tileShuffler = shuffler,
@@ -49,18 +71,6 @@ export class Carcassonne {
     const unlockedPositions = Carcassonne.getAllUnlockedPosition(board);
 
     return new Carcassonne(players, tileManager, board, unlockedPositions);
-  }
-
-  getBoard() {
-    return this.board.getBoard();
-  }
-
-  getCurrentPlayer() {
-    return this.players[this.turn];
-  }
-
-  changePlayerTurn() {
-    this.turn = (this.turn + 1) % this.players.length;
   }
 
   rotateTile(tile: Tile): Tile {
@@ -112,5 +122,17 @@ export class Carcassonne {
 
   getCurrentTile() {
     return this.currentTile;
+  }
+
+  getBoard() {
+    return this.board.getBoard();
+  }
+
+  getCurrentPlayer() {
+    return this.players[this.turn];
+  }
+
+  changePlayerTurn() {
+    this.turn = (this.turn + 1) % this.players.length;
   }
 }

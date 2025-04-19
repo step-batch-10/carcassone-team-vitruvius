@@ -73,3 +73,78 @@ describe("testing rotateCurrentTile", () => {
     assertEquals(game.getCurrentTile()?.orientation, 90);
   });
 });
+
+describe("testing placablePositions", () => {
+  it("should return object having unlockedPosition and placablePositions", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+    const game: Carcassonne = Carcassonne.initGame(players, (arr) => arr);
+    game.drawATile();
+    const placeablePositions = game.validPositions();
+
+    assertEquals(placeablePositions, {
+      unlockedPositions: [
+        {
+          col: 42,
+          row: 41,
+        },
+        {
+          col: 41,
+          row: 42,
+        },
+        {
+          col: 43,
+          row: 42,
+        },
+        {
+          col: 42,
+          row: 43,
+        },
+      ],
+      placablePositions: [
+        {
+          col: 41,
+          row: 42,
+        },
+        {
+          col: 43,
+          row: 42,
+        },
+      ],
+    });
+  });
+
+  it("should return object having unlockedPosition and with no placeablePositions when no tile drawn", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+    const game: Carcassonne = Carcassonne.initGame(players, (arr) => arr);
+    const placeablePositions = game.validPositions();
+
+    assertEquals(placeablePositions, {
+      unlockedPositions: [
+        {
+          col: 42,
+          row: 41,
+        },
+        {
+          col: 41,
+          row: 42,
+        },
+        {
+          col: 43,
+          row: 42,
+        },
+        {
+          col: 42,
+          row: 43,
+        },
+      ],
+      placablePositions: [],
+    });
+  });
+});
+

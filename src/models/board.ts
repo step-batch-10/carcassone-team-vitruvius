@@ -133,7 +133,8 @@ export class Board {
     return true;
   }
 
-  isTilePlacable(tile: Tile, position: Position): boolean {
+  isTilePlacable(tile: Tile | null, position: Position): boolean {
+    if (!tile) return false;
     const placingTileEdges = this.extractEdges(tile);
     const resTiles = this.respectiveTile(position);
 

@@ -148,3 +148,14 @@ describe("testing putTile method of Board", () => {
     });
   });
 });
+
+
+describe("testing isTilePlacable", () => {
+  it("should return false if there is no tile", () => {
+    const board = Board.create(5, 5);
+
+    const tilePlaced = board.isTilePlacable(null, { row: 1, col: 1 });
+
+    assertEquals(tilePlaced, false);
+  });
+});
