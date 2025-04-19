@@ -98,6 +98,7 @@ const addMouseListeners = (grid, currentTilePath, currentTileOrientation) => {
 const updateGameState = async (grid, gridSize) => {
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
+  console.log(tiles);
 
   const tileResponse = await fetch("/game/draw-tile");
   const currentTile = await tileResponse.json();
