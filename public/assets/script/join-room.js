@@ -34,8 +34,10 @@ const focusNext = (input, inputs, index) => {
       return;
     }
 
-    const join = document.querySelector("#join-button");
-    join.focus();
+    if (!nextInput) {
+      const join = document.querySelector("#join-button");
+      join.focus();
+    }
   };
 };
 
@@ -52,10 +54,16 @@ const focusPrevious = (input, inputs, index) => {
 const main = () => {
   const form = document.getElementById("roomJoiningForm");
   const inputs = document.querySelectorAll("input");
+  const join = document.querySelector("#join-button");
 
   inputs.forEach((input, index) => {
     input.addEventListener("input", focusNext(input, inputs, index));
     input.addEventListener("keydown", focusPrevious(input, inputs, index));
+    join.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace") {
+        inputs[5].focus();
+      }
+    });
   });
 
   form.addEventListener("submit", joinRoom);
