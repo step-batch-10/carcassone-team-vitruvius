@@ -29,7 +29,7 @@ const setContext = (
 
 const createGameApp = () => {
   const gameApp = new Hono();
-  gameApp.get("/", serveStatic({ path: "/html/game/html", root: "public" }));
+  gameApp.get("/", serveStatic({ path: "/html/game.html", root: "public" }));
   gameApp.get("/board", serveGameBoard);
   gameApp.get("/draw-tile", drawATile);
   return gameApp;
