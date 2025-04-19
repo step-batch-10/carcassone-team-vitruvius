@@ -1,7 +1,8 @@
 import { Context, Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import { AppContext } from "./models/models.ts";
-import { Next } from "hono/types";
+import { MiddlewareHandler, Next } from "hono/types";
+import { Variables } from "./models/models.ts";
 import {
   handleLogin,
   handleJoin,
@@ -11,15 +12,19 @@ import {
   drawATile,
 } from "./handlers/request-handlers.ts";
 
-const setContext = (context: AppContext) => {
-  return (ctx: Context, next: Next) => {
-    ctx.set("context", context);
+const setContext = (
+  appContext: AppContext
+): MiddlewareHandler<{ Variables: Variables }> => {
+  return async (ctx: Context<{ Variables: Variables }>, next: Next) => {
+    const { sessions, users, roomManager, games } = appContext;
 
-    return next();
+    ctx.set("sessions", sessions);
+    ctx.set("users", users);
+    ctx.set("roomManager", roomManager);
+    ctx.set("games", games);
+
+    await next();
   };
-};
-type variables = {
-  context: AppContext;
 };
 
 const createGameApp = () => {
@@ -30,10 +35,10 @@ const createGameApp = () => {
   return gameApp;
 };
 
-const createApp = (context: AppContext) => {
-  const app = new Hono<{ Variables: variables }>();
+const createApp = (appContext: AppContext) => {
+  const app = new Hono<{ Variables: Variables }>();
 
-  app.use(setContext(context));
+  app.use(setContext(appContext));
   app.get(
     "/game-options",
     serveStatic({ path: "/html/game-options.html", root: "public" })

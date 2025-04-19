@@ -19,8 +19,8 @@ describe("handleGetRoom", () => {
 
     roomManager.createRoom("Mounika", 3);
 
-    const context = { sessions, users, roomManager, games };
-    const app = createApp(context);
+    const appContext = { sessions, users, roomManager, games };
+    const app = createApp(appContext);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=1; session-id=sId" },
@@ -62,8 +62,8 @@ describe("handleGetRoom", () => {
     roomManager.createRoom("Mounika", 3);
     const games = new Map<string, Carcassonne>();
 
-    const context = { sessions, users, roomManager, games };
-    const app = createApp(context);
+    const appContext = { sessions, users, roomManager, games };
+    const app = createApp(appContext);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=0; session-id=sId" },
