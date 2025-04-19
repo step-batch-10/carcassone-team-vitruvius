@@ -91,12 +91,13 @@ export class Carcassonne {
   }
 
   isValidTileToPlace(tile: Tile) {
+    const rotated = {...tile}
     for (let i = 0; i < 4; i++) {
-      if (this.isTilePlacableAtUnlockedPos(tile)) {
+      if (this.isTilePlacableAtUnlockedPos(rotated)) {
         return true;
       }
 
-      this.rotateTile(tile);
+      this.rotateTile(rotated);
     }
 
     return false;
