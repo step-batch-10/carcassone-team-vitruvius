@@ -40,13 +40,14 @@ const showFloatingImage = (_) => {
 };
 
 const rotateTile = (edges, orientation) => {
-  const rotations = (orientation % 90) + 1;
+  const rotated = [...edges];
+  const rotations = (orientation / 90) % 4;
 
   for (let rotation = 0; rotation < rotations; rotation++) {
-    edges.push(edges.shift());
+    rotated.push(rotated.shift());
   }
 
-  return edges.map((edge) => edge[0]);
+  return rotated.map((edge) => edge[0]);
 };
 
 const extractPath = (cell) => {
@@ -70,6 +71,7 @@ const setImage = (img, path, tiles, row, column, cell) => {
 };
 
 const renderTiles = (gridSize, tiles, grid, currentTilePath) => {
+  const newTiles = [];
   for (let row = 0; row < gridSize; row++) {
     for (let column = 0; column < gridSize; column++) {
       const cell = document.createElement("div");
@@ -82,9 +84,11 @@ const renderTiles = (gridSize, tiles, grid, currentTilePath) => {
         "click",
         tilePlacementListener(cell, currentTilePath)
       );
-      grid.appendChild(cell);
+      newTiles.push(cell);
     }
   }
+
+  grid.replaceChildren(...newTiles);
 };
 
 const addMouseListeners = (grid, currentTilePath, currentTileOrientation) => {
@@ -95,17 +99,22 @@ const addMouseListeners = (grid, currentTilePath, currentTileOrientation) => {
   grid.addEventListener("mouseenter", showFloatingImage);
 };
 
-const updateGameState = async (grid, gridSize) => {
+const updateGameState = async (
+  grid,
+  gridSize,
+  currentTile,
+  currentTilePath
+) => {
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
-  console.log(tiles);
-
-  const tileResponse = await fetch("/game/draw-tile");
-  const currentTile = await tileResponse.json();
-
-  const currentTilePath = extractPath({ tile: currentTile });
 
   renderTiles(gridSize, tiles, grid, currentTilePath);
+
+  globalThis.scrollTo({
+    top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
+    left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
+    behavior: "smooth", // optional: adds a smooth scroll effect
+  });
 
   addMouseListeners(grid, currentTilePath, currentTile.orientation);
 };
@@ -118,7 +127,19 @@ const main = async () => {
   grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
   grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
 
-  setInterval(await updateGameState(grid, gridSize), 1000);
+  const tileResponse = await fetch("/game/draw-tile");
+  const currentTile = await tileResponse.json();
+
+  const currentTilePath = extractPath({ tile: currentTile });
+
+  setInterval(
+    updateGameState,
+    1000,
+    grid,
+    gridSize,
+    currentTile,
+    currentTilePath
+  );
 };
 
 globalThis.onload = main;
