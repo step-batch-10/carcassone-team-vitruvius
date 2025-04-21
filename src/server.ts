@@ -1,7 +1,7 @@
 import createApp from "./app.ts";
-import { Carcassonne } from "./models/carcassone.ts";
-import { User } from "./models/models.ts";
-import RoomManager from "./models/room-manager.ts";
+import { Carcassonne } from "./models/game/carcassone.ts";
+import { User } from "./models/ds/models.ts";
+import RoomManager from "./models/room/room-manager.ts";
 
 const roomIdGenerator = (): string => Date.now().toString().slice(-6);
 

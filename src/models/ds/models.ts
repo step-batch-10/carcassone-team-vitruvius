@@ -1,5 +1,5 @@
-import { Carcassonne } from "./carcassone.ts";
-import RoomManager from "./room-manager.ts";
+import { Carcassonne } from "../game/carcassone.ts";
+import RoomManager from "../room/room-manager.ts";
 
 export enum Feature {
   CITY = "city",

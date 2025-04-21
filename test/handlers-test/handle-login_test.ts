@@ -1,9 +1,9 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room-manager.ts";
-import { Carcassonne } from "../../src/models/carcassone.ts";
+import { AppContext, User } from "../../src/models/ds/models.ts";
+import RoomManager from "../../src/models/room/room-manager.ts";
+import { Carcassonne } from "../../src/models/game/carcassone.ts";
 
 describe("handleLogin", () => {
   it("should return a redirection response", async () => {

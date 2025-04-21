@@ -1,10 +1,10 @@
-import { createDummyPlayers } from "../../src/models/dummy-data-for-test.ts";
-import { Carcassonne } from "./../../src/models/carcassone.ts";
+import { createDummyPlayers } from "../../src/models/game/dummy-data-for-test.ts";
+import { Carcassonne } from "../../src/models/game/carcassone.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room-manager.ts";
+import { AppContext, User } from "../../src/models/ds/models.ts";
+import RoomManager from "../../src/models/room/room-manager.ts";
 
 describe("handle the game board", () => {
   it("should return a game board when game id is valid", async () => {

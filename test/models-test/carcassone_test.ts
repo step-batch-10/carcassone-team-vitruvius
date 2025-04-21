@@ -2,10 +2,11 @@ import {
   dummyTiles2,
   createDummyPlayers,
   createPlayer,
-} from "./../../src/models/dummy-data-for-test.ts";
+} from "../../src/models/game/dummy-data-for-test.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { Carcassonne } from "../../src/models/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassone.ts";
+import { Tile } from "../../src/models/ds/models.ts";
 
 describe("testing getCurrentPlayer", () => {
   it("should return currentPlayer", () => {
@@ -125,7 +126,10 @@ describe("testing placablePositions", () => {
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
     ];
-    const game: Carcassonne = Carcassonne.initGame(players, (arr) => arr);
+    const game: Carcassonne = Carcassonne.initGame(
+      players,
+      (arr: Tile[]): Tile[] => arr
+    );
     const placeablePositions = game.validPositions();
 
     assertEquals(placeablePositions, {

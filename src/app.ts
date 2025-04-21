@@ -1,8 +1,8 @@
 import { Context, Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { AppContext } from "./models/models.ts";
+import { AppContext } from "./models/ds/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
-import { Variables } from "./models/models.ts";
+import { Variables } from "./models/ds/models.ts";
 import { logger } from "hono/logger";
 import {
   handleLogin,

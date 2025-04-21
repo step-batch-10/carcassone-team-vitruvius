@@ -1,9 +1,9 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { GameRoomJson, GameStatus, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room-manager.ts";
+import { GameRoomJson, GameStatus, User } from "../../src/models/ds/models.ts";
+import RoomManager from "../../src/models/room/room-manager.ts";
 import createApp from "../../src/app.ts";
-import { Carcassonne } from "../../src/models/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassone.ts";
 
 describe("handleGetRoom", () => {
   it("should return json data of room", async () => {

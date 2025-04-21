@@ -1,4 +1,4 @@
-import { Tile } from "./models.ts";
+import { Tile } from "../ds/models.ts";
 
 export const shuffler = (tiles: Tile[]): Tile[] => {
   return tiles.sort(() => Math.random() - 0.5);

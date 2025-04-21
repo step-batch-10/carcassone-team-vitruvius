@@ -1,5 +1,5 @@
-import { Feature, Tile, TileBox } from "./models.ts";
-import Player from "./player.ts";
+import { Feature, Tile, TileBox } from "../ds/models.ts";
+import Player from "../room/player.ts";
 
 export const createTile = (
   id: string,

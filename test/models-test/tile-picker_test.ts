@@ -1,8 +1,8 @@
-import { shuffler } from "./../../src/models/tile-Manager.ts";
+import { shuffler } from "../../src/models/game/tile-Manager.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { TileManager } from "../../src/models/tile-Manager.ts";
-import { Feature, Tile } from "../../src/models/models.ts";
+import { TileManager } from "../../src/models/game/tile-Manager.ts";
+import { Feature, Tile } from "../../src/models/ds/models.ts";
 
 describe("testing pickTile", () => {
   it("should return a tile from the top of the stack", () => {

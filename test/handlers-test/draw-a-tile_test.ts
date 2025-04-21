@@ -1,14 +1,14 @@
 import {
   dummyTiles,
   createDummyPlayers,
-} from "./../../src/models/dummy-data-for-test.ts";
+} from "../../src/models/game/dummy-data-for-test.ts";
 
-import { Carcassonne } from "./../../src/models/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassone.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room-manager.ts";
+import { AppContext, Tile, User } from "../../src/models/ds/models.ts";
+import RoomManager from "../../src/models/room/room-manager.ts";
 
 describe("testing draw a tile handler", () => {
   it("should return a valid drawn tile", async () => {
@@ -21,7 +21,11 @@ describe("testing draw a tile handler", () => {
     const games = new Map<string, Carcassonne>();
     games.set(
       "1",
-      Carcassonne.initGame(createDummyPlayers(), (arr) => arr, dummyTiles)
+      Carcassonne.initGame(
+        createDummyPlayers(),
+        (arr: Tile[]): Tile[] => arr,
+        dummyTiles
+      )
     );
 
     const context: AppContext = { sessions, users, roomManager, games };

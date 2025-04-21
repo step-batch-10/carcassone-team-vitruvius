@@ -5,7 +5,7 @@ import {
   TileEdges,
   ResTiles,
   TileBox,
-} from "./models.ts";
+} from "../ds/models.ts";
 
 export class Board {
   private board: TileBox[][];

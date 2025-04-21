@@ -1,7 +1,7 @@
 import { TileManager, shuffler } from "./tile-Manager.ts";
 import { Board } from "./board.ts";
-import Player from "./player.ts";
-import { Tile, Position, CardinalDegrees } from "./models.ts";
+import Player from "../room/player.ts";
+import { Tile, Position, CardinalDegrees } from "../ds/models.ts";
 import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
 /*
 - make a function to get all placeable positions and unclocked positions
@@ -91,7 +91,7 @@ export class Carcassonne {
   }
 
   isValidTileToPlace(tile: Tile) {
-    const rotated = {...tile}
+    const rotated = { ...tile };
     for (let i = 0; i < 4; i++) {
       if (this.isTilePlacableAtUnlockedPos(rotated)) {
         return true;

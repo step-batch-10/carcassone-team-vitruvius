@@ -1,11 +1,11 @@
-import { Board } from "./../../src/models/board.ts";
+import { Board } from "../../src/models/game/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { Feature } from "../../src/models/models.ts";
+import { Feature } from "../../src/models/ds/models.ts";
 import {
   createATileBox,
   createTile,
-} from "../../src/models/dummy-data-for-test.ts";
+} from "../../src/models/game/dummy-data-for-test.ts";
 
 describe("testing static method 'create' of board to create board", () => {
   it("should create an empty board of given size with first tile already present", () => {
@@ -148,7 +148,6 @@ describe("testing putTile method of Board", () => {
     });
   });
 });
-
 
 describe("testing isTilePlacable", () => {
   it("should return false if there is no tile", () => {

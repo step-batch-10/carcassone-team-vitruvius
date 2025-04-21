@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import Player from "../../src/models/player.ts";
+import Player from "../../src/models/room/player.ts";
 
 describe("Player", () => {
   describe("json", () => {

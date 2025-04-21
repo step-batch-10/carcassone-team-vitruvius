@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import RoomManager from "../../src/models/room-manager.ts";
+import RoomManager from "../../src/models/room/room-manager.ts";
 
 describe("RoomManager", () => {
   describe("createRoom", () => {
