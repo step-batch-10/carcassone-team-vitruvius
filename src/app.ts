@@ -1,17 +1,19 @@
 import { Context, Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { AppContext } from "./models/ds/models.ts";
-import { MiddlewareHandler, Next } from "hono/types";
-import { Variables } from "./models/ds/models.ts";
 import { logger } from "hono/logger";
+import { AppContext, Variables } from "./models/ds/models.ts";
+import { MiddlewareHandler, Next } from "hono/types";
 import {
   handleLogin,
   handleJoin,
   handleGetLobbyDetails,
   handleHost,
+} from "./handlers/request-handlers.ts";
+import {
   serveGameBoard,
   drawATile,
-} from "./handlers/request-handlers.ts";
+  serveValidPositions,
+} from "./handlers/game-handlers.ts";
 
 const setContext = (
   appContext: AppContext
@@ -33,6 +35,7 @@ const createGameApp = () => {
   gameApp.get("/", serveStatic({ path: "/html/game.html", root: "public" }));
   gameApp.get("/board", serveGameBoard);
   gameApp.get("/draw-tile", drawATile);
+  gameApp.get("/valid-positions", serveValidPositions);
   return gameApp;
 };
 
@@ -48,7 +51,6 @@ const createApp = (appContext: AppContext) => {
   app.route("/game", createGameApp());
 
   app.get("/lobby", serveStatic({ path: "/html/lobby.html", root: "public" }));
-  // /game/valid-positions
   app.post("/login", handleLogin);
   app.post("/host", handleHost);
   app.get("/room", handleGetLobbyDetails);

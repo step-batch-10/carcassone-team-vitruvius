@@ -3,11 +3,6 @@ import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import { Tile, Position, CardinalDegrees } from "../ds/models.ts";
 import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
-/*
-- make a function to get all placeable positions and unclocked positions
-- make a route to return all placeable positions and unclocked positions obj
-- and handler for it
-*/
 
 export class Carcassonne {
   private readonly board: Board;

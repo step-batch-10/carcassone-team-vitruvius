@@ -7,6 +7,8 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
   return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
 };
 
+
+
 const getUserOfSessionId = (
   ctx: Context<{ Variables: Variables }>,
   sessions: Sessions,
@@ -110,31 +112,9 @@ const handleGetLobbyDetails = (ctx: Context<{ Variables: Variables }>) => {
   return ctx.json(null, 404);
 };
 
-const serveGameBoard = (ctx: Context<{ Variables: Variables }>) => {
-  const games = ctx.get("games");
-
-  const roomID = String(getCookie(ctx, "room-id"));
-  const game = games.get(roomID);
-  if (!game) {
-    return ctx.json({ desc: "invalid game Id" }, 200);
-  }
-  return ctx.json(game.getBoard(), 200);
-};
-
-const drawATile = (ctx: Context) => {
-  const games = ctx.get("games");
-
-  const roomID = String(getCookie(ctx, "room-id"));
-  const game = games.get(roomID);
-
-  return ctx.json(game.drawATile(), 200);
-};
-
 export {
   handleHost,
   handleGetLobbyDetails,
   handleJoin,
   handleLogin,
-  serveGameBoard,
-  drawATile,
 };
