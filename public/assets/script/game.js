@@ -22,7 +22,7 @@ const main = async () => {
   const grid = document.getElementById("grid");
   const gridSize = 84;
 
-  grid.style.display = "grid";
+  grid.style.display = "grid";``
   grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
   grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
 

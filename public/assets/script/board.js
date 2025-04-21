@@ -61,6 +61,7 @@ class Board {
 
     rotateButton.textContent = "->";
     rotateButton.classList.add("rotate-right");
+    this.#addEvents(rotateButton, events);
 
     parentNode.appendChild(rotateButton);
   }
