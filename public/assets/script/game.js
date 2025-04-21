@@ -18,13 +18,28 @@ const changeFocusToStartingTile = () =>
     });
   }, 2000);
 
-const main = async () => {
-  const grid = document.getElementById("grid");
-  const gridSize = 84;
+const fetchCurrentPlayer = async () => {
+  const response = await fetch("/current-player");
 
-  grid.style.display = "grid";``
-  grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
-  grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
+  const player = await response.json();
+
+  return player.username;
+};
+
+const showCurrentPlayer = (interval) => {
+  const currentPlayerLabel = document.querySelector(".player-turn");
+  const textLabel = currentPlayerLabel.querySelector("p");
+
+  setInterval(async () => {
+    const currentPlayer = await fetchCurrentPlayer();
+
+    textLabel.textContent = `${currentPlayer}'s turn`;
+  }, interval);
+};
+
+const main = async () => {
+  showCurrentPlayer(4000);
+  const grid = setupGrid(84);
 
   const tileResponse = await fetch("/game/draw-tile");
   const currentTile = await tileResponse.json();
@@ -36,3 +51,12 @@ const main = async () => {
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
+
+function setupGrid(gridSize) {
+  const grid = document.getElementById("grid");
+
+  grid.style.display = "grid";
+  grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
+  grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
+  return grid;
+}
