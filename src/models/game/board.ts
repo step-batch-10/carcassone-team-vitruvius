@@ -5,17 +5,21 @@ import {
   TileEdges,
   ResTiles,
   TileBox,
+  Sides,
 } from "../ds/models.ts";
+import { ScoreManager } from "./score-board.ts";
 
 export class Board {
   private board: TileBox[][];
   private maxRow: number;
   private maxCol: number;
+  private scoreManager: ScoreManager;
 
   constructor(tileBoxes: TileBox[][], row: number, col: number) {
     this.board = tileBoxes;
     this.maxRow = row;
     this.maxCol = col;
+    this.scoreManager = new ScoreManager(this.board);
   }
 
   private static firstTile(): Tile {
@@ -43,7 +47,7 @@ export class Board {
   static createTileBox() {
     return {
       tile: null,
-      mapple: { color: null, playerName: null, region: null },
+      meeple: { color: null, playerName: null, region: null },
       occupiedRegion: Board.createOccupiedRegion(),
     };
   }
@@ -59,7 +63,7 @@ export class Board {
   }
 
   static createPosition() {
-    return { feature: null, occupiedBy: [] };
+    return { feature: null, occupiedBy: new Set<string>() };
   }
 
   getTile(position: Position) {
@@ -153,9 +157,15 @@ export class Board {
     return this.board[position.row][position.col];
   }
 
-  putTile(tile: Tile, position: Position): void {
-    if (this.isTilePlaceable(tile, position))
+  placeTile(tile: Tile, position: Position): void {
+    if (this.isTilePlaceable(tile, position)) {
       this.getTileBox(position).tile = tile;
+      this.scoreManager.markOccupance(position, this.respectivePosition);
+    }
+  }
+
+  placeMeeple(position: Position, playerName: string, subGrid: Sides) {
+    return this.scoreManager.placeMeeple(position, playerName, subGrid);
   }
 
   isBoxUnlockToPlace(position: Position) {

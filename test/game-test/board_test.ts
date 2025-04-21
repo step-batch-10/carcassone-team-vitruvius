@@ -77,7 +77,7 @@ describe("testing putTile method of Board", () => {
         [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
         Feature.ROAD
       );
-      board.putTile(tile, { row: 2, col: 3 });
+      board.placeTile(tile, { row: 2, col: 3 });
 
       assertEquals(board.getTile({ row: 2, col: 3 }), {
         hasShield: false,
@@ -98,7 +98,7 @@ describe("testing putTile method of Board", () => {
         Feature.ROAD
       );
 
-      board.putTile(tile, { row: 1, col: 1 });
+      board.placeTile(tile, { row: 1, col: 1 });
 
       assertEquals(board.getTile({ row: 1, col: 1 }), null);
     });
@@ -112,7 +112,7 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.FIELD],
         Feature.ROAD
       );
-      board.putTile(tile, { row: 2, col: 3 });
+      board.placeTile(tile, { row: 2, col: 3 });
 
       assertEquals(board.getTile({ row: 2, col: 3 }), null);
     });
@@ -124,7 +124,7 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.ROAD],
         Feature.ROAD
       );
-      board.putTile(tile, { row: 1, col: 2 });
+      board.placeTile(tile, { row: 1, col: 2 });
 
       assertEquals(board.getTile({ row: 1, col: 2 }), null);
     });
@@ -136,7 +136,7 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.FIELD, Feature.ROAD],
         Feature.ROAD
       );
-      board.putTile(tile, { row: 2, col: 1 });
+      board.placeTile(tile, { row: 2, col: 1 });
 
       assertEquals(board.getTile({ row: 2, col: 1 }), null);
     });
@@ -148,7 +148,7 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
         Feature.ROAD
       );
-      board.putTile(tile, { row: 3, col: 2 });
+      board.placeTile(tile, { row: 3, col: 2 });
 
       assertEquals(board.getTile({ row: 3, col: 2 }), null);
     });

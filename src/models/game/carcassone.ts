@@ -1,20 +1,21 @@
-import { TileManager, shuffler } from "./tile-Manager.ts";
+import { TileStacker, shuffler } from "./tile-Manager.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import { Tile, Position, CardinalDegrees } from "../ds/models.ts";
+import { Tile, Position, CardinalDegrees, Sides } from "../ds/models.ts";
 import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
 
 export class Carcassonne {
   private readonly board: Board;
   private readonly players: Player[];
   private turn: number;
-  private tileManager: TileManager;
+  private tileManager: TileStacker;
   private currentTile: Tile | null;
   private unlockedPositions: Position[];
+  private tilePlacedAt: Position;
 
   constructor(
     players: Player[],
-    tileManager: TileManager,
+    tileManager: TileStacker,
     board: Board,
     unlockedPosition: Position[]
   ) {
@@ -24,6 +25,7 @@ export class Carcassonne {
     this.currentTile = null;
     this.tileManager = tileManager;
     this.unlockedPositions = unlockedPosition;
+    this.tilePlacedAt = { row: 42, col: 42 };
   }
 
   static getAllUnlockedPosition(board: Board): Position[] {
@@ -61,7 +63,7 @@ export class Carcassonne {
     tileShuffler = shuffler,
     tilesArr = tiles
   ) {
-    const tileManager = new TileManager(tilesArr, tileShuffler);
+    const tileManager = new TileStacker(tilesArr, tileShuffler);
     const board = Board.create(84, 84);
     const unlockedPositions = Carcassonne.getAllUnlockedPosition(board);
 
@@ -137,9 +139,20 @@ export class Carcassonne {
       this.currentTile &&
       this.board.isTilePlaceable(this.currentTile, position)
     ) {
-      return this.board.putTile(this.currentTile, position);
+      this.tilePlacedAt = position;
+      return this.board.placeTile(this.currentTile, position);
     }
 
     return { desc: "invalid tile to place" };
+  }
+
+  placeAMeeple(subGrid: Sides) {
+    const player = this.getCurrentPlayer().username;
+    const status = this.board.placeMeeple(this.tilePlacedAt, player, subGrid);
+    if (status.isPlaced) {
+      this.changePlayerTurn();
+    }
+
+    return status;
   }
 }

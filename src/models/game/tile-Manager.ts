@@ -4,7 +4,7 @@ export const shuffler = (tiles: Tile[]): Tile[] => {
   return tiles.sort(() => Math.random() - 0.5);
 };
 
-export class TileManager {
+export class TileStacker {
   private readonly tilesStack;
   constructor(tiles: Tile[], tileShuffler: (tiles: Tile[]) => Tile[]) {
     const shuffledTile = tileShuffler([...tiles]);

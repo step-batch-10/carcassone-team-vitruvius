@@ -1,7 +1,7 @@
 import { shuffler } from "../../src/models/game/tile-Manager.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { TileManager } from "../../src/models/game/tile-Manager.ts";
+import { TileStacker } from "../../src/models/game/tile-Manager.ts";
 import { Feature, Tile } from "../../src/models/ds/models.ts";
 
 describe("testing pickTile", () => {
@@ -22,7 +22,7 @@ describe("testing pickTile", () => {
         tileCenter: Feature.FIELD,
       },
     ];
-    const tileManager = new TileManager(tiles, (tile) => tile);
+    const tileManager = new TileStacker(tiles, (tile) => tile);
 
     assertEquals(tileManager.pickTile(), tiles[0]);
   });
@@ -46,7 +46,7 @@ describe("testing pickTile", () => {
       tileCenter: Feature.FIELD,
     };
 
-    const tileManager = new TileManager(tiles, (tile) => tile);
+    const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pushTile(tile);
     assertEquals(tileManager.getStack().at(-1), tile);
   });
@@ -54,7 +54,7 @@ describe("testing pickTile", () => {
   it("when picked a tile from empty stack it shuld return null", () => {
     const tiles: Tile[] = [];
 
-    const tileManager = new TileManager(tiles, (tile) => tile);
+    const tileManager = new TileStacker(tiles, (tile) => tile);
 
     assertEquals(tileManager.pickTile(), null);
   });
@@ -70,7 +70,7 @@ describe("testing pickTile", () => {
       },
     ];
 
-    const tileManager = new TileManager(tiles, (tile) => tile);
+    const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pickTile();
 
     assertEquals(tileManager.remainingTile(), 0);

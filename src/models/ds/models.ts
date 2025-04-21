@@ -10,6 +10,13 @@ export enum Feature {
   ROAD_END = "roadEnd",
 }
 
+export enum Sides {
+  LEFT = "left",
+  RIGHT = "right",
+  TOP = "top",
+  BOTTOM = "bottom",
+}
+
 type Edges = [Feature, Feature, Feature, Feature];
 
 export enum CardinalDegrees {
@@ -20,25 +27,25 @@ export enum CardinalDegrees {
 }
 export type Position = { row: number; col: number };
 
-interface OcupanceSubGrid {
+export interface OccupanceSubGrid {
   feature: null | string;
-  occupiedBy: string[];
+  occupiedBy: Set<string>;
 }
 
 export interface TileBox {
   tile: null | Tile;
-  mapple: {
+  meeple: {
     color: null | string;
     playerName: null | string;
     region: null | string;
   };
 
   occupiedRegion: {
-    left: OcupanceSubGrid;
-    top: OcupanceSubGrid;
-    right: OcupanceSubGrid;
-    bottom: OcupanceSubGrid;
-    middle: OcupanceSubGrid;
+    left: OccupanceSubGrid;
+    top: OccupanceSubGrid;
+    right: OccupanceSubGrid;
+    bottom: OccupanceSubGrid;
+    middle: OccupanceSubGrid;
   };
 }
 export type TileEdges = {
@@ -133,7 +140,20 @@ export interface AppContext {
 interface TileHandler {
   tiles: Tile[];
 }
-
+export interface RespectivePosition {
+  (position: Position): {
+    left: { row: number; col: number };
+    right: { row: number; col: number };
+    top: { row: number; col: number };
+    bottom: { row: number; col: number };
+  };
+  (arg0: Position): {
+    left: Position;
+    top: Position;
+    right: Position;
+    bottom: Position;
+  };
+}
 // export interface Carcassonne {
 //   tileHandler: TileHandler;
 //   players: Player[];

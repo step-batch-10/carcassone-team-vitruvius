@@ -3,10 +3,10 @@ import {
   createDummyPlayers,
   createPlayer,
 } from "../../src/models/game/dummy-data-for-test.ts";
-import { assertEquals } from "@std/assert";
+import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassone.ts";
-import { Tile } from "../../src/models/ds/models.ts";
+import { Sides, Tile } from "../../src/models/ds/models.ts";
 
 describe("testing getCurrentPlayer", () => {
   it("should return currentPlayer", () => {
@@ -153,5 +153,58 @@ describe("testing placablePositions", () => {
       ],
       placablePositions: [],
     });
+  });
+});
+
+describe("testing place a meeple", () => {
+  it("should place a meeple when it is not occupied by any player ", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+
+    const game = Carcassonne.initGame(players, (arr) => arr);
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    const status = game.placeAMeeple(Sides.LEFT);
+
+    assert(status.isPlaced);
+  });
+
+  it("should not place when it is already occupied by any player", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+
+    const game = Carcassonne.initGame(players, (arr) => arr);
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    game.placeAMeeple(Sides.RIGHT);
+    game.placeATile({ row: 42, col: 44 });
+    const status = game.placeAMeeple(Sides.LEFT);
+
+    assertFalse(status.isPlaced);
+  });
+
+  it("when tile placed and connects to claimed feature should marked as claim", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+
+    const game = Carcassonne.initGame(players, (arr) => arr);
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    game.placeAMeeple(Sides.RIGHT);
+    game.placeATile({ row: 42, col: 44 });
+
+    assertEquals(
+      game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
+      1
+    );
   });
 });

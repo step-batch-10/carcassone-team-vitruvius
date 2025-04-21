@@ -22,13 +22,13 @@ export const createATileBox = (
 ): TileBox => {
   return {
     tile: createTile(id, edges, center),
-    mapple: { color: null, playerName: null, region: null },
+    meeple: { color: null, playerName: null, region: null },
     occupiedRegion: {
-      left: { feature: null, occupiedBy: [] },
-      top: { feature: null, occupiedBy: [] },
-      right: { feature: null, occupiedBy: [] },
-      bottom: { feature: null, occupiedBy: [] },
-      middle: { feature: null, occupiedBy: [] },
+      left: { feature: null, occupiedBy: new Set<string>() },
+      top: { feature: null, occupiedBy: new Set<string>() },
+      right: { feature: null, occupiedBy: new Set<string>() },
+      bottom: { feature: null, occupiedBy: new Set<string>() },
+      middle: { feature: null, occupiedBy: new Set<string>() },
     },
   };
 };
