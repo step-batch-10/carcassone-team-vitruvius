@@ -133,7 +133,7 @@ export class Board {
     return true;
   }
 
-  isTilePlacable(tile: Tile | null, position: Position): boolean {
+  isTilePlaceable(tile: Tile | null, position: Position): boolean {
     if (!tile) return false;
     const placingTileEdges = this.extractEdges(tile);
     const resTiles = this.respectiveTile(position);
@@ -153,11 +153,9 @@ export class Board {
     return this.board[position.row][position.col];
   }
 
-  putTile(tile: Tile, position: Position): boolean {
-    if (!this.isTilePlacable(tile, position)) return false;
-
-    this.getTileBox(position).tile = tile;
-    return true;
+  putTile(tile: Tile, position: Position): void {
+    if (this.isTilePlaceable(tile, position))
+      this.getTileBox(position).tile = tile;
   }
 
   isBoxUnlockToPlace(position: Position) {

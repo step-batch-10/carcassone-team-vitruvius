@@ -77,9 +77,15 @@ describe("testing putTile method of Board", () => {
         [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
         Feature.ROAD
       );
-      const tilePlaced = board.putTile(tile, { row: 2, col: 3 });
+      board.putTile(tile, { row: 2, col: 3 });
 
-      assertEquals(tilePlaced, true);
+      assertEquals(board.getTile({ row: 2, col: 3 }), {
+        hasShield: false,
+        id: "2",
+        orientation: 0,
+        tileCenter: "road",
+        tileEdges: ["road", "city", "road", "field"],
+      });
     });
   });
 
@@ -92,9 +98,9 @@ describe("testing putTile method of Board", () => {
         Feature.ROAD
       );
 
-      const tilePlaced = board.putTile(tile, { row: 1, col: 1 });
+      board.putTile(tile, { row: 1, col: 1 });
 
-      assertEquals(tilePlaced, false);
+      assertEquals(board.getTile({ row: 1, col: 1 }), null);
     });
   });
 
@@ -106,9 +112,9 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.FIELD],
         Feature.ROAD
       );
-      const tilePlaced = board.putTile(tile, { row: 2, col: 3 });
+      board.putTile(tile, { row: 2, col: 3 });
 
-      assertEquals(tilePlaced, false);
+      assertEquals(board.getTile({ row: 2, col: 3 }), null);
     });
 
     it("field should not match with monastery (invalid position top)", () => {
@@ -118,9 +124,9 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.ROAD],
         Feature.ROAD
       );
-      const tilePlaced = board.putTile(tile, { row: 1, col: 2 });
+      board.putTile(tile, { row: 1, col: 2 });
 
-      assertEquals(tilePlaced, false);
+      assertEquals(board.getTile({ row: 1, col: 2 }), null);
     });
 
     it("road should not match with field (invalid position left)", () => {
@@ -130,9 +136,9 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.CITY, Feature.FIELD, Feature.ROAD],
         Feature.ROAD
       );
-      const tilePlaced = board.putTile(tile, { row: 2, col: 1 });
+      board.putTile(tile, { row: 2, col: 1 });
 
-      assertEquals(tilePlaced, false);
+      assertEquals(board.getTile({ row: 2, col: 1 }), null);
     });
 
     it("road should not place with monastery (invalid position bottom)", () => {
@@ -142,9 +148,9 @@ describe("testing putTile method of Board", () => {
         [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
         Feature.ROAD
       );
-      const tilePlaced = board.putTile(tile, { row: 3, col: 2 });
+      board.putTile(tile, { row: 3, col: 2 });
 
-      assertEquals(tilePlaced, false);
+      assertEquals(board.getTile({ row: 3, col: 2 }), null);
     });
   });
 });
@@ -153,7 +159,7 @@ describe("testing isTilePlacable", () => {
   it("should return false if there is no tile", () => {
     const board = Board.create(5, 5);
 
-    const tilePlaced = board.isTilePlacable(null, { row: 1, col: 1 });
+    const tilePlaced = board.isTilePlaceable(null, { row: 1, col: 1 });
 
     assertEquals(tilePlaced, false);
   });

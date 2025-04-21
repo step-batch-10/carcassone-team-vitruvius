@@ -45,7 +45,7 @@ export class Carcassonne {
     }
 
     return this.unlockedPositions.filter((position: Position) =>
-      this.board.isTilePlacable(this.currentTile, position)
+      this.board.isTilePlaceable(this.currentTile, position)
     );
   }
 
@@ -81,7 +81,7 @@ export class Carcassonne {
 
   private isTilePlacableAtUnlockedPos(tile: Tile) {
     return this.unlockedPositions.some((position) =>
-      this.board.isTilePlacable(tile, position)
+      this.board.isTilePlaceable(tile, position)
     );
   }
 
@@ -130,5 +130,16 @@ export class Carcassonne {
 
   changePlayerTurn() {
     this.turn = (this.turn + 1) % this.players.length;
+  }
+
+  placeATile(position: Position) {
+    if (
+      this.currentTile &&
+      this.board.isTilePlaceable(this.currentTile, position)
+    ) {
+      return this.board.putTile(this.currentTile, position);
+    }
+
+    return { desc: "invalid tile to place" };
   }
 }

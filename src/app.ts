@@ -13,6 +13,7 @@ import {
   serveGameBoard,
   drawATile,
   serveValidPositions,
+  handleTilePlacement,
 } from "./handlers/game-handlers.ts";
 
 const setContext = (
@@ -36,6 +37,7 @@ const createGameApp = () => {
   gameApp.get("/board", serveGameBoard);
   gameApp.get("/draw-tile", drawATile);
   gameApp.get("/valid-positions", serveValidPositions);
+  gameApp.patch("/place-tile", handleTilePlacement);
   return gameApp;
 };
 
