@@ -1,5 +1,5 @@
 import Player from "./player.ts";
-import { GameRoomJson, GameStatus } from "../ds/models.ts";
+import { GameRoomJson, GameStatus } from "../types/models.ts";
 import { Carcassonne } from "../game/carcassone.ts";
 type stringIdentity = () => string;
 

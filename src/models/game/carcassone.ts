@@ -1,7 +1,7 @@
 import { TileStacker, shuffler } from "./tile-Manager.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import { Tile, Position, CardinalDegrees, Sides } from "../ds/models.ts";
+import { Tile, Position, CardinalDegrees, Sides } from "../types/models.ts";
 import { dummyTiles as tiles } from "./dummy-data-for-test.ts";
 
 export class Carcassonne {

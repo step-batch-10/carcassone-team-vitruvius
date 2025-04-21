@@ -1,7 +1,7 @@
 import { Board } from "../../src/models/game/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { Feature } from "../../src/models/ds/models.ts";
+import { Feature } from "../../src/models/types/models.ts";
 import {
   createATileBox,
   createTile,

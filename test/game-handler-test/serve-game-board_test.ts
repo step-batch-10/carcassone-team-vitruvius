@@ -3,7 +3,7 @@ import { Carcassonne } from "../../src/models/game/carcassone.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/ds/models.ts";
+import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 
 describe("handle the game board", () => {

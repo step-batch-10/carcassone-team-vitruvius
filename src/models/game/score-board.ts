@@ -4,7 +4,7 @@ import {
   RespectivePosition,
   Sides,
   TileBox,
-} from "../ds/models.ts";
+} from "../types/models.ts";
 
 export class ScoreManager {
   private board;

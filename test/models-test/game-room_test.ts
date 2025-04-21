@@ -1,7 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import GameRoom from "../../src/models/room/game-room.ts";
-import { GameRoomJson, GameStatus } from "../../src/models/ds/models.ts";
+import { GameRoomJson, GameStatus } from "../../src/models/types/models.ts";
 
 describe("GameRoom", () => {
   it("should create a room and add host in players", () => {

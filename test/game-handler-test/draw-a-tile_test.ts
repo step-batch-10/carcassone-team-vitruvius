@@ -7,7 +7,7 @@ import { Carcassonne } from "../../src/models/game/carcassone.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, Tile, User } from "../../src/models/ds/models.ts";
+import { AppContext, Tile, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 
 describe("testing draw a tile handler", () => {

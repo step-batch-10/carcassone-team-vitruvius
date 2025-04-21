@@ -6,7 +6,7 @@ import {
   ResTiles,
   TileBox,
   Sides,
-} from "../ds/models.ts";
+} from "../types/models.ts";
 import { ScoreManager } from "./score-board.ts";
 
 export class Board {

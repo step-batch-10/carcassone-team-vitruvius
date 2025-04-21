@@ -1,6 +1,6 @@
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { Sessions, Users, Variables } from "../models/ds/models.ts";
+import { Sessions, Users, Variables } from "../models/types/models.ts";
 import RoomManager from "../models/room/room-manager.ts";
 
 const parseAppContexts = (ctx: Context, ...keys: string[]) => {

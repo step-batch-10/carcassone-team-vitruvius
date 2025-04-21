@@ -6,7 +6,7 @@ import {
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassone.ts";
-import { Sides, Tile } from "../../src/models/ds/models.ts";
+import { Sides, Tile } from "../../src/models/types/models.ts";
 
 describe("testing getCurrentPlayer", () => {
   it("should return currentPlayer", () => {
