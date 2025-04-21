@@ -1,24 +1,11 @@
 import Board from "./board.js";
 
-const handleTilePlacement = (event, board) => {
-  event.target.style.opacity = "1";
-  board.removeGhostEffect();
-};
-
-const createCellEvents = (board) => {
-  return {
-    click: (event) => {
-      handleTilePlacement(event, board);
-    },
-  };
-};
-
 const updateGameState = async (grid, currentTilePath) => {
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
   const board = new Board(grid);
 
-  board.build(tiles, createCellEvents(board));
+  board.build(tiles);
   board.addGhostEffect(currentTilePath);
 };
 

@@ -18,6 +18,7 @@ body {
 .grid div {
   border: 1px dotted black;
   box-sizing: border-box;
+  position: relative;
   aspect-ratio: 1 / 1;
   width: 150px;
   height: 150px;
@@ -95,4 +96,9 @@ body {
   top: 50%;
   left: 0px;
   transform: rotate(90deg);
+}
+
+.rotate-right {
+  position: absolute;
+  top: 0px;
 }

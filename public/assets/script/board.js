@@ -9,29 +9,32 @@ class Board {
     this.#ghostEffectEvents = {};
   }
 
-  static rotateTile(edges, orientation) {
+  static extractEdgesOfOriginalTile(edges, orientation) {
     const rotated = [...edges];
-    const rotations = (orientation / 90) % 4;
+    const totalRotations = (orientation / 90) % 4;
 
-    for (let rotation = 0; rotation < rotations; rotation++) {
+    Array.from({ length: totalRotations }, () => {
       rotated.push(rotated.shift());
-    }
+    });
 
-    return rotated.map((edge) => edge[0]);
+    return rotated.map((edge) => edge.at(0)).join("");
   }
 
   static extractTileImagePath(tile) {
     const { tileEdges, orientation, tileCenter, hasShield } = tile;
 
-    const edges = Board.rotateTile(tileEdges, orientation).join("");
-    const center = tileCenter[0];
+    const edges = Board.extractEdgesOfOriginalTile(tileEdges, orientation);
+    const center = tileCenter.at(0);
     const guard = hasShield ? "-g" : "";
 
     return `/assets/images/tiles/${edges}-${center}${guard}.png`;
   }
 
-  #createCell(cell, events) {
+  #createCell(cell, events, chord) {
+    const id = chord.join("/");
+
     const cellElement = document.createElement("div");
+    cellElement.id = id;
     cellElement.className = "cell";
 
     if (cell.tile) {
@@ -44,15 +47,34 @@ class Board {
     return cellElement;
   }
 
-  #addBackgroundImage(event, imgPath) {
-    const element = event.target;
+  #addImage(parentNode, imgPath) {
+    const imgElement = document.createElement("img");
 
-    element.style.backgroundImage = `url("${imgPath}")`;
-    element.style.opacity = "0.6";
+    imgElement.setAttribute("src", imgPath);
+    parentNode.appendChild(imgElement);
+
+    parentNode.style.opacity = "0.6";
   }
 
-  #removeBackgroundImage(event) {
-    event.target.style.backgroundImage = ``;
+  #addRotateRightButton(parentNode, events = {}) {
+    const rotateButton = document.createElement("button");
+
+    rotateButton.textContent = "->";
+    rotateButton.classList.add("rotate-right");
+
+    parentNode.appendChild(rotateButton);
+  }
+
+  #removeChildren(parentNode) {
+    const imgElement = parentNode.querySelector("img");
+    const button = parentNode.querySelector("button");
+
+    if (imgElement) {
+      button.remove();
+      imgElement.remove();
+    }
+
+    parentNode.style.opacity = "1";
   }
 
   #createHandler(handler, context) {
@@ -73,8 +95,17 @@ class Board {
 
   addGhostEffect(imgPath) {
     this.#ghostEffectEvents = {
-      mouseover: this.#createHandler(this.#addBackgroundImage, imgPath),
-      mouseout: this.#removeBackgroundImage,
+      mouseenter: (event) => {
+        event.stopPropagation();
+
+        this.#addImage(event.target, imgPath);
+        this.#addRotateRightButton(event.target);
+      },
+      mouseleave: (event) => {
+        event.stopPropagation();
+
+        this.#removeChildren(event.target, imgPath);
+      },
     };
 
     this.#cellNodes.forEach((cell) => {
@@ -90,10 +121,13 @@ class Board {
     });
   }
 
-  build(tiles, events) {
-    this.#cellNodes = tiles
-      .flat()
-      .map((cell) => this.#createCell(cell, events));
+  build(tiles, events = {}) {
+    this.#cellNodes = tiles.flatMap((row, rowIndex) =>
+      row.map((cell, cellIndex) =>
+        this.#createCell(cell, events, [rowIndex, cellIndex])
+      )
+    );
+
     this.#parentNode.replaceChildren(...this.#cellNodes);
   }
 }
