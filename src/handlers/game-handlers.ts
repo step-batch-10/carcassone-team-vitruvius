@@ -38,4 +38,20 @@ const handleTilePlacement = async (ctx: Context) => {
   return ctx.json(null, 201);
 };
 
-export { serveGameBoard, drawATile, serveValidPositions, handleTilePlacement };
+const serveCurrentTile = (ctx: Context) => {
+  const game = getGame(ctx);
+
+  if (game) {
+    return ctx.json(game.getCurrentTile(), 200);
+  }
+
+  return ctx.json({ desc: "invalid game Id" }, 400);
+};
+
+export {
+  serveGameBoard,
+  serveCurrentTile,
+  drawATile,
+  serveValidPositions,
+  handleTilePlacement,
+};

@@ -27,7 +27,7 @@ class Board {
     const center = tileCenter.at(0);
     const guard = hasShield ? "-g" : "";
 
-    return `/assets/images/tiles/${edges}-${center}${guard}.png`;
+    return `/${edges}-${center}${guard}.png`;
   }
 
   #createCell(cell, events, chord) {
@@ -47,13 +47,17 @@ class Board {
     return cellElement;
   }
 
-  #addImage(parentNode, imgPath) {
-    const imgElement = document.createElement("img");
+  #insertTileInCell(cell, tile) {
+    if (tile) {
+      const imgPath = Board.extractTileImagePath(tile);
+      const imgElement = document.createElement("img");
 
-    imgElement.setAttribute("src", imgPath);
-    parentNode.appendChild(imgElement);
+      imgElement.setAttribute("src", imgPath);
+      imgElement.style.transform = `rotateZ(${tile.orientation}deg)`;
+      imgElement.style.opacity = "0.6";
 
-    parentNode.style.opacity = "0.6";
+      cell.appendChild(imgElement);
+    }
   }
 
   #addRotateRightButton(parentNode, events = {}) {
@@ -78,10 +82,6 @@ class Board {
     parentNode.style.opacity = "1";
   }
 
-  #createHandler(handler, context) {
-    return (event) => handler(event, context);
-  }
-
   #addEvents(node, events) {
     Object.entries(events).forEach(([eventName, handler]) =>
       node.addEventListener(eventName, handler)
@@ -94,13 +94,22 @@ class Board {
     );
   }
 
+  async #fetchCurrentTile() {
+    const response = await fetch("/current-tile");
+
+    return await response.json();
+  }
+
   addGhostEffect(imgPath) {
     this.#ghostEffectEvents = {
-      mouseenter: (event) => {
+      mouseenter: async (event) => {
         event.stopPropagation();
+        const cell = event.target;
 
-        this.#addImage(event.target, imgPath);
-        this.#addRotateRightButton(event.target);
+        const currentTile = await this.#fetchCurrentTile();
+
+        this.#insertTileInCell(cell, currentTile);
+        this.#addRotateRightButton(cell);
       },
       mouseleave: (event) => {
         event.stopPropagation();

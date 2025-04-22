@@ -13,6 +13,7 @@ import {
   serveGameBoard,
   drawATile,
   serveValidPositions,
+  serveCurrentTile,
   handleTilePlacement,
 } from "./handlers/game-handlers.ts";
 
@@ -38,6 +39,7 @@ const createGameApp = () => {
   gameApp.get("/draw-tile", drawATile);
   gameApp.get("/valid-positions", serveValidPositions);
   gameApp.patch("/place-tile", handleTilePlacement);
+  gameApp.get("/current-tile", serveCurrentTile);
   return gameApp;
 };
 
