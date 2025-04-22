@@ -1,42 +1,43 @@
 import Board from "./board.js";
 
-const updateGameState = async (grid) => {
 const getImgUrl = (cell) => {
   const img = cell.querySelector("img");
-  console.log();
-
   return img.src;
 };
 
 const placeTile = (cell) => {
-  const [row, col] = cell.id.slice("/");
+  const [row, col] = cell.id.split("/");
+
   return fetch("/game/place-tile", {
     method: "PATCH",
-    body: JSON.stringify({ row, col }),
+    body: JSON.stringify({ row: Number(row), col: Number(col) }),
     headers: {
       "Content-Type": "application/json",
     },
   });
 };
 
-const addImgToCell = (cell) => {
-  console.log(cell);
-
+const setBackground = (cell, board) => {
   const imgPath = getImgUrl(cell);
-  cell.innerHtml = "";
+  board.removeGhostEffect();
+  const img = cell.querySelector("img");
+  const btn = cell.querySelector("button");
+  cell.removeChild(img);
+  cell.removeChild(btn);
   cell.style.backgroundImage = `url("${imgPath}")`;
+  cell.style.opacity = "1";
 };
 
 const handleTilePlacement = async (event, board, events) => {
-  const tilePlacementRes = await placeTile(event.target);
+  const tilePlacementRes = await placeTile(event.target.parentNode);
   if (tilePlacementRes.status !== 201) {
     alert("isInvalid Place");
     return;
   }
 
-  event.target.style.opacity = "1";
-  board.removeGhostEffect();
-  addImgToCell(event.target);
+  console.log(event.target, event);
+
+  setBackground(event.target.parentNode, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
 };
@@ -67,13 +68,12 @@ const rotateRight = async (event) => {
 };
 
 const updateGameState = async (grid, currentTilePath) => {
->>>>>>> 0edc13e ([#16]: adds functions rotateTile and placeTile in game.js | sakib/mounika)
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
   const board = new Board(grid);
 
-  board.build(tiles);
-  board.addGhostEffect();
+  board.build(tiles, createCellEvents(board));
+  await board.addGhostEffect(currentTilePath, { click: rotateRight });
 };
 
 const changeFocusToStartingTile = () =>

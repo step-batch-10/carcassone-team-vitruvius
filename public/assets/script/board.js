@@ -7,11 +7,13 @@ class Board {
   #parentNode;
   #cellNodes;
   #ghostEffectEvents;
+  #currentTile;
 
   constructor(parentNode) {
     this.#parentNode = parentNode;
     this.#cellNodes = [];
     this.#ghostEffectEvents = {};
+    this.#currentTile = null;
   }
 
   static extractEdgesOfOriginalTile(edges, orientation) {
@@ -105,17 +107,16 @@ class Board {
     return await response.json();
   }
 
-  addGhostEffect() {
+  async addGhostEffect(events = {}) {
+    this.#currentTile = await this.#fetchCurrentTile();
     this.#ghostEffectEvents = {
-      mouseenter: async (event) => {
+      mouseenter: (event) => {
         event.stopPropagation();
         const cell = event.target;
 
-        const currentTile = debug(await this.#fetchCurrentTile());
-
-        if (currentTile) {
+        if (this.#currentTile) {
           this.#insertTileInCell(cell, currentTile);
-          this.#addRotateRightButton(cell);
+          this.#addRotateRightButton(cell, events);
         }
       },
       mouseleave: (event) => {
