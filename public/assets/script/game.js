@@ -1,12 +1,12 @@
 import Board from "./board.js";
 
-const updateGameState = async (grid, currentTilePath) => {
+const updateGameState = async (grid) => {
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
   const board = new Board(grid);
 
   board.build(tiles);
-  board.addGhostEffect(currentTilePath);
+  board.addGhostEffect();
 };
 
 const changeFocusToStartingTile = () =>
@@ -19,7 +19,7 @@ const changeFocusToStartingTile = () =>
   }, 2000);
 
 const fetchCurrentPlayer = async () => {
-  const response = await fetch("/current-player");
+  const response = await fetch("/game/current-player");
 
   const player = await response.json();
 
@@ -29,26 +29,29 @@ const fetchCurrentPlayer = async () => {
 const showCurrentPlayer = (interval) => {
   const currentPlayerLabel = document.querySelector(".player-turn");
   const textLabel = currentPlayerLabel.querySelector("p");
-  
+
   setInterval(async () => {
     const currentPlayer = await fetchCurrentPlayer();
-    
+
     textLabel.textContent = `${currentPlayer}'s turn`;
     currentPlayerLabel.style.display = "flex";
   }, interval);
+};
+
+const drawATile = async () => {
+  const response = await fetch("/game/draw-tile");
+
+  return response.json();
 };
 
 const main = async () => {
   showCurrentPlayer(4000);
   const grid = setupGrid(84);
 
-  const tileResponse = await fetch("/game/draw-tile");
-  const currentTile = await tileResponse.json();
-
-  const currentTilePath = Board.extractTileImagePath(currentTile);
+  await drawATile();
   changeFocusToStartingTile();
 
-  await updateGameState(grid, currentTilePath);
+  await updateGameState(grid);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);

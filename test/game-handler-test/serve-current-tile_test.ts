@@ -37,7 +37,7 @@ describe("serveCurrentTile", () => {
     assertEquals(await response.json(), null);
   });
 
-  it("should return null if current player drew tile", async () => {
+  it("should return current tile if current player drew tile", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const games = new Map<string, Carcassonne>();

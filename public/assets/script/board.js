@@ -1,3 +1,8 @@
+const debug = function (arg) {
+  console.log(arg);
+  return arg;
+};
+
 class Board {
   #parentNode;
   #cellNodes;
@@ -27,7 +32,7 @@ class Board {
     const center = tileCenter.at(0);
     const guard = hasShield ? "-g" : "";
 
-    return `/${edges}-${center}${guard}.png`;
+    return `/assets/images/tiles/${edges}-${center}${guard}.png`;
   }
 
   #createCell(cell, events, chord) {
@@ -95,26 +100,28 @@ class Board {
   }
 
   async #fetchCurrentTile() {
-    const response = await fetch("/current-tile");
+    const response = await fetch("/game/current-tile");
 
     return await response.json();
   }
 
-  addGhostEffect(imgPath) {
+  addGhostEffect() {
     this.#ghostEffectEvents = {
       mouseenter: async (event) => {
         event.stopPropagation();
         const cell = event.target;
 
-        const currentTile = await this.#fetchCurrentTile();
+        const currentTile = debug(await this.#fetchCurrentTile());
 
-        this.#insertTileInCell(cell, currentTile);
-        this.#addRotateRightButton(cell);
+        if (currentTile) {
+          this.#insertTileInCell(cell, currentTile);
+          this.#addRotateRightButton(cell);
+        }
       },
       mouseleave: (event) => {
         event.stopPropagation();
 
-        this.#removeChildren(event.target, imgPath);
+        this.#removeChildren(event.target);
       },
     };
 
