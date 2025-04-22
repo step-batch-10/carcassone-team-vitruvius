@@ -1,5 +1,5 @@
 import { createDummyPlayers } from "../../src/models/game/dummy-data-for-test.ts";
-import { Carcassonne } from "../../src/models/game/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
@@ -55,7 +55,7 @@ describe("handle the game board", () => {
 
     const response = await app.request(request);
 
-    assertEquals(response.status, 200);
+    assertEquals(response.status, 404);
     assertEquals(await response.json(), { desc: "invalid game Id" });
   });
 });

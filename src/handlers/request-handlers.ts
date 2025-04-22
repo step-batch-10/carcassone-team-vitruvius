@@ -1,16 +1,14 @@
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { Sessions, Users, Variables } from "../models/types/models.ts";
+import { Sessions, Users, AppVariables } from "../models/types/models.ts";
 import RoomManager from "../models/room/room-manager.ts";
 
 const parseAppContexts = (ctx: Context, ...keys: string[]) => {
   return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
 };
 
-
-
 const getUserOfSessionId = (
-  ctx: Context<{ Variables: Variables }>,
+  ctx: Context<{ Variables: AppVariables }>,
   sessions: Sessions,
   users: Users
 ) => {
@@ -21,7 +19,7 @@ const getUserOfSessionId = (
 };
 
 const joinPlayerInRoom = (
-  ctx: Context<{ Variables: Variables }>,
+  ctx: Context<{ Variables: AppVariables }>,
   roomManager: RoomManager,
   roomID: string,
   username: string
@@ -43,7 +41,7 @@ const joinPlayerInRoom = (
   return ctx.json({ isRoomJoined: true }, 200);
 };
 
-const getHostName = (ctx: Context<{ Variables: Variables }>): string => {
+const getHostName = (ctx: Context<{ Variables: AppVariables }>): string => {
   const sessionId = getCookie(ctx, "session-id");
   const { users, sessions } = parseAppContexts(ctx, "users", "sessions");
 
@@ -57,7 +55,7 @@ const parseMaxPlayers = async (ctx: Context): Promise<number> => {
   return Number(maxPlayers);
 };
 
-const handleHost = async (ctx: Context<{ Variables: Variables }>) => {
+const handleHost = async (ctx: Context<{ Variables: AppVariables }>) => {
   const roomManager = ctx.get("roomManager");
   const host = getHostName(ctx);
   const maxPlayers = await parseMaxPlayers(ctx);
@@ -68,7 +66,7 @@ const handleHost = async (ctx: Context<{ Variables: Variables }>) => {
   return ctx.redirect("/lobby", 303);
 };
 
-const handleJoin = async (ctx: Context<{ Variables: Variables }>) => {
+const handleJoin = async (ctx: Context<{ Variables: AppVariables }>) => {
   const formData = await ctx.req.parseBody();
   const roomID = String(formData.roomID);
 
@@ -84,7 +82,7 @@ const handleJoin = async (ctx: Context<{ Variables: Variables }>) => {
 const generateSessionID = () => String(Date.now());
 const generateUserID = () => String(Date.now() * Math.random() * 10);
 
-const handleLogin = async (ctx: Context<{ Variables: Variables }>) => {
+const handleLogin = async (ctx: Context<{ Variables: AppVariables }>) => {
   const { sessions, users } = parseAppContexts(ctx, "sessions", "users");
 
   const { username } = await ctx.req.parseBody();
@@ -99,7 +97,7 @@ const handleLogin = async (ctx: Context<{ Variables: Variables }>) => {
   return ctx.redirect("/game-options", 303);
 };
 
-const handleGetLobbyDetails = (ctx: Context<{ Variables: Variables }>) => {
+const handleGetLobbyDetails = (ctx: Context<{ Variables: AppVariables }>) => {
   const roomManager = ctx.get("roomManager");
   const roomId = String(getCookie(ctx, "room-id"));
 
@@ -112,9 +110,4 @@ const handleGetLobbyDetails = (ctx: Context<{ Variables: Variables }>) => {
   return ctx.json(null, 404);
 };
 
-export {
-  handleHost,
-  handleGetLobbyDetails,
-  handleJoin,
-  handleLogin,
-};
+export { handleHost, handleGetLobbyDetails, handleJoin, handleLogin };

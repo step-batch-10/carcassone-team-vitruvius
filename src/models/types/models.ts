@@ -1,4 +1,4 @@
-import { Carcassonne } from "../game/carcassone.ts";
+import { Carcassonne } from "../game/carcassonne.ts";
 import RoomManager from "../room/room-manager.ts";
 
 export enum Feature {
@@ -119,11 +119,15 @@ interface Cell {
   placedMeeple: PlacedMeeple | null;
 }
 
-export type Variables = {
+export type AppVariables = {
   sessions: Map<string, string>;
   users: Map<string, User>;
   roomManager: RoomManager;
   games: Map<string, Carcassonne>;
+};
+
+export type GameVariables = {
+  game: Carcassonne;
 };
 
 export type Sessions = Map<string, string>;
@@ -135,6 +139,10 @@ export interface AppContext {
   users: Users;
   roomManager: RoomManager;
   games: Map<string, Carcassonne>;
+}
+
+export interface GameContext {
+  game: Carcassonne;
 }
 
 interface TileHandler {

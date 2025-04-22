@@ -1,5 +1,5 @@
 import createApp from "./app.ts";
-import { Carcassonne } from "./models/game/carcassone.ts";
+import { Carcassonne } from "./models/game/carcassonne.ts"; 
 import { User } from "./models/types/models.ts";
 import RoomManager from "./models/room/room-manager.ts";
 

@@ -3,7 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { Feature, Tile, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
-import { Carcassonne } from "../../src/models/game/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import Player from "../../src/models/room/player.ts";
 
 describe("serveCurrentTile", () => {

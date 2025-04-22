@@ -3,7 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
-import { Carcassonne } from "../../src/models/game/carcassone.ts";
+import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 
 describe("handleHost", () => {
   it("should redirect to lobby page and create room for host", async () => {

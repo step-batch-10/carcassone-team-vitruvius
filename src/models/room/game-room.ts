@@ -1,6 +1,6 @@
 import Player from "./player.ts";
 import { GameRoomJson, GameStatus } from "../types/models.ts";
-import { Carcassonne } from "../game/carcassone.ts";
+import { Carcassonne } from "../game/carcassonne.ts";
 type stringIdentity = () => string;
 
 class GameRoom {

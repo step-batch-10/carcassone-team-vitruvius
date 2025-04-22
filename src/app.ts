@@ -1,7 +1,7 @@
-import { Context, Hono } from "hono";
+import { getCookie } from "hono/cookie";
 import { serveStatic } from "hono/deno";
 import { logger } from "hono/logger";
-import { AppContext, Variables } from "./models/types/models.ts";
+import { AppContext, AppVariables } from "./models/types/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
 import {
   handleLogin,
@@ -16,11 +16,13 @@ import {
   serveCurrentTile,
   handleTilePlacement,
 } from "./handlers/game-handlers.ts";
+import { Context } from "hono";
+import { Hono } from "hono";
 
-const setContext = (
+const setAppContext = (
   appContext: AppContext
-): MiddlewareHandler<{ Variables: Variables }> => {
-  return async (ctx: Context<{ Variables: Variables }>, next: Next) => {
+): MiddlewareHandler<{ Variables: AppVariables }> => {
+  return async (ctx: Context<{ Variables: AppVariables }>, next: Next) => {
     const { sessions, users, roomManager, games } = appContext;
 
     ctx.set("sessions", sessions);
@@ -32,22 +34,39 @@ const setContext = (
   };
 };
 
+const setGameInContext = async (ctx: Context, next: Next) => {
+  const games = ctx.get("games");
+  const roomID = String(getCookie(ctx, "room-id"));
+
+  if (!games.has(roomID)) {
+    return ctx.json({ desc: "invalid game Id" }, 404);
+  }
+
+  ctx.set("game", games.get(roomID));
+
+  await next();
+};
+
 const createGameApp = () => {
   const gameApp = new Hono();
+
+  gameApp.use(setGameInContext);
+
   gameApp.get("/", serveStatic({ path: "/html/game.html", root: "public" }));
   gameApp.get("/board", serveGameBoard);
   gameApp.get("/draw-tile", drawATile);
   gameApp.get("/valid-positions", serveValidPositions);
   gameApp.patch("/place-tile", handleTilePlacement);
   gameApp.get("/current-tile", serveCurrentTile);
+
   return gameApp;
 };
 
 const createApp = (appContext: AppContext) => {
-  const app = new Hono<{ Variables: Variables }>();
+  const app = new Hono<{ Variables: AppVariables }>();
 
   app.use(logger());
-  app.use(setContext(appContext));
+  app.use(setAppContext(appContext));
   app.get(
     "/game-options",
     serveStatic({ path: "/html/game-options.html", root: "public" })
