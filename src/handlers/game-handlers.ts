@@ -39,11 +39,9 @@ const handleRotateTile = (ctx: Context) => {
   const games = ctx.get("games");
 
   const roomID = String(getCookie(ctx, "room-id"));
-  const game = games.get(roomID);
-
+  const game: Carcassonne = games.get(roomID);
   if (game) {
     const rotatedTile = game.rotateCurrentTile();
-
     return ctx.json(rotatedTile, 200);
   }
 

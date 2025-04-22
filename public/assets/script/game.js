@@ -35,8 +35,6 @@ const handleTilePlacement = async (event, board, events) => {
     return;
   }
 
-  console.log(event.target, event);
-
   setBackground(event.target.parentNode, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);

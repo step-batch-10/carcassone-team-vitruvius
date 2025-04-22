@@ -15,6 +15,7 @@ import {
   serveValidPositions,
   serveCurrentTile,
   handleTilePlacement,
+  handleRotateTile,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
@@ -58,7 +59,7 @@ const createGameApp = () => {
   gameApp.get("/valid-positions", serveValidPositions);
   gameApp.patch("/place-tile", handleTilePlacement);
   gameApp.get("/current-tile", serveCurrentTile);
-
+  gameApp.patch("/tile/rotate", handleRotateTile);
   return gameApp;
 };
 
