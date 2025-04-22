@@ -65,13 +65,33 @@ const rotateRight = async (event) => {
   }
 };
 
-const updateGameState = async (grid, currentTilePath) => {
-  const boardResponse = await fetch("/game/board");
-  const tiles = await boardResponse.json();
-  const board = new Board(grid);
+const setupGrid = (gridSize) => {
+  const grid = document.getElementById("grid");
 
+  grid.style.display = "grid";
+  grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
+  grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
+
+  return grid;
+};
+
+const drawTileIfNotDrawn = async (currentTile) => {
+  if (!currentTile) {
+    await drawATile();
+  }
+}
+
+const updateGameState = (gameState) => {
+  const { board: tiles, currentPlayer, self, currentTile } = gameState;
+
+  const grid = setupGrid(84);
+  const board = new Board(grid);
   board.build(tiles, createCellEvents(board));
-  await board.addGhostEffect(currentTilePath, { click: rotateRight });
+
+  if (self.username === currentPlayer.username) {
+    drawTileIfNotDrawn(currentTile);
+    board.addGhostEffect({ click: rotateRight });
+  }
 };
 
 const changeFocusToStartingTile = () =>
@@ -109,28 +129,18 @@ const drawATile = async () => {
   return response.json();
 };
 
+const fetchGameState = async () => {
+  const response = await fetch("/game/state");
+
+  return await response.json();
+};
+
 const main = async () => {
-  showCurrentPlayer(4000);
-  const grid = setupGrid(84);
+  const gameState = await fetchGameState();
 
-  await drawATile();
-
-  // const tileResponse = await fetch("/game/draw-tile");
-  // const currentTile = await tileResponse.json();
-
-  // const currentTilePath = Board.extractTileImagePath(currentTile);
+  updateGameState(gameState);
   changeFocusToStartingTile();
-
-  await updateGameState(grid);
+  showCurrentPlayer();
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
-
-function setupGrid(gridSize) {
-  const grid = document.getElementById("grid");
-
-  grid.style.display = "grid";
-  grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
-  grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
-  return grid;
-}
