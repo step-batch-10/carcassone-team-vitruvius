@@ -1,5 +1,9 @@
 import Board from "./board.js";
 
+const querySelector = (selector) => {
+  return document.querySelector(selector);
+};
+
 const getImgUrl = (cell) => {
   const img = cell.querySelector("img");
   return img.src;
@@ -106,37 +110,37 @@ const changeFocusToStartingTile = () =>
 const fetchCurrentPlayer = async () => {
   const response = await fetch("/game/current-player");
 
-  const player = await response.json();
 
-  return player.username;
+  return await response.json();
 };
 
 const showCurrentPlayer = (interval) => {
-  const currentPlayerLabel = document.querySelector(".player-turn");
+  const currentPlayerLabel = querySelector(".player-turn");
   const textLabel = currentPlayerLabel.querySelector("p");
 
   setInterval(async () => {
     const currentPlayer = await fetchCurrentPlayer();
-
+    
     textLabel.textContent = `${currentPlayer}'s turn`;
     currentPlayerLabel.style.display = "flex";
   }, interval);
 };
 
-const drawATile = async () => {
-  const response = await fetch("/game/draw-tile");
+const showPlayerStatus = async () => {
+  const playerRes = await fetch("/game/self");
+  const { noOfMeeples, points, meepleColor } = await playerRes.json();
 
-  return response.json();
-};
-
-const fetchGameState = async () => {
-  const response = await fetch("/game/state");
-
-  return await response.json();
+  const meepleimg = querySelector("#meeple");
+  const meepleCount = querySelector("#meeple-count");
+  const score = querySelector("#score");
+  meepleCount.textContent = noOfMeeples;
+  score.textContent = points;
+  meepleimg.src = `assets/images/${meepleColor}-meeple.png`;
 };
 
 const main = async () => {
   const gameState = await fetchGameState();
+  showPlayerStatus();
 
   updateGameState(gameState);
   changeFocusToStartingTile();

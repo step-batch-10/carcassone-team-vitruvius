@@ -1,6 +1,30 @@
 import { Context } from "hono";
-import { Position } from "../models/types/models.ts";
+import { Position, Sessions, Users, Variables } from "../models/types/models.ts";
 import { getCookie } from "hono/cookie";
+import { Carcassonne } from "../models/game/carcassonne.ts";
+import _ from "lodash";
+
+const parseAppContexts = (ctx: Context, ...keys: string[]) => {
+  return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
+};
+
+const getUserOfSessionId = (
+  ctx: Context<{ Variables: Variables }>,
+  sessions: Sessions,
+  users: Users
+) => {
+  const sessionID = String(getCookie(ctx, "session-id"));
+  const userID = String(sessions.get(sessionID));
+
+  return users.get(userID);
+};
+
+const getGame = (ctx: Context): Carcassonne => {
+  const games = ctx.get("games");
+
+  const roomID = String(getCookie(ctx, "room-id"));
+  return games.get(roomID);
+};
 
 const serveGameBoard = (ctx: Context) => {
   const game = ctx.get("game");
@@ -30,6 +54,26 @@ const handleTilePlacement = async (ctx: Context) => {
   return ctx.json(null, 201);
 };
 
+const getCurrentPlayer = (ctx: Context) => {
+  const game = getGame(ctx);
+  const currentPlayer = game.getCurrentPlayer();
+  const userName = currentPlayer.username;
+  return ctx.json(userName, 200);
+};
+
+const getSelfStatus = (ctx: Context) => {
+  const appContext = parseAppContexts(ctx, "users", "sessions");
+  const { users, sessions } = appContext;
+  const game = getGame(ctx);
+
+  const user = getUserOfSessionId(ctx, sessions, users);
+  const username = String(user?.username);
+
+  const currentPlayer = _.find(game.getAllPlayers(), { username: username });
+
+  return ctx.json(currentPlayer, 200);
+};
+
 const serveCurrentTile = (ctx: Context) => {
   const game = ctx.get("game");
 
@@ -46,10 +90,12 @@ const handleRotateTile = (ctx: Context) => {
 };
 
 export {
-  drawATile,
   handleRotateTile,
-  handleTilePlacement,
   serveCurrentTile,
   serveGameBoard,
+  drawATile,
   serveValidPositions,
+  handleTilePlacement,
+  getCurrentPlayer,
+  getSelfStatus,
 };

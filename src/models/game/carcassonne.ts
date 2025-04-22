@@ -130,6 +130,10 @@ export class Carcassonne {
     return this.players[this.turn];
   }
 
+  getAllPlayers() {
+    return this.players;
+  }
+
   changePlayerTurn() {
     this.turn = (this.turn + 1) % this.players.length;
   }

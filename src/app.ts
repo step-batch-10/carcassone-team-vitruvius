@@ -1,7 +1,7 @@
 import { getCookie } from "hono/cookie";
 import { serveStatic } from "hono/deno";
 import { logger } from "hono/logger";
-import { AppContext, AppVariables } from "./models/types/models.ts";
+import { AppVariables, AppContext } from "./models/types/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
 import {
   handleGetLobbyDetails,
@@ -12,16 +12,18 @@ import {
 import {
   drawATile,
   handleRotateTile,
-  handleTilePlacement,
   serveCurrentTile,
   serveGameBoard,
   serveValidPositions,
+  handleTilePlacement,
+  getCurrentPlayer,
+  getSelfStatus,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
 
 const setAppContext = (
-  appContext: AppContext,
+  appContext: AppContext
 ): MiddlewareHandler<{ Variables: AppVariables }> => {
   return async (ctx: Context<{ Variables: AppVariables }>, next: Next) => {
     const { sessions, users, roomManager, games } = appContext;
@@ -60,6 +62,8 @@ const createGameApp = () => {
   gameApp.patch("/place-tile", handleTilePlacement);
   gameApp.get("/current-tile", serveCurrentTile);
   gameApp.patch("/tile/rotate", handleRotateTile);
+  gameApp.get("/current-player", getCurrentPlayer);
+  gameApp.get("/self", getSelfStatus);
   return gameApp;
 };
 
@@ -70,7 +74,7 @@ const createApp = (appContext: AppContext) => {
   app.use(setAppContext(appContext));
   app.get(
     "/game-options",
-    serveStatic({ path: "/html/game-options.html", root: "public" }),
+    serveStatic({ path: "/html/game-options.html", root: "public" })
   );
   app.route("/game", createGameApp());
 
