@@ -2,6 +2,8 @@ import {
   createDummyPlayers,
   createPlayer,
   dummyTiles2,
+  dummyTiles,
+  dummyTiles3,
 } from "../../src/models/game/dummy-data-for-test.ts";
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -35,7 +37,7 @@ describe("testing draw a tile", () => {
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
     ];
-    const game = Carcassonne.initGame(players, (arr) => arr);
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
     assertEquals(game.drawATile(), {
       hasShield: false,
       id: "2",
@@ -67,7 +69,7 @@ describe("testing rotateCurrentTile", () => {
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
     ];
-    const game = Carcassonne.initGame(players, (arr) => arr);
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
     game.drawATile();
     game.rotateCurrentTile();
 
@@ -81,7 +83,11 @@ describe("testing placablePositions", () => {
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
     ];
-    const game: Carcassonne = Carcassonne.initGame(players, (arr) => arr);
+    const game: Carcassonne = Carcassonne.initGame(
+      players,
+      (arr) => arr,
+      dummyTiles
+    );
     game.drawATile();
     const placeablePositions = game.validPositions();
 
@@ -129,6 +135,7 @@ describe("testing placablePositions", () => {
     const game: Carcassonne = Carcassonne.initGame(
       players,
       (arr: Tile[]): Tile[] => arr,
+      dummyTiles
     );
     const placeablePositions = game.validPositions();
 
@@ -163,7 +170,7 @@ describe("testing place a meeple", () => {
       createPlayer("user2", "blue", false, "121"),
     ];
 
-    const game = Carcassonne.initGame(players, (arr) => arr);
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
 
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
@@ -178,7 +185,7 @@ describe("testing place a meeple", () => {
       createPlayer("user2", "blue", false, "121"),
     ];
 
-    const game = Carcassonne.initGame(players, (arr) => arr);
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
 
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
@@ -195,7 +202,7 @@ describe("testing place a meeple", () => {
       createPlayer("user2", "blue", false, "121"),
     ];
 
-    const game = Carcassonne.initGame(players, (arr) => arr);
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
 
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
@@ -204,7 +211,36 @@ describe("testing place a meeple", () => {
 
     assertEquals(
       game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
-      1,
+      1
+    );
+  });
+});
+
+describe("testing to mark the occurence recurssevely when adjacent tile is claimed ", () => {
+  it("should mark as occurence when adjacent claimed", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3);
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    game.drawATile();
+    game.placeATile({ row: 43, col: 42 });
+    game.drawATile();
+    game.placeATile({ row: 43, col: 41 });
+    game.placeAMeeple(Sides.TOP);
+    game.drawATile();
+    game.placeATile({ row: 42, col: 41 });
+
+    console.log("42 41", game.getBoard()[42][41]);
+    console.log("42 42", game.getBoard()[42][42]);
+
+    assertEquals(
+      game.getBoard()[42][41].occupiedRegion.bottom.occupiedBy.size,
+      1
     );
   });
 });

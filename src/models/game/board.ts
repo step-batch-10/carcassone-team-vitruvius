@@ -1,5 +1,6 @@
+import { TileBoxManager } from "./tileBox.ts";
+import { createTileBox, firstTileBox } from "./boardModel.ts";
 import {
-  Feature,
   Position,
   ResTiles,
   Sides,
@@ -11,92 +12,23 @@ import { ScoreManager } from "./score-board.ts";
 
 export class Board {
   private board: TileBox[][];
-  private maxRow: number;
-  private maxCol: number;
   private scoreManager: ScoreManager;
+  private tileBoxes;
 
-  constructor(tileBoxes: TileBox[][], row: number, col: number) {
+  constructor(tileBoxes: TileBox[][]) {
     this.board = tileBoxes;
-    this.maxRow = row;
-    this.maxCol = col;
-    this.scoreManager = new ScoreManager(this.board);
-  }
-
-  private static firstTile(): Tile {
-    return {
-      id: "1",
-      orientation: 0,
-      hasShield: false,
-      tileEdges: [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-      tileCenter: Feature.ROAD,
-    };
+    this.tileBoxes = new TileBoxManager(this.board);
+    this.scoreManager = new ScoreManager(this.board, this.tileBoxes);
   }
 
   static create(rows: number, cols: number) {
     const emptyBoard = Array(rows).fill(Array(cols).fill(null));
     const tileBoxes: TileBox[][] = emptyBoard.map((rows: null[]) =>
-      rows.map(Board.createTileBox)
+      rows.map(createTileBox)
     );
+    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox;
 
-    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)].tile = Board
-      .firstTile();
-
-    return new Board(tileBoxes, rows, cols);
-  }
-
-  static createTileBox() {
-    return {
-      tile: null,
-      meeple: { color: null, playerName: null, region: null },
-      occupiedRegion: Board.createOccupiedRegion(),
-    };
-  }
-
-  static createOccupiedRegion() {
-    return {
-      left: Board.createPosition(),
-      top: Board.createPosition(),
-      right: Board.createPosition(),
-      bottom: Board.createPosition(),
-      middle: Board.createPosition(),
-    };
-  }
-
-  static createPosition() {
-    return { feature: null, occupiedBy: new Set<string>() };
-  }
-
-  getTile(position: Position) {
-    const { row, col } = position;
-    if (row < 0 || col < 0 || row >= this.maxRow || col >= this.maxCol) {
-      return null;
-    }
-
-    return this.board[row][col].tile;
-  }
-
-  respectivePosition(position: Position) {
-    const { row, col } = position;
-    const pos = {
-      left: { row, col: col - 1 },
-      right: { row, col: col + 1 },
-      top: { row: row - 1, col },
-      bottom: { row: row + 1, col },
-    };
-
-    return pos;
-  }
-
-  respectiveTile(position: Position) {
-    const resPosition = this.respectivePosition(position);
-    const resTile = {
-      leftTile: this.getTile(resPosition.left),
-      rightTile: this.getTile(resPosition.right),
-      topTile: this.getTile(resPosition.top),
-      bottomTile: this.getTile(resPosition.bottom),
-    };
-
-    return resTile;
+    return new Board(tileBoxes);
   }
 
   extractEdges(tile: Tile): TileEdges {
@@ -140,7 +72,7 @@ export class Board {
   isTilePlaceable(tile: Tile | null, position: Position): boolean {
     if (!tile) return false;
     const placingTileEdges = this.extractEdges(tile);
-    const resTiles = this.respectiveTile(position);
+    const resTiles = this.tileBoxes.adjacentTile(position);
 
     if (this.areAllResEmpty(resTiles)) {
       return false;
@@ -153,14 +85,16 @@ export class Board {
     return this.board;
   }
 
-  getTileBox(position: Position) {
-    return this.board[position.row][position.col];
+  getTile(position: Position) {
+    return this.tileBoxes.getTile(position);
   }
 
   placeTile(tile: Tile, position: Position): void {
+    const cell = this.tileBoxes.getCell(position);
+    if (!cell) return;
     if (this.isTilePlaceable(tile, position)) {
-      this.getTileBox(position).tile = tile;
-      this.scoreManager.markOccupance(position, this.respectivePosition);
+      cell.tile = tile;
+      this.scoreManager.markOccupance(position);
     }
   }
 
@@ -169,7 +103,7 @@ export class Board {
   }
 
   isBoxUnlockToPlace(position: Position) {
-    const resTile = this.respectiveTile(position);
+    const resTile = this.tileBoxes.adjacentTile(position);
     return !this.areAllResEmpty(resTile);
   }
 }

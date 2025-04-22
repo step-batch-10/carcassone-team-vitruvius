@@ -24,11 +24,11 @@ export const createATileBox = (
     tile: createTile(id, edges, center),
     meeple: { color: null, playerName: null, region: null },
     occupiedRegion: {
-      left: { feature: null, occupiedBy: new Set<string>() },
-      top: { feature: null, occupiedBy: new Set<string>() },
-      right: { feature: null, occupiedBy: new Set<string>() },
-      bottom: { feature: null, occupiedBy: new Set<string>() },
-      middle: { feature: null, occupiedBy: new Set<string>() },
+      left: { feature: edges[0], occupiedBy: new Set<string>() },
+      top: { feature: edges[1], occupiedBy: new Set<string>() },
+      right: { feature: edges[2], occupiedBy: new Set<string>() },
+      bottom: { feature: edges[3], occupiedBy: new Set<string>() },
+      middle: { feature: center, occupiedBy: new Set<string>() },
     },
   };
 };
@@ -44,6 +44,31 @@ export const dummyTiles = [
     "3",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
     Feature.ROAD,
+  ),
+];
+
+export const dummyTiles3 = [
+  createTile(
+    "2",
+    [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.CITY],
+    Feature.ROAD
+  ),
+
+  createTile(
+    "3",
+    [Feature.ROAD, Feature.FIELD, Feature.FIELD, Feature.ROAD],
+    Feature.ROAD
+  ),
+
+  createTile(
+    "4",
+    [Feature.FIELD, Feature.ROAD, Feature.ROAD, Feature.FIELD],
+    Feature.ROAD
+  ),
+  createTile(
+    "5",
+    [Feature.FIELD, Feature.FIELD, Feature.ROAD, Feature.ROAD],
+    Feature.ROAD
   ),
 ];
 

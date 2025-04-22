@@ -1,53 +1,14 @@
-import {
-  OccupanceSubGrid,
-  Position,
-  RespectivePosition,
-  Sides,
-  TileBox,
-} from "../types/models.ts";
+import { TileBoxManager } from "./tileBox.ts";
+import { OccupanceSubGrid, Position, Sides, TileBox } from "../types/models.ts";
 
 export class ScoreManager {
   private board;
   private edges;
-  constructor(board: TileBox[][]) {
+  private tileBoxes;
+  constructor(board: TileBox[][], tileBoxes: TileBoxManager) {
     this.board = board;
+    this.tileBoxes = tileBoxes;
     this.edges = [Sides.LEFT, Sides.TOP, Sides.RIGHT, Sides.BOTTOM];
-  }
-
-  private adjacentTiles(
-    left: Position,
-    top: Position,
-    right: Position,
-    bottom: Position,
-  ) {
-    const leftAdjTile = this.board[left.row][left.col];
-    const topAdjTile = this.board[top.row][top.col];
-    const rightAdjTile = this.board[right.row][right.col];
-    const bottomAdjTile = this.board[bottom.row][bottom.col];
-
-    return { leftAdjTile, topAdjTile, rightAdjTile, bottomAdjTile };
-  }
-
-  adjacentEdges(
-    tilePosition: Position,
-    resPostions: (arg0: Position) => {
-      left: Position;
-      top: Position;
-      right: Position;
-      bottom: Position;
-    },
-  ) {
-    const { left, top, right, bottom } = resPostions(tilePosition);
-
-    const { leftAdjTile, topAdjTile, rightAdjTile, bottomAdjTile } = this
-      .adjacentTiles(left, top, right, bottom);
-
-    const leftAdjEdge = leftAdjTile.occupiedRegion.right;
-    const topAdjEdge = topAdjTile.occupiedRegion.bottom;
-    const rightAdjEdge = rightAdjTile.occupiedRegion.left;
-    const bottomAdjEdge = bottomAdjTile.occupiedRegion.top;
-
-    return { leftAdjEdge, topAdjEdge, rightAdjEdge, bottomAdjEdge };
   }
 
   private addPlayerToCenter(
@@ -60,6 +21,7 @@ export class ScoreManager {
   markCenterOccupance(cell: TileBox) {
     const occupances = cell.occupiedRegion;
     const middleOccupance = occupances.middle;
+
     this.edges.forEach((edge: Sides) => {
       if (middleOccupance.feature === occupances[edge].feature) {
         this.addPlayerToCenter(middleOccupance, occupances[edge]);
@@ -67,19 +29,35 @@ export class ScoreManager {
     });
   }
 
-  markOccupance(
-    tilePosition: Position,
-    respectivePosition: RespectivePosition,
-  ) {
+  private markFeature(cell: TileBox) {
+    if (!cell.tile) return;
+    const tileEdge = cell.tile.tileEdges;
+    const tileCenter = cell.tile.tileCenter;
+    const tileOccu = cell.occupiedRegion;
+
+    this.edges.forEach((edge, index) => {
+      tileOccu[edge].feature = tileEdge[index];
+    });
+    tileOccu.middle.feature = tileCenter;
+  }
+
+  private markOccupiedRegion(currentTile: TileBox, tilePosition: Position) {
+    const { leftEdge, topEdge, rightEdge, bottomEdge } =
+      this.tileBoxes.adjacentOccupiedRegion(tilePosition);
+
+    const occupiedEdges = [leftEdge, topEdge, rightEdge, bottomEdge];
+    this.edges.forEach((edge, index) => {
+      currentTile.occupiedRegion[edge] =
+        occupiedEdges[index] || currentTile.occupiedRegion[edge];
+    });
+  }
+
+  markOccupance(tilePosition: Position) {
     const { col, row } = tilePosition;
     const currentTile = this.board[row][col];
-    const { leftAdjEdge, topAdjEdge, rightAdjEdge, bottomAdjEdge } = this
-      .adjacentEdges(tilePosition, respectivePosition);
+    this.markOccupiedRegion(currentTile, tilePosition);
 
-    currentTile.occupiedRegion.left = leftAdjEdge;
-    currentTile.occupiedRegion.top = topAdjEdge;
-    currentTile.occupiedRegion.right = rightAdjEdge;
-    currentTile.occupiedRegion.bottom = bottomAdjEdge;
+    this.markFeature(currentTile);
     this.markCenterOccupance(this.board[row][col]);
   }
 

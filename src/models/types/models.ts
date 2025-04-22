@@ -55,10 +55,10 @@ export type TileEdges = {
   left: string;
 };
 export type ResTiles = {
-  leftTile: Tile | null;
-  rightTile: Tile | null;
-  topTile: Tile | null;
-  bottomTile: Tile | null;
+  leftTile: Tile | null | undefined;
+  rightTile: Tile | null | undefined;
+  topTile: Tile | null | undefined;
+  bottomTile: Tile | null | undefined;
 };
 export interface Tile {
   id: string;
@@ -144,6 +144,12 @@ export interface AppContext {
 export interface GameContext {
   game: Carcassonne;
 }
+export type resPositions = (arg0: Position) => {
+  left: Position;
+  top: Position;
+  right: Position;
+  bottom: Position;
+};
 
 interface TileHandler {
   tiles: Tile[];
