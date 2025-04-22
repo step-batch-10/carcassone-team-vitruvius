@@ -59,9 +59,9 @@ const handleHost = async (ctx: Context<{ Variables: AppVariables }>) => {
   const roomManager = ctx.get("roomManager");
   const host = getHostName(ctx);
   const maxPlayers = await parseMaxPlayers(ctx);
-  const roomId = roomManager.createRoom(host, maxPlayers);
+  const roomID = roomManager.createRoom(host, maxPlayers);
 
-  setCookie(ctx, "room-id", roomId);
+  setCookie(ctx, "room-id", roomID);
 
   return ctx.redirect("/lobby", 303);
 };
@@ -99,10 +99,10 @@ const handleLogin = async (ctx: Context<{ Variables: AppVariables }>) => {
 
 const handleGetLobbyDetails = (ctx: Context<{ Variables: AppVariables }>) => {
   const roomManager = ctx.get("roomManager");
-  const roomId = String(getCookie(ctx, "room-id"));
+  const roomID = String(getCookie(ctx, "room-id"));
 
-  if (roomManager.hasRoom(roomId)) {
-    const room = roomManager.getRoom(roomId);
+  if (roomManager.hasRoom(roomID)) {
+    const room = roomManager.getRoom(roomID);
 
     return ctx.json(room?.json(), 200);
   }

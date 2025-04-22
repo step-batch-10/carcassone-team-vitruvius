@@ -4,38 +4,38 @@ type stringIdentity = () => string;
 
 class RoomManager {
   private rooms: Map<string, GameRoom>;
-  private roomIdGenerator: stringIdentity;
+  private roomIDGenerator: stringIdentity;
   private createMeepleColorGenerator: () => stringIdentity;
 
   constructor(
-    roomIdGenerator: stringIdentity,
+    roomIDGenerator: stringIdentity,
     createMeepleColorGenerator: () => stringIdentity,
   ) {
     this.rooms = new Map();
-    this.roomIdGenerator = roomIdGenerator;
+    this.roomIDGenerator = roomIDGenerator;
     this.createMeepleColorGenerator = createMeepleColorGenerator;
   }
 
   createRoom(host: string, maxPlayers: number): string {
-    const roomId = this.roomIdGenerator();
+    const roomID = this.roomIDGenerator();
     const room = new GameRoom(
       maxPlayers,
       host,
-      roomId,
+      roomID,
       this.createMeepleColorGenerator(),
     );
 
-    this.rooms.set(roomId, room);
+    this.rooms.set(roomID, room);
 
-    return roomId;
+    return roomID;
   }
 
-  hasRoom(roomId: string): boolean {
-    return this.rooms.has(roomId);
+  hasRoom(roomID: string): boolean {
+    return this.rooms.has(roomID);
   }
 
-  getRoom(roomId: string): GameRoom | null {
-    return this.rooms.get(roomId) ?? null;
+  getRoom(roomID: string): GameRoom | null {
+    return this.rooms.get(roomID) ?? null;
   }
 }
 

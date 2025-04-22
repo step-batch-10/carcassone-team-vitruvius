@@ -10,9 +10,10 @@ import {
   User,
 } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("testing the handleRotateTile", () => {
-  it("should return an object containing an rotatedTile if roomId is valid ", async () => {
+  it("should return an object containing an rotatedTile if roomID is valid ", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
@@ -30,7 +31,7 @@ describe("testing the handleRotateTile", () => {
     games.set("1", game);
 
     const context: AppContext = { sessions, users, roomManager, games };
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
 
     const rotatedTileRes = await app.request("game/tile/rotate", {
       method: "PATCH",
@@ -52,7 +53,7 @@ describe("testing the handleRotateTile", () => {
     assertEquals(rotatedTile, expectedTile);
   });
 
-  it("should return an object containing desc key with value 'invalid game id' if roomId is invalid ", async () => {
+  it("should return an object containing desc key with value 'invalid game id' if roomID is invalid ", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
@@ -70,7 +71,7 @@ describe("testing the handleRotateTile", () => {
     games.set("2", game);
 
     const context: AppContext = { sessions, users, roomManager, games };
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
 
     const rotatedTileRes = await app.request("game/tile/rotate", {
       method: "PATCH",

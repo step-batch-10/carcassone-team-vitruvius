@@ -4,9 +4,10 @@ import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
+import { silentLogger } from "../game-handler-test/silent-logger.ts";
 
 describe("handleJoin", () => {
-  it("should join room if roomId is valid", async () => {
+  it("should join room if roomID is valid", async () => {
     const sessions = new Map<string, string>();
     sessions.set("123", "123");
     const users = new Map<string, User>();
@@ -25,7 +26,7 @@ describe("handleJoin", () => {
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
 
     const response = await app.request("/joinRoom", {
       method: "post",
@@ -40,7 +41,7 @@ describe("handleJoin", () => {
     assertEquals(response.headers.get("set-cookie"), setCookies);
   });
 
-  it("should return not join room if roomId is valid", async () => {
+  it("should return not join room if roomID is valid", async () => {
     const sessions = new Map<string, string>();
     sessions.set("123", "123");
     const users = new Map<string, User>();
@@ -59,7 +60,7 @@ describe("handleJoin", () => {
     const formData = new FormData();
     formData.set("roomID", "2");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
 
     const response = await app.request("/joinRoom", {
       method: "post",
@@ -91,7 +92,7 @@ describe("handleJoin", () => {
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     await app.request("/joinRoom", {
       method: "post",
       body: formData,
@@ -121,7 +122,7 @@ describe("handleJoin", () => {
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     await app.request("/joinRoom", {
       method: "post",
       body: formData,

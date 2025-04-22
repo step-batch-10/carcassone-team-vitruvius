@@ -4,6 +4,7 @@ import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
+import { silentLogger } from "../game-handler-test/silent-logger.ts";
 
 describe("handleLogin", () => {
   it("should return a redirection response", async () => {
@@ -19,7 +20,7 @@ describe("handleLogin", () => {
     const formData = new FormData();
     formData.set("username", "Alice");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request("http:localhost/login", {
       method: "POST",
       body: formData,

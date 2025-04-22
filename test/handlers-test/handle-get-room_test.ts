@@ -8,6 +8,7 @@ import {
 import RoomManager from "../../src/models/room/room-manager.ts";
 import createApp from "../../src/app.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
+import { silentLogger } from "../game-handler-test/silent-logger.ts";
 
 describe("handleGetRoom", () => {
   it("should return json data of room", async () => {
@@ -24,7 +25,7 @@ describe("handleGetRoom", () => {
     roomManager.createRoom("Mounika", 3);
 
     const appContext = { sessions, users, roomManager, games };
-    const app = createApp(appContext);
+    const app = createApp(appContext, silentLogger);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=1; session-id=sId" },
@@ -67,7 +68,7 @@ describe("handleGetRoom", () => {
     const games = new Map<string, Carcassonne>();
 
     const appContext = { sessions, users, roomManager, games };
-    const app = createApp(appContext);
+    const app = createApp(appContext, silentLogger);
 
     const request = new Request("http://localhost/room", {
       headers: { cookie: "room-id=0; session-id=sId" },

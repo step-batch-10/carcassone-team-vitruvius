@@ -5,61 +5,61 @@ import RoomManager from "../../src/models/room/room-manager.ts";
 describe("RoomManager", () => {
   describe("createRoom", () => {
     it("should create a room with a host", () => {
-      const roomId = "1";
-      const idGenerator = () => roomId;
+      const roomID = "1";
+      const idGenerator = () => roomID;
       const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
       const createdRoomId = lobby.createRoom("host", 3);
 
-      assertEquals(createdRoomId, roomId);
+      assertEquals(createdRoomId, roomID);
     });
   });
 
   describe("hasRoom", () => {
     it("should return false if room is not present in RoomManager", () => {
-      const roomId = "1";
-      const idGenerator = () => roomId;
+      const roomID = "1";
+      const idGenerator = () => roomID;
       const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
-      assertFalse(lobby.hasRoom(roomId));
+      assertFalse(lobby.hasRoom(roomID));
     });
 
     it("should return true if room is present in RoomManager", () => {
-      const roomId = "1";
-      const idGenerator = () => roomId;
+      const roomID = "1";
+      const idGenerator = () => roomID;
       const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
       lobby.createRoom("host", 3);
 
-      assert(lobby.hasRoom(roomId));
+      assert(lobby.hasRoom(roomID));
     });
   });
 
   describe("getRoom", () => {
     it("should return GameRoom instance if it is created", () => {
-      const roomId = "1";
-      const idGenerator = () => roomId;
+      const roomID = "1";
+      const idGenerator = () => roomID;
       const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
       lobby.createRoom("host", 3);
 
-      assertEquals(lobby.getRoom(roomId)?.roomID, roomId);
+      assertEquals(lobby.getRoom(roomID)?.roomID, roomID);
     });
 
     it("should return null if GameRoom is not created", () => {
-      const roomId = "1";
-      const idGenerator = () => roomId;
+      const roomID = "1";
+      const idGenerator = () => roomID;
       const meepleColorGenerator = () => () => "red";
 
       const lobby = new RoomManager(idGenerator, meepleColorGenerator);
 
-      assertEquals(lobby.getRoom(roomId), null);
+      assertEquals(lobby.getRoom(roomID), null);
     });
   });
 });

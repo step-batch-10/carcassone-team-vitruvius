@@ -137,6 +137,12 @@ const showPlayerStatus = async () => {
   meepleimg.src = `assets/images/${meepleColor}-meeple.png`;
 };
 
+const fetchGameState = async () => {
+  const response = await fetch("/game/state");
+
+  return await response.json();
+};
+
 const main = async () => {
   const gameState = await fetchGameState();
   showPlayerStatus();

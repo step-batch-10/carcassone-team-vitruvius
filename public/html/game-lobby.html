@@ -8,16 +8,16 @@
   <body>
     <h1>Carcossanne</h1>
     <script>
-      const displayRoom = (roomId) => {
+      const displayRoom = (roomID) => {
         const body = document.querySelector("body");
         const roomNumber = document.createElement("p");
-        roomNumber.textContent = `Room Id : ${roomId}`;
+        roomNumber.textContent = `Room Id : ${roomID}`;
         body.appendChild(roomNumber);
       };
 
-      const roomId = 12345;
+      const roomID = 12345;
 
-      displayRoom(roomId);
+      displayRoom(roomID);
     </script>
   </body>
 </html>

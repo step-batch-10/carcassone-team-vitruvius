@@ -3,6 +3,7 @@ import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import { CardinalDegrees, Position, Sides, Tile } from "../types/models.ts";
 import { dummyTiles as tiles } from "../../../test/dummy-data.ts";
+import _ from "lodash";
 
 export class Carcassonne {
   private readonly board: Board;
@@ -134,6 +135,10 @@ export class Carcassonne {
     return this.players;
   }
 
+  getPlayerOf(username: string) {
+    return _.find(this.getAllPlayers(), { username: username });
+  }
+
   changePlayerTurn() {
     this.turn = (this.turn + 1) % this.players.length;
   }
@@ -158,5 +163,14 @@ export class Carcassonne {
     }
 
     return status;
+  }
+
+  state() {
+    return {
+      board: this.getBoard(),
+      currentPlayer: this.getCurrentPlayer(),
+      currentTile: this.currentTile,
+      players: this.getAllPlayers(),
+    };
   }
 }

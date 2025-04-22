@@ -3,7 +3,6 @@ import { Position, Sessions, Users } from "../models/types/models.ts";
 import { Variables } from "hono/types";
 import { getCookie } from "hono/cookie";
 import { Carcassonne } from "../models/game/carcassonne.ts";
-import _ from "lodash";
 
 const parseAppContexts = (ctx: Context, ...keys: string[]) => {
   return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
@@ -70,9 +69,7 @@ const getSelfStatus = (ctx: Context) => {
   const user = getUserOfSessionId(ctx, sessions, users);
   const username = String(user?.username);
 
-  const currentPlayer = _.find(game.getAllPlayers(), { username: username });
-
-  return ctx.json(currentPlayer, 200);
+  return ctx.json(game.getPlayerOf(username), 200);
 };
 
 const serveCurrentTile = (ctx: Context) => {
@@ -90,6 +87,18 @@ const handleRotateTile = (ctx: Context) => {
   return ctx.json(rotatedTile, 200);
 };
 
+const serveGameState = (ctx: Context) => {
+  const game = ctx.get("game");
+  const appContext = parseAppContexts(ctx, "users", "sessions");
+  const { users, sessions } = appContext;
+
+  const user = getUserOfSessionId(ctx, sessions, users);
+  const username = String(user?.username);
+  const self = game.getPlayerOf(username);
+
+  return ctx.json({ ...game.state(), self }, 200);
+};
+
 export {
   drawATile,
   getCurrentPlayer,
@@ -98,5 +107,6 @@ export {
   handleTilePlacement,
   serveCurrentTile,
   serveGameBoard,
+  serveGameState,
   serveValidPositions,
 };

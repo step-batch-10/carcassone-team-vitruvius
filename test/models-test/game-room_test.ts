@@ -6,7 +6,7 @@ import { GameRoomJson, GameStatus } from "../../src/models/types/models.ts";
 describe("GameRoom", () => {
   it("should create a room and add host in players", () => {
     const meepleColorGenerator = () => "red";
-    const room = new GameRoom(2, "mounika", "roomId", meepleColorGenerator);
+    const room = new GameRoom(2, "mounika", "roomID", meepleColorGenerator);
 
     assertEquals(room.totalJoinedPlayers(), 1);
   });
@@ -15,7 +15,7 @@ describe("GameRoom", () => {
     it("should return joined player instance", () => {
       const meepleColorGenerator = () => "red";
 
-      const room = new GameRoom(3, "mounika", "roomId", meepleColorGenerator);
+      const room = new GameRoom(3, "mounika", "roomID", meepleColorGenerator);
 
       const addedPlayer = room.addPlayer("prasad") ?? { json: () => "" };
       const addedPlayerJson = {
@@ -24,7 +24,7 @@ describe("GameRoom", () => {
         points: 0,
         meepleColor: "red",
         isHost: false,
-        roomID: "roomId",
+        roomID: "roomID",
       };
 
       assertEquals(addedPlayer.json(), addedPlayerJson);
@@ -33,7 +33,7 @@ describe("GameRoom", () => {
     it("should return null when max players limit is extended", () => {
       const meepleColorGenerator = () => "red";
 
-      const room = new GameRoom(1, "mounika", "roomId", meepleColorGenerator);
+      const room = new GameRoom(1, "mounika", "roomID", meepleColorGenerator);
 
       assertEquals(room.addPlayer("prasad"), null);
     });
@@ -43,20 +43,20 @@ describe("GameRoom", () => {
     it("should return json data of game room with host data", () => {
       const meepleColorGenerator = () => "red";
 
-      const room = new GameRoom(3, "mounika", "roomId", meepleColorGenerator);
+      const room = new GameRoom(3, "mounika", "roomID", meepleColorGenerator);
       const playerJson = {
         username: "mounika",
         noOfMeeples: 7,
         points: 0,
         meepleColor: "red",
         isHost: true,
-        roomID: "roomId",
+        roomID: "roomID",
       };
 
       const roomJson: GameRoomJson = {
         maxPlayers: 3,
         players: [playerJson],
-        roomID: "roomId",
+        roomID: "roomID",
         host: "mounika",
         gameStatus: GameStatus.WAITING,
       };
@@ -67,7 +67,7 @@ describe("GameRoom", () => {
     it("should return json data of game room with host and joined players data", () => {
       const meepleColorGenerator = () => "red";
 
-      const room = new GameRoom(3, "mounika", "roomId", meepleColorGenerator);
+      const room = new GameRoom(3, "mounika", "roomID", meepleColorGenerator);
       room.addPlayer("Prasad");
 
       const playersJson = [
@@ -77,7 +77,7 @@ describe("GameRoom", () => {
           points: 0,
           meepleColor: "red",
           isHost: true,
-          roomID: "roomId",
+          roomID: "roomID",
         },
         {
           username: "Prasad",
@@ -85,14 +85,14 @@ describe("GameRoom", () => {
           points: 0,
           meepleColor: "red",
           isHost: false,
-          roomID: "roomId",
+          roomID: "roomID",
         },
       ];
 
       const roomJson: GameRoomJson = {
         maxPlayers: 3,
         players: playersJson,
-        roomID: "roomId",
+        roomID: "roomID",
         host: "mounika",
         gameStatus: GameStatus.WAITING,
       };
@@ -103,7 +103,7 @@ describe("GameRoom", () => {
 
   describe("createGame", () => {
     it("should create carcassonne game instance if max player limit reached", () => {
-      const room = new GameRoom(2, "Mounika", "roomId", () => "red");
+      const room = new GameRoom(2, "Mounika", "roomID", () => "red");
 
       room.addPlayer("Prasad");
 
@@ -113,7 +113,7 @@ describe("GameRoom", () => {
     });
 
     it("should return null if max player limit is not reached", () => {
-      const room = new GameRoom(2, "Mounika", "roomId", () => "red");
+      const room = new GameRoom(2, "Mounika", "roomID", () => "red");
 
       const game = room.createGame();
 

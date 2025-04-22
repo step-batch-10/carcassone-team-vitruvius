@@ -5,6 +5,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("handle the game board", () => {
   it("should return a game board when game id is valid", async () => {
@@ -19,7 +20,7 @@ describe("handle the game board", () => {
 
     const context: AppContext = { sessions, users, roomManager, games };
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request("http:localhost/game/board", {
       method: "GET",
       headers: {
@@ -45,7 +46,7 @@ describe("handle the game board", () => {
 
     const context: AppContext = { sessions, users, roomManager, games };
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request("http:localhost/game/board", {
       method: "GET",
       headers: {

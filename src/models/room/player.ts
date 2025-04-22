@@ -1,7 +1,7 @@
 import { PlayerJson } from "../types/models.ts";
 class Player {
   readonly username: string;
-  readonly roomId;
+  readonly roomID;
   noOfMeeples: number;
   points: number;
   readonly meepleColor: string;
@@ -11,14 +11,14 @@ class Player {
     username: string,
     meepleColor: string,
     isHost: boolean,
-    roomId: string,
+    roomID: string,
   ) {
     this.username = username;
     this.noOfMeeples = 7;
     this.points = 0;
     this.meepleColor = meepleColor;
     this.isHost = isHost;
-    this.roomId = roomId;
+    this.roomID = roomID;
   }
 
   json(): PlayerJson {
@@ -28,7 +28,7 @@ class Player {
       points: this.points,
       meepleColor: this.meepleColor,
       isHost: this.isHost,
-      roomID: this.roomId,
+      roomID: this.roomID,
     };
   }
 }

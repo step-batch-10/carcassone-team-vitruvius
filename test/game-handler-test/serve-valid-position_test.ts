@@ -5,6 +5,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("testing the serve valid position function", () => {
   it("should return an object containing an array of placeable tiles and an array of unlocked tiles ", async () => {
@@ -19,7 +20,7 @@ describe("testing the serve valid position function", () => {
 
     const context: AppContext = { sessions, users, roomManager, games };
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request(
       "http:localhost/game/valid-positions",
       {

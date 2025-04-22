@@ -6,6 +6,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, Tile, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("testing draw a tile handler", () => {
   it("should return a valid drawn tile", async () => {
@@ -27,7 +28,7 @@ describe("testing draw a tile handler", () => {
 
     const context: AppContext = { sessions, users, roomManager, games };
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request("http:localhost/game/draw-tile", {
       method: "GET",
       headers: {

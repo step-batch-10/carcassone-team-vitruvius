@@ -6,6 +6,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { Tile, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("testing player Status", () => {
   it("should return the data of the current player", async () => {
@@ -28,7 +29,7 @@ describe("testing player Status", () => {
     );
 
     const appContext = { sessions, users, roomManager, games };
-    const app = createApp(appContext);
+    const app = createApp(appContext, silentLogger);
 
     const request = new Request("http://localhost/game/self", {
       headers: { cookie: "room-id=1; session-id=sId" },
@@ -36,7 +37,7 @@ describe("testing player Status", () => {
 
     const playerData = {
       username: "user1",
-      roomId: "121",
+      roomID: "121",
       noOfMeeples: 7,
       points: 0,
       meepleColor: "black",

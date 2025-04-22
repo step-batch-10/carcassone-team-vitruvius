@@ -4,6 +4,7 @@ import createApp from "../../src/app.ts";
 import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
+import { silentLogger } from "../game-handler-test/silent-logger.ts";
 
 describe("handleHost", () => {
   it("should redirect to lobby page and create room for host", async () => {
@@ -19,7 +20,7 @@ describe("handleHost", () => {
     const formData = new FormData();
     formData.set("username", "Alice");
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const loginRequest = new Request("http://localhost/login", {
       method: "POST",
       body: formData,

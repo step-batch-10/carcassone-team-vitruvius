@@ -6,6 +6,7 @@ import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
 import { AppContext, Tile, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
+import { silentLogger } from "./silent-logger.ts";
 
 describe("testing current Player", () => {
   it("should return current  player Name", async () => {
@@ -27,7 +28,7 @@ describe("testing current Player", () => {
 
     const context: AppContext = { sessions, users, roomManager, games };
 
-    const app = createApp(context);
+    const app = createApp(context, silentLogger);
     const request: Request = new Request("http:localhost/game/current-player", {
       method: "GET",
       headers: {

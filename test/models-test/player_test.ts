@@ -11,10 +11,10 @@ describe("Player", () => {
         points: 0,
         meepleColor: "red",
         isHost: false,
-        roomID: "roomId",
+        roomID: "roomID",
       };
 
-      const player = new Player("prasad", "red", false, "roomId");
+      const player = new Player("prasad", "red", false, "roomID");
 
       assertEquals(player.json(), playerJson);
     });

@@ -98,9 +98,9 @@ export const createPlayer = (
   username: string,
   meepleColor: string,
   isHost: boolean,
-  roomId: string,
+  roomID: string,
 ): Player => {
-  return new Player(username, meepleColor, isHost, roomId);
+  return new Player(username, meepleColor, isHost, roomID);
 };
 
 export const createDummyPlayers = () => {

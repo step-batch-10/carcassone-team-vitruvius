@@ -1,6 +1,5 @@
 import { getCookie } from "hono/cookie";
 import { serveStatic } from "hono/deno";
-import { logger } from "hono/logger";
 import { AppContext, AppVariables } from "./models/types/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
 import {
@@ -17,6 +16,7 @@ import {
   handleTilePlacement,
   serveCurrentTile,
   serveGameBoard,
+  serveGameState,
   serveValidPositions,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
@@ -56,6 +56,7 @@ const createGameApp = () => {
   gameApp.use(setGameInContext);
 
   gameApp.get("/", serveStatic({ path: "/html/game.html", root: "public" }));
+  gameApp.get("/state", serveGameState);
   gameApp.get("/board", serveGameBoard);
   gameApp.get("/draw-tile", drawATile);
   gameApp.get("/valid-positions", serveValidPositions);
@@ -67,10 +68,10 @@ const createGameApp = () => {
   return gameApp;
 };
 
-const createApp = (appContext: AppContext) => {
+const createApp = (appContext: AppContext, logger: MiddlewareHandler) => {
   const app = new Hono<{ Variables: AppVariables }>();
 
-  app.use(logger());
+  app.use(logger);
   app.use(setAppContext(appContext));
   app.get(
     "/game-options",
