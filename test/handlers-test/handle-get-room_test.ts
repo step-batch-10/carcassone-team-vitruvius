@@ -17,7 +17,7 @@ describe("handleGetRoom", () => {
     users.set("uId", { username: "Mounika", roomID: null });
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
 
@@ -60,7 +60,7 @@ describe("handleGetRoom", () => {
     users.set("uId", { username: "Mounika", roomID: null });
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
 
     roomManager.createRoom("Mounika", 3);

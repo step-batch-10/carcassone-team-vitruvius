@@ -1,5 +1,5 @@
 import { createDummyPlayers } from "../../src/models/game/dummy-data-for-test.ts";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts"; 
+import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
@@ -12,7 +12,7 @@ describe("testing the serve valid position function", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
     games.set("1", Carcassonne.initGame(createDummyPlayers()));
@@ -27,7 +27,7 @@ describe("testing the serve valid position function", () => {
         headers: {
           cookie: "room-id=1",
         },
-      }
+      },
     );
 
     const response = await app.request(request);

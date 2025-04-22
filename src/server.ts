@@ -1,5 +1,5 @@
 import createApp from "./app.ts";
-import { Carcassonne } from "./models/game/carcassonne.ts"; 
+import { Carcassonne } from "./models/game/carcassonne.ts";
 import { User } from "./models/types/models.ts";
 import RoomManager from "./models/room/room-manager.ts";
 
@@ -22,7 +22,7 @@ const main = () => {
   const sessions = new Map<string, string>();
   const roomManager = new RoomManager(
     roomIdGenerator,
-    createMeepleColorGenerator()
+    createMeepleColorGenerator(),
   );
   const games = new Map<string, Carcassonne>();
   const context = { sessions, users, roomManager, games };

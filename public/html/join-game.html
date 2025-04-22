@@ -1,31 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>joinGamePage</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="/assets/css/join-game.css">
+    <script src="/assets/script/join-room.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>joinGamePage</title>
-  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/join-game.css">
-  <script src="/assets/script/join-room.js"></script>
-</head>
+  <body>
+    <header>
+      <h1>CARCASSONNE</h1>
+    </header>
 
-<body>
-  <header>
-    <h1>CARCASSONNE</h1>
-  </header>
-
-  <form id="roomJoiningForm">
-    <div class="join-id-container">
-      <input type="number" min="0" max="9" required autofocus class="join-box" />
-      <input type="number" min="0" max="9" required class="join-box" />
-      <input type="number" min="0" max="9" required class="join-box" />
-      <input type="number" min="0" max="9" required class="join-box" />
-      <input type="number" min="0" max="9" required class="join-box" />
-      <input type="number" min="0" max="9" required class="join-box" />
-    </div>
-    <button id="join-button" type="submit">Join</button>
-  </form>
-</body>
-
+    <form id="roomJoiningForm">
+      <div class="join-id-container">
+        <input
+          type="number"
+          min="0"
+          max="9"
+          required
+          autofocus
+          class="join-box"
+        />
+        <input type="number" min="0" max="9" required class="join-box" />
+        <input type="number" min="0" max="9" required class="join-box" />
+        <input type="number" min="0" max="9" required class="join-box" />
+        <input type="number" min="0" max="9" required class="join-box" />
+        <input type="number" min="0" max="9" required class="join-box" />
+      </div>
+      <button id="join-button" type="submit">Join</button>
+    </form>
+  </body>
 </html>

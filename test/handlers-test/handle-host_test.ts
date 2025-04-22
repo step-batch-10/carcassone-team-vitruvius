@@ -11,7 +11,7 @@ describe("handleHost", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
 
@@ -30,7 +30,7 @@ describe("handleHost", () => {
     const setCookies = loginResponse.headers.get("set-cookie") ?? "session-id=";
 
     const { "session-id": sessionId } = Object.fromEntries(
-      setCookies.split(";").map((cookie) => cookie.split("="))
+      setCookies.split(";").map((cookie) => cookie.split("=")),
     );
 
     const hostRequest = new Request("http://localhost/host", {

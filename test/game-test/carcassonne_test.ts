@@ -1,7 +1,7 @@
 import {
-  dummyTiles2,
   createDummyPlayers,
   createPlayer,
+  dummyTiles2,
 } from "../../src/models/game/dummy-data-for-test.ts";
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -128,7 +128,7 @@ describe("testing placablePositions", () => {
     ];
     const game: Carcassonne = Carcassonne.initGame(
       players,
-      (arr: Tile[]): Tile[] => arr
+      (arr: Tile[]): Tile[] => arr,
     );
     const placeablePositions = game.validPositions();
 
@@ -204,7 +204,7 @@ describe("testing place a meeple", () => {
 
     assertEquals(
       game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
-      1
+      1,
     );
   });
 });

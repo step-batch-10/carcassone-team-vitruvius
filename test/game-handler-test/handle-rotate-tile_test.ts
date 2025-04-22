@@ -20,13 +20,13 @@ describe("testing the handleRotateTile", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
     const game = Carcassonne.initGame(
       createDummyPlayers(),
       (arr) => arr,
-      dummyTiles
+      dummyTiles,
     );
 
     game.drawATile();
@@ -60,13 +60,13 @@ describe("testing the handleRotateTile", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "10",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
     const game = Carcassonne.initGame(
       createDummyPlayers(),
       (arr) => arr,
-      dummyTiles
+      dummyTiles,
     );
 
     game.drawATile();

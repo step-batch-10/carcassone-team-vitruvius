@@ -22,7 +22,7 @@ describe("serveCurrentTile", () => {
     games.set("1", Carcassonne.initGame(players));
     const roomManager = new RoomManager(
       () => "1",
-      () => meepleColorGenerator
+      () => meepleColorGenerator,
     );
 
     const appContext = { sessions, users, roomManager, games };
@@ -30,7 +30,7 @@ describe("serveCurrentTile", () => {
 
     const currentTileRequest = new Request(
       "http://localhost/game/current-tile",
-      { headers: { cookie: "room-id=1;" } }
+      { headers: { cookie: "room-id=1;" } },
     );
     const response = await app.request(currentTileRequest);
 
@@ -68,7 +68,7 @@ describe("serveCurrentTile", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => meepleColorGenerator
+      () => meepleColorGenerator,
     );
 
     const appContext = { sessions, users, roomManager, games };
@@ -78,7 +78,7 @@ describe("serveCurrentTile", () => {
 
     const currentTileRequest = new Request(
       "http://localhost/game/current-tile",
-      { headers: { cookie: "room-id=1;" } }
+      { headers: { cookie: "room-id=1;" } },
     );
 
     const response = await app.request(currentTileRequest);

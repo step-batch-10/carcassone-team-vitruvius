@@ -11,7 +11,7 @@ describe("handleLogin", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
 

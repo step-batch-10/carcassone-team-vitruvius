@@ -9,7 +9,7 @@ class RoomManager {
 
   constructor(
     roomIdGenerator: stringIdentity,
-    createMeepleColorGenerator: () => stringIdentity
+    createMeepleColorGenerator: () => stringIdentity,
   ) {
     this.rooms = new Map();
     this.roomIdGenerator = roomIdGenerator;
@@ -22,7 +22,7 @@ class RoomManager {
       maxPlayers,
       host,
       roomId,
-      this.createMeepleColorGenerator()
+      this.createMeepleColorGenerator(),
     );
 
     this.rooms.set(roomId, room);

@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Host and Join</title>
+    <script src="/assets/script/join-host.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="/assets/css/game-options.css">
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Host and Join</title>
-  <script src="/assets/script/join-host.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/game-options.css">
-</head>
+  <body>
+    <header>
+      <h1>CARCASSONNE</h1>
+    </header>
+    <div class="form-container">
+      <form action="/host" method="POST">
+        <label for="numbers">No.of Players</label>
 
-<body>
-  <header>
-    <h1>CARCASSONNE</h1>
-  </header>
-  <div class="form-container">
-    <form action="/host" method="POST">
-      <label for="numbers">No.of Players</label>
-
-      <select id="numbers" name="maxPlayers">
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-      <div>
-        <button class="host">Host</button>
-        <button class="quickPlay">Quick Play</button>
-      </div>
-    </form>
-    <button id="join-btn">Join</button>
-  </div>
-</body>
-
+        <select id="numbers" name="maxPlayers">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <div>
+          <button class="host">Host</button>
+          <button class="quickPlay">Quick Play</button>
+        </div>
+      </form>
+      <button id="join-btn">Join</button>
+    </div>
+  </body>
 </html>

@@ -1,48 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Game</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="/assets/css/game.css" />
+    <script type="module" src="/assets/script/game.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/game.css" />
-  <script type="module" src="/assets/script/game.js"></script>
-</head>
-
-<body>
-  <main>
-    <div class="player-turn" style="display: none;">
-      <p></p>
-    </div>
-    <div class="grid" id="grid"></div>
-    <div id="a-top">
-      <img class="arrow" src="/assets/images/symbols/arrow.png" alt="arrow-top" />
-    </div>
-    <div id="a-right">
-      <img class="arrow" src="/assets/images/symbols/arrow.png" alt="arrow-right" />
-    </div>
-    <div id="a-bottom">
-      <img class="arrow" src="/assets/images/symbols/arrow.png" alt="arrow-bottom" />
-    </div>
-    <div id="a-left">
-      <img class="arrow" src="/assets/images/symbols/arrow.png" alt="arrow-left" />
-    </div>
-  </main>
-  <footer>
-    <div id="options" class="footer">
-      <img src="/assets/images/symbols/center.png" alt="center" />
-      <img src="/assets/images/symbols/last-placed-tile.png" alt="last-placed-tile" />
-      <img src="/assets/images/symbols/last-player-tile.png" alt="last-player-tile" />
-      <img src="/assets/images/symbols/rotate-map.png" alt="rotate-map" />
-    </div>
-    <div id="status" class="footer">
-      <p>You</p>
-      <img id="meeple" src="/assets/images/red-meeple.png" alt="meeple" />
-      <p id="meeple-count">7</p>
-      <img src="/assets/images/symbols/score.png" alt="meeple" />
-      <p id="score">0</p>
-    </div>
-  </footer>
-</body>
-
+  <body>
+    <main>
+      <div class="player-turn" style="display: none">
+        <p></p>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div id="a-top">
+        <img
+          class="arrow"
+          src="/assets/images/symbols/arrow.png"
+          alt="arrow-top"
+        />
+      </div>
+      <div id="a-right">
+        <img
+          class="arrow"
+          src="/assets/images/symbols/arrow.png"
+          alt="arrow-right"
+        />
+      </div>
+      <div id="a-bottom">
+        <img
+          class="arrow"
+          src="/assets/images/symbols/arrow.png"
+          alt="arrow-bottom"
+        />
+      </div>
+      <div id="a-left">
+        <img
+          class="arrow"
+          src="/assets/images/symbols/arrow.png"
+          alt="arrow-left"
+        />
+      </div>
+    </main>
+    <footer>
+      <div id="options" class="footer">
+        <img src="/assets/images/symbols/center.png" alt="center" />
+        <img
+          src="/assets/images/symbols/last-placed-tile.png"
+          alt="last-placed-tile"
+        />
+        <img
+          src="/assets/images/symbols/last-player-tile.png"
+          alt="last-player-tile"
+        />
+        <img src="/assets/images/symbols/rotate-map.png" alt="rotate-map" />
+      </div>
+      <div id="status" class="footer">
+        <p>You</p>
+        <img id="meeple" src="/assets/images/red-meeple.png" alt="meeple" />
+        <p id="meeple-count">7</p>
+        <img src="/assets/images/symbols/score.png" alt="meeple" />
+        <p id="score">0</p>
+      </div>
+    </footer>
+  </body>
 </html>

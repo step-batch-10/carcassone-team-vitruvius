@@ -1,11 +1,11 @@
 import {
-  Tile,
   Feature,
   Position,
-  TileEdges,
   ResTiles,
-  TileBox,
   Sides,
+  Tile,
+  TileBox,
+  TileEdges,
 } from "../types/models.ts";
 import { ScoreManager } from "./score-board.ts";
 
@@ -38,8 +38,8 @@ export class Board {
       rows.map(Board.createTileBox)
     );
 
-    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)].tile =
-      Board.firstTile();
+    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)].tile = Board
+      .firstTile();
 
     return new Board(tileBoxes, rows, cols);
   }

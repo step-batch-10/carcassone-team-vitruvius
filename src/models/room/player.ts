@@ -11,7 +11,7 @@ class Player {
     username: string,
     meepleColor: string,
     isHost: boolean,
-    roomId: string
+    roomId: string,
   ) {
     this.username = username;
     this.noOfMeeples = 7;

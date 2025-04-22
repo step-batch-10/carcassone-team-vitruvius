@@ -16,7 +16,7 @@ class GameRoom {
     maxPlayers: number,
     host: string,
     roomID: string,
-    meepleColorGenerator: stringIdentity
+    meepleColorGenerator: stringIdentity,
   ) {
     this.roomID = roomID;
     this.host = host;
@@ -36,7 +36,7 @@ class GameRoom {
       playerName,
       this.meepleColorGenerator(),
       isHost,
-      this.roomID
+      this.roomID,
     );
 
     this.players.push(newPlayer);

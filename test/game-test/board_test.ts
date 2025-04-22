@@ -17,7 +17,7 @@ describe("testing static method 'create' of board to create board", () => {
         createATileBox(
           "1",
           [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-          Feature.ROAD
+          Feature.ROAD,
         ),
       ],
     ]);
@@ -75,7 +75,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD
+        Feature.ROAD,
       );
       board.placeTile(tile, { row: 2, col: 3 });
 
@@ -95,7 +95,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD
+        Feature.ROAD,
       );
 
       board.placeTile(tile, { row: 1, col: 1 });
@@ -110,7 +110,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD
+        Feature.ROAD,
       );
       board.placeTile(tile, { row: 2, col: 3 });
 
@@ -122,7 +122,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.ROAD],
-        Feature.ROAD
+        Feature.ROAD,
       );
       board.placeTile(tile, { row: 1, col: 2 });
 
@@ -134,7 +134,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.MONASTERY, Feature.CITY, Feature.FIELD, Feature.ROAD],
-        Feature.ROAD
+        Feature.ROAD,
       );
       board.placeTile(tile, { row: 2, col: 1 });
 
@@ -146,7 +146,7 @@ describe("testing putTile method of Board", () => {
       const tile = createTile(
         "2",
         [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-        Feature.ROAD
+        Feature.ROAD,
       );
       board.placeTile(tile, { row: 3, col: 2 });
 

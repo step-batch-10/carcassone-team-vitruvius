@@ -18,7 +18,7 @@ export class ScoreManager {
     left: Position,
     top: Position,
     right: Position,
-    bottom: Position
+    bottom: Position,
   ) {
     const leftAdjTile = this.board[left.row][left.col];
     const topAdjTile = this.board[top.row][top.col];
@@ -35,12 +35,12 @@ export class ScoreManager {
       top: Position;
       right: Position;
       bottom: Position;
-    }
+    },
   ) {
     const { left, top, right, bottom } = resPostions(tilePosition);
 
-    const { leftAdjTile, topAdjTile, rightAdjTile, bottomAdjTile } =
-      this.adjacentTiles(left, top, right, bottom);
+    const { leftAdjTile, topAdjTile, rightAdjTile, bottomAdjTile } = this
+      .adjacentTiles(left, top, right, bottom);
 
     const leftAdjEdge = leftAdjTile.occupiedRegion.right;
     const topAdjEdge = topAdjTile.occupiedRegion.bottom;
@@ -52,7 +52,7 @@ export class ScoreManager {
 
   private addPlayerToCenter(
     middleOccupance: OccupanceSubGrid,
-    adjacentSubGrid: OccupanceSubGrid
+    adjacentSubGrid: OccupanceSubGrid,
   ) {
     middleOccupance.occupiedBy.union(adjacentSubGrid.occupiedBy);
   }
@@ -61,19 +61,20 @@ export class ScoreManager {
     const occupances = cell.occupiedRegion;
     const middleOccupance = occupances.middle;
     this.edges.forEach((edge: Sides) => {
-      if (middleOccupance.feature === occupances[edge].feature)
+      if (middleOccupance.feature === occupances[edge].feature) {
         this.addPlayerToCenter(middleOccupance, occupances[edge]);
+      }
     });
   }
 
   markOccupance(
     tilePosition: Position,
-    respectivePosition: RespectivePosition
+    respectivePosition: RespectivePosition,
   ) {
     const { col, row } = tilePosition;
     const currentTile = this.board[row][col];
-    const { leftAdjEdge, topAdjEdge, rightAdjEdge, bottomAdjEdge } =
-      this.adjacentEdges(tilePosition, respectivePosition);
+    const { leftAdjEdge, topAdjEdge, rightAdjEdge, bottomAdjEdge } = this
+      .adjacentEdges(tilePosition, respectivePosition);
 
     currentTile.occupiedRegion.left = leftAdjEdge;
     currentTile.occupiedRegion.top = topAdjEdge;

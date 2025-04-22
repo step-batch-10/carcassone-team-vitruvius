@@ -15,7 +15,7 @@ describe("handleJoin", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
 
     roomManager.createRoom("hostUser", 3);
@@ -49,7 +49,7 @@ describe("handleJoin", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
 
     roomManager.createRoom("hostUser", 3);
@@ -80,7 +80,7 @@ describe("handleJoin", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
 
     roomManager.createRoom("hostUser", 2);
@@ -110,7 +110,7 @@ describe("handleJoin", () => {
 
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
 
     roomManager.createRoom("hostUser", 3);

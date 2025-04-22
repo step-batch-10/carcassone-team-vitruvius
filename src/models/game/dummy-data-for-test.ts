@@ -4,7 +4,7 @@ import Player from "../room/player.ts";
 export const createTile = (
   id: string,
   edges: [Feature, Feature, Feature, Feature],
-  center: Feature
+  center: Feature,
 ): Tile => {
   return {
     hasShield: false,
@@ -18,7 +18,7 @@ export const createTile = (
 export const createATileBox = (
   id: string,
   edges: [Feature, Feature, Feature, Feature],
-  center: Feature
+  center: Feature,
 ): TileBox => {
   return {
     tile: createTile(id, edges, center),
@@ -37,13 +37,13 @@ export const dummyTiles = [
   createTile(
     "2",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD
+    Feature.ROAD,
   ),
 
   createTile(
     "3",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD
+    Feature.ROAD,
   ),
 ];
 
@@ -56,12 +56,12 @@ export const dummyTiles2 = [
       Feature.MONASTERY,
       Feature.MONASTERY,
     ],
-    Feature.ROAD
+    Feature.ROAD,
   ),
   createTile(
     "2",
     [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY],
-    Feature.CITY
+    Feature.CITY,
   ),
 ];
 
@@ -69,7 +69,7 @@ export const createPlayer = (
   username: string,
   meepleColor: string,
   isHost: boolean,
-  roomId: string
+  roomId: string,
 ): Player => {
   return new Player(username, meepleColor, isHost, roomId);
 };

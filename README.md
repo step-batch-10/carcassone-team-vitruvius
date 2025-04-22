@@ -12,8 +12,10 @@
 
 ## About
 
-**Carcassonne** is a strategic tile-placement board game where players place tiles to build cities, roads, monasteries, and fields to score points.  
-This is an online version of the game, enhanced with interactive features and multiplayer support.
+**Carcassonne** is a strategic tile-placement board game where players place
+tiles to build cities, roads, monasteries, and fields to score points.\
+This is an online version of the game, enhanced with interactive features and
+multiplayer support.
 
 ---
 
