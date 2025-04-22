@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 deno test -A --coverage
 deno run -A jsr:@ashishkujoy/deno-coverage-checker@0.0.7 --lines=90
 echo "---------------------------------test coverage covers the threshold---------------------------------"
