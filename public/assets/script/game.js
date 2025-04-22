@@ -238,7 +238,7 @@ const main = async () => {
   mouseLeft();
   mouseRight();
   changeFocusToStartingTile();
-  showCurrentPlayer();
+  showCurrentPlayer(5000);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
