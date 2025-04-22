@@ -79,6 +79,12 @@ const setupGrid = (gridSize) => {
   return grid;
 };
 
+const drawATile = async () => {
+  const response = await fetch("/game/draw-tile");
+
+  return response.json();
+};
+
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
     await drawATile();

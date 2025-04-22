@@ -21,7 +21,6 @@ const fetchRoomData = async () => {
   const roomData = await fetch("/room");
 
   const { maxPlayers, roomID, players } = await roomData.json();
-  console.log(maxPlayers, "max players i am getting form server");
 
   return { maxPlayers, roomID, players };
 };

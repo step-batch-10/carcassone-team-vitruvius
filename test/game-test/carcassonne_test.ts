@@ -200,7 +200,6 @@ describe("testing place a meeple", () => {
 
   it("when tile placed and connects to claimed feature should marked as claim", () => {
     const tiles = [[createATileBox()]];
-    console.log(tiles);
 
     const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
 

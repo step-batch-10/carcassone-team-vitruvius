@@ -81,7 +81,6 @@ describe("testing the handleRotateTile", () => {
     });
 
     const actual = await rotatedTileRes.json();
-    console.log(actual);
 
     assertEquals(actual, { desc: "invalid game Id" });
   });

@@ -110,7 +110,7 @@ class Board {
         const cell = event.target;
 
         if (this.#currentTile) {
-          this.#insertTileInCell(cell, currentTile);
+          this.#insertTileInCell(cell, this.#currentTile);
           this.#addRotateRightButton(cell, events);
         }
       },

@@ -46,7 +46,6 @@ export class ScoreManager {
       .adjacentOccupiedRegion(tilePosition);
 
     const occupiedEdges = [leftEdge, topEdge, rightEdge, bottomEdge];
-    console.log(occupiedEdges);
 
     this.edges.forEach((edge, index) => {
       currentTile.occupiedRegion[edge] = occupiedEdges[index]?.feature

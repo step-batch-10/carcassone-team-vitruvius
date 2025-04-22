@@ -7,7 +7,7 @@ import { AppContext, User } from "../../src/models/types/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 
-describe("testing the serve valid position function", () => {
+describe("handleTilePlacement", () => {
   it("should return an object containing an array of placeable tiles and an array of unlocked tiles ", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
