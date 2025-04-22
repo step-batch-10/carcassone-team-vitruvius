@@ -5,7 +5,7 @@ import { Feature } from "../../src/models/types/models.ts";
 import {
   createATileBox,
   createTile,
-} from "../../src/models/game/dummy-data-for-test.ts";
+} from "../dummy-data.ts";
 
 describe("testing static method 'create' of board to create board", () => {
   it("should create an empty board of given size with first tile already present", () => {

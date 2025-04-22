@@ -1,7 +1,4 @@
-import {
-  createDummyPlayers,
-  dummyTiles,
-} from "../../src/models/game/dummy-data-for-test.ts";
+import { createDummyPlayers, dummyTiles } from "../dummy-data.ts";
 
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
@@ -16,7 +13,7 @@ describe("testing draw a tile handler", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red",
+      () => () => "red"
     );
     const games = new Map<string, Carcassonne>();
     games.set(
@@ -24,8 +21,8 @@ describe("testing draw a tile handler", () => {
       Carcassonne.initGame(
         createDummyPlayers(),
         (arr: Tile[]): Tile[] => arr,
-        dummyTiles,
-      ),
+        dummyTiles
+      )
     );
 
     const context: AppContext = { sessions, users, roomManager, games };

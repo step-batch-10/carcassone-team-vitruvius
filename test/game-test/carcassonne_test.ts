@@ -4,7 +4,7 @@ import {
   dummyTiles2,
   dummyTiles,
   dummyTiles3,
-} from "../../src/models/game/dummy-data-for-test.ts";
+} from "../dummy-data.ts";
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";

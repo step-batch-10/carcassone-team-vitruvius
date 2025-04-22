@@ -1,4 +1,4 @@
-import { createDummyPlayers } from "../../src/models/game/dummy-data-for-test.ts";
+import { createDummyPlayers } from "../dummy-data.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -12,7 +12,7 @@ describe("handle the game board", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red",
+      () => () => "red"
     );
     const games = new Map<string, Carcassonne>();
     games.set("1", Carcassonne.initGame(createDummyPlayers()));
@@ -38,7 +38,7 @@ describe("handle the game board", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red",
+      () => () => "red"
     );
     const games = new Map<string, Carcassonne>();
     games.set("1", Carcassonne.initGame(createDummyPlayers()));
