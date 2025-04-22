@@ -1,4 +1,4 @@
-import { TileBoxManager } from "./../../src/models/game/tileBox.ts";
+import { TileBoxManager } from "../../src/models/game/tiles.ts";
 import { createATileBox } from "./../dummy-data.ts";
 import {
   createDummyPlayers,

@@ -1,4 +1,4 @@
-import { shuffler, TileStacker } from "./tile-Manager.ts";
+import { shuffler, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import { CardinalDegrees, Position, Sides, Tile } from "../types/models.ts";

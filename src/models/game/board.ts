@@ -1,5 +1,4 @@
-import { TileBoxManager } from "./tileBox.ts";
-import { createTileBox, firstTileBox } from "./boardModel.ts";
+import { createTileBox, firstTileBox, TileBoxManager } from "./tiles.ts";
 import {
   Position,
   ResTiles,

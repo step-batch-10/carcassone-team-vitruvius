@@ -1,7 +1,6 @@
-import { shuffler } from "../../src/models/game/tile-Manager.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { TileStacker } from "../../src/models/game/tile-Manager.ts";
+import { shuffler, TileStacker } from "../../src/models/game/tiles.ts";
 import { Feature, Tile } from "../../src/models/types/models.ts";
 
 describe("testing pickTile", () => {

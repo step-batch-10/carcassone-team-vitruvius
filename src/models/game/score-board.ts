@@ -1,4 +1,4 @@
-import { TileBoxManager } from "./tileBox.ts";
+import { TileBoxManager } from "./tiles.ts";
 import { OccupanceSubGrid, Position, Sides, TileBox } from "../types/models.ts";
 
 export class ScoreManager {
