@@ -60,18 +60,26 @@ const fetchRotatedTile = async () => {
   return await response.json();
 };
 
+// const reqForPlaceablePositions = async () => {
+//   return await fetch("/game/tile/placeable-positions");
+// };
+
+// const heightLightPlaceableCell = async () => {
+//   const placeablePositions = await reqForPlaceablePositions();
+// };
+
 const rotateRight = async (event) => {
   const rotatedTile = await fetchRotatedTile();
 
   if (rotatedTile) {
     const tileImage = event.target.parentNode.querySelector("img");
     tileImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
+    // await heightLightPlaceableCell();
   }
 };
 
 const setupGrid = (gridSize) => {
   const grid = document.getElementById("grid");
-
   grid.style.display = "grid";
   grid.style.gridTemplateColumns = `repeat(${gridSize}, 150px)`;
   grid.style.gridTemplateRows = `repeat(${gridSize}, 150px)`;
@@ -91,16 +99,15 @@ const drawTileIfNotDrawn = async (currentTile) => {
   }
 };
 
-const updateGameState = (gameState) => {
+const updateGameState = async (gameState) => {
   const { board: tiles, currentPlayer, self, currentTile } = gameState;
 
   const grid = setupGrid(84);
   const board = new Board(grid);
   board.build(tiles, createCellEvents(board));
-
   if (self.username === currentPlayer.username) {
     drawTileIfNotDrawn(currentTile);
-    board.addGhostEffect({ click: rotateRight });
+    await board.addGhostEffect({ click: rotateRight });
   }
 };
 
