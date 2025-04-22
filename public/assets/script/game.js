@@ -149,11 +149,87 @@ const fetchGameState = async () => {
   return await response.json();
 };
 
+const atTopEdge = () => globalThis.scrollY <= 0;
+
+const atBottomEdge = () => {
+  return (
+    globalThis.scrollY + globalThis.innerHeight >= document.body.scrollHeight
+  );
+};
+
+const atLeftEdge = () => globalThis.scrollX <= 0;
+
+const atRightEdge = () => {
+  return (
+    globalThis.scrollX + globalThis.innerWidth >= document.body.scrollWidth
+  );
+};
+
+const mouseDown = () => {
+  const upArrow = document.querySelector("#a-bottom");
+  upArrow.addEventListener("click", () => {
+    if (!atBottomEdge()) {
+      globalThis.scrollBy({
+        top: 450,
+        behavior: "smooth",
+      });
+    } else {
+      alert("You are already in bottom edge!");
+    }
+  });
+};
+
+const mouseUp = () => {
+  const upArrow = document.querySelector("#a-top");
+  upArrow.addEventListener("click", () => {
+    if (!atTopEdge()) {
+      globalThis.scrollBy({
+        top: -450,
+        behavior: "smooth",
+      });
+    } else {
+      alert("You are already in top edge!");
+    }
+  });
+};
+
+const mouseLeft = () => {
+  const upArrow = document.querySelector("#a-left");
+  upArrow.addEventListener("click", () => {
+    if (!atLeftEdge()) {
+      globalThis.scrollBy({
+        left: -450,
+        behavior: "smooth",
+      });
+    } else {
+      alert("You are already in Left edge!");
+    }
+  });
+};
+
+const mouseRight = () => {
+  const upArrow = document.querySelector("#a-right");
+  upArrow.addEventListener("click", () => {
+    if (!atRightEdge()) {
+      globalThis.scrollBy({
+        left: 450,
+        behavior: "smooth",
+      });
+    } else {
+      alert("You are already in Right edge!");
+    }
+  });
+};
+
 const main = async () => {
   const gameState = await fetchGameState();
   showPlayerStatus();
 
   updateGameState(gameState);
+  mouseUp();
+  mouseDown();
+  mouseLeft();
+  mouseRight();
   changeFocusToStartingTile();
   showCurrentPlayer();
 };
