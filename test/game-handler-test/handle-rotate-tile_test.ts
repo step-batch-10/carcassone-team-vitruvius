@@ -1,7 +1,4 @@
-import {
-  createDummyPlayers,
-  dummyTiles,
-} from "../../src/models/game/dummy-data-for-test.ts";
+import { createDummyPlayers, dummyTiles } from "../dummy-data.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";

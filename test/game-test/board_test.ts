@@ -2,10 +2,7 @@ import { Board } from "../../src/models/game/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Feature } from "../../src/models/types/models.ts";
-import {
-  createATileBox,
-  createTile,
-} from "../dummy-data.ts";
+import { createATileBox, createTile } from "../dummy-data.ts";
 
 describe("testing static method 'create' of board to create board", () => {
   it("should create an empty board of given size with first tile already present", () => {
@@ -152,6 +149,20 @@ describe("testing putTile method of Board", () => {
 
       assertEquals(board.getTile({ row: 3, col: 2 }), null);
     });
+  });
+});
+
+describe("testing placing of tile", () => {
+  it("should return when the tile being placed outside the board", () => {
+    const board = Board.create(5, 5);
+    const tile = createTile(
+      "2",
+      [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
+      Feature.ROAD,
+    );
+    board.placeTile(tile, { row: 6, col: 6 });
+
+    assertEquals(board.getTile({ row: 6, col: 6 }), undefined);
   });
 });
 

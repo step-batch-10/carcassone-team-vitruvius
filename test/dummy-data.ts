@@ -16,12 +16,16 @@ export const createTile = (
 };
 
 export const createATileBox = (
-  id: string,
-  edges: [Feature, Feature, Feature, Feature],
-  center: Feature,
+  id: string = "1",
+  edges: [Feature, Feature, Feature, Feature] | null = null,
+  center: Feature = Feature.ROAD,
 ): TileBox => {
+  const tile = edges ? createTile(id, edges, center) : null;
+  edges = edges
+    ? edges
+    : [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY];
   return {
-    tile: createTile(id, edges, center),
+    tile: tile,
     meeple: { color: null, playerName: null, region: null },
     occupiedRegion: {
       left: { feature: edges[0], occupiedBy: new Set<string>() },
@@ -51,24 +55,24 @@ export const dummyTiles3 = [
   createTile(
     "2",
     [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.CITY],
-    Feature.ROAD
+    Feature.ROAD,
   ),
 
   createTile(
     "3",
     [Feature.ROAD, Feature.FIELD, Feature.FIELD, Feature.ROAD],
-    Feature.ROAD
+    Feature.ROAD,
   ),
 
   createTile(
     "4",
     [Feature.FIELD, Feature.ROAD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD
+    Feature.ROAD,
   ),
   createTile(
     "5",
     [Feature.FIELD, Feature.FIELD, Feature.ROAD, Feature.ROAD],
-    Feature.ROAD
+    Feature.ROAD,
   ),
 ];
 

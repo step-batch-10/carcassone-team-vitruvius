@@ -1,7 +1,7 @@
 import { shuffler, TileStacker } from "./tile-Manager.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import { Tile, Position, CardinalDegrees, Sides } from "../types/models.ts";
+import { CardinalDegrees, Position, Sides, Tile } from "../types/models.ts";
 import { dummyTiles as tiles } from "../../../test/dummy-data.ts";
 
 export class Carcassonne {
@@ -17,7 +17,7 @@ export class Carcassonne {
     players: Player[],
     tileManager: TileStacker,
     board: Board,
-    unlockedPosition: Position[]
+    unlockedPosition: Position[],
   ) {
     this.players = players;
     this.turn = 0;
@@ -61,7 +61,7 @@ export class Carcassonne {
   static initGame(
     players: Player[],
     tileShuffler = shuffler,
-    tilesArr = tiles
+    tilesArr = tiles,
   ) {
     const tileManager = new TileStacker(tilesArr, tileShuffler);
     const board = Board.create(84, 84);

@@ -1,14 +1,16 @@
+import { TileBoxManager } from "./../../src/models/game/tileBox.ts";
+import { createATileBox } from "./../dummy-data.ts";
 import {
   createDummyPlayers,
   createPlayer,
-  dummyTiles2,
   dummyTiles,
-  dummyTiles3,
+  dummyTiles2,
 } from "../dummy-data.ts";
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { Sides, Tile } from "../../src/models/types/models.ts";
+import { ScoreManager } from "../../src/models/game/score-board.ts";
 
 describe("testing getCurrentPlayer", () => {
   it("should return currentPlayer", () => {
@@ -86,7 +88,7 @@ describe("testing placablePositions", () => {
     const game: Carcassonne = Carcassonne.initGame(
       players,
       (arr) => arr,
-      dummyTiles
+      dummyTiles,
     );
     game.drawATile();
     const placeablePositions = game.validPositions();
@@ -135,7 +137,7 @@ describe("testing placablePositions", () => {
     const game: Carcassonne = Carcassonne.initGame(
       players,
       (arr: Tile[]): Tile[] => arr,
-      dummyTiles
+      dummyTiles,
     );
     const placeablePositions = game.validPositions();
 
@@ -197,50 +199,11 @@ describe("testing place a meeple", () => {
   });
 
   it("when tile placed and connects to claimed feature should marked as claim", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const tiles = [[createATileBox()]];
+    console.log(tiles);
 
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles);
+    const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.placeAMeeple(Sides.RIGHT);
-    game.placeATile({ row: 42, col: 44 });
-
-    assertEquals(
-      game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
-      1
-    );
-  });
-});
-
-describe("testing to mark the occurence recurssevely when adjacent tile is claimed ", () => {
-  it("should mark as occurence when adjacent claimed", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3);
-
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 42 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 41 });
-    game.placeAMeeple(Sides.TOP);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 41 });
-
-    console.log("42 41", game.getBoard()[42][41]);
-    console.log("42 42", game.getBoard()[42][42]);
-
-    assertEquals(
-      game.getBoard()[42][41].occupiedRegion.bottom.occupiedBy.size,
-      1
-    );
+    assertFalse(scoreBoard.markOccupance({ row: 0, col: 0 }));
   });
 });

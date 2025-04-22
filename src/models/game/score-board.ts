@@ -18,7 +18,7 @@ export class ScoreManager {
     middleOccupance.occupiedBy.union(adjacentSubGrid.occupiedBy);
   }
 
-  markCenterOccupance(cell: TileBox) {
+  private markCenterOccupance(cell: TileBox) {
     const occupances = cell.occupiedRegion;
     const middleOccupance = occupances.middle;
 
@@ -42,13 +42,16 @@ export class ScoreManager {
   }
 
   private markOccupiedRegion(currentTile: TileBox, tilePosition: Position) {
-    const { leftEdge, topEdge, rightEdge, bottomEdge } =
-      this.tileBoxes.adjacentOccupiedRegion(tilePosition);
+    const { leftEdge, topEdge, rightEdge, bottomEdge } = this.tileBoxes
+      .adjacentOccupiedRegion(tilePosition);
 
     const occupiedEdges = [leftEdge, topEdge, rightEdge, bottomEdge];
+    console.log(occupiedEdges);
+
     this.edges.forEach((edge, index) => {
-      currentTile.occupiedRegion[edge] =
-        occupiedEdges[index] || currentTile.occupiedRegion[edge];
+      currentTile.occupiedRegion[edge] = occupiedEdges[index]?.feature
+        ? occupiedEdges[index]
+        : currentTile.occupiedRegion[edge];
     });
   }
 

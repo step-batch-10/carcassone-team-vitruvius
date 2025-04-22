@@ -1,4 +1,4 @@
-import { TileBox, Feature } from "./../types/models.ts";
+import { Feature, TileBox } from "./../types/models.ts";
 const createPosition = () => {
   return { feature: null, occupiedBy: new Set<string>() };
 };

@@ -1,4 +1,4 @@
-import { TileBox, Position } from "../types/models.ts";
+import { Position, TileBox } from "../types/models.ts";
 
 export class TileBoxManager {
   private board: TileBox[][];

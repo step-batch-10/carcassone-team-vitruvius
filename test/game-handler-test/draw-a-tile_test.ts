@@ -13,7 +13,7 @@ describe("testing draw a tile handler", () => {
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
     games.set(
@@ -21,8 +21,8 @@ describe("testing draw a tile handler", () => {
       Carcassonne.initGame(
         createDummyPlayers(),
         (arr: Tile[]): Tile[] => arr,
-        dummyTiles
-      )
+        dummyTiles,
+      ),
     );
 
     const context: AppContext = { sessions, users, roomManager, games };
