@@ -1,5 +1,6 @@
 import { Context } from "hono";
-import { Position, Sessions, Users, Variables } from "../models/types/models.ts";
+import { Position, Sessions, Users } from "../models/types/models.ts";
+import { Variables } from "hono/types";
 import { getCookie } from "hono/cookie";
 import { Carcassonne } from "../models/game/carcassonne.ts";
 import _ from "lodash";
@@ -11,7 +12,7 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
 const getUserOfSessionId = (
   ctx: Context<{ Variables: Variables }>,
   sessions: Sessions,
-  users: Users
+  users: Users,
 ) => {
   const sessionID = String(getCookie(ctx, "session-id"));
   const userID = String(sessions.get(sessionID));
@@ -90,12 +91,12 @@ const handleRotateTile = (ctx: Context) => {
 };
 
 export {
-  handleRotateTile,
-  serveCurrentTile,
-  serveGameBoard,
   drawATile,
-  serveValidPositions,
-  handleTilePlacement,
   getCurrentPlayer,
   getSelfStatus,
+  handleRotateTile,
+  handleTilePlacement,
+  serveCurrentTile,
+  serveGameBoard,
+  serveValidPositions,
 };

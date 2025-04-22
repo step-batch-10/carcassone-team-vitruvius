@@ -83,7 +83,7 @@ const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
     await drawATile();
   }
-}
+};
 
 const updateGameState = (gameState) => {
   const { board: tiles, currentPlayer, self, currentTile } = gameState;
@@ -110,7 +110,6 @@ const changeFocusToStartingTile = () =>
 const fetchCurrentPlayer = async () => {
   const response = await fetch("/game/current-player");
 
-
   return await response.json();
 };
 
@@ -120,7 +119,7 @@ const showCurrentPlayer = (interval) => {
 
   setInterval(async () => {
     const currentPlayer = await fetchCurrentPlayer();
-    
+
     textLabel.textContent = `${currentPlayer}'s turn`;
     currentPlayerLabel.style.display = "flex";
   }, interval);
