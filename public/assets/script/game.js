@@ -1,6 +1,73 @@
 import Board from "./board.js";
 
 const updateGameState = async (grid) => {
+const getImgUrl = (cell) => {
+  const img = cell.querySelector("img");
+  console.log();
+
+  return img.src;
+};
+
+const placeTile = (cell) => {
+  const [row, col] = cell.id.slice("/");
+  return fetch("/game/place-tile", {
+    method: "PATCH",
+    body: JSON.stringify({ row, col }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+const addImgToCell = (cell) => {
+  console.log(cell);
+
+  const imgPath = getImgUrl(cell);
+  cell.innerHtml = "";
+  cell.style.backgroundImage = `url("${imgPath}")`;
+};
+
+const handleTilePlacement = async (event, board, events) => {
+  const tilePlacementRes = await placeTile(event.target);
+  if (tilePlacementRes.status !== 201) {
+    alert("isInvalid Place");
+    return;
+  }
+
+  event.target.style.opacity = "1";
+  board.removeGhostEffect();
+  addImgToCell(event.target);
+
+  event.target.removeEventListener("dblclick", events.dblclick);
+};
+
+const createCellEvents = (board) => {
+  const events = {
+    dblclick: (event) => {
+      handleTilePlacement(event, board, events);
+    },
+  };
+
+  return events;
+};
+
+const fetchRotatedTile = async () => {
+  const response = await fetch("game/tile/rotate", { method: "PATCH" });
+
+  return await response.json();
+};
+
+const rotateRight = async (event) => {
+  const rotatedTile = await fetchRotatedTile();
+
+  if (rotatedTile) {
+    const tileImage = event.target.parentNode.querySelector("img");
+    tileImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
+  }
+};
+
+const updateGameState = async (grid, currentTilePath) => {
+>>>>>>> 0edc13e ([#16]: adds functions rotateTile and placeTile in game.js | sakib/mounika)
   const boardResponse = await fetch("/game/board");
   const tiles = await boardResponse.json();
   const board = new Board(grid);
@@ -49,6 +116,11 @@ const main = async () => {
   const grid = setupGrid(84);
 
   await drawATile();
+
+  // const tileResponse = await fetch("/game/draw-tile");
+  // const currentTile = await tileResponse.json();
+
+  // const currentTilePath = Board.extractTileImagePath(currentTile);
   changeFocusToStartingTile();
 
   await updateGameState(grid);
