@@ -51,6 +51,7 @@ describe("testing the handleRotateTile", () => {
       tileCenter: Feature.ROAD,
       tileEdges: [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
     };
+
     assertEquals(rotatedTile, expectedTile);
   });
 
@@ -58,7 +59,7 @@ describe("testing the handleRotateTile", () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
-      () => "1",
+      () => "10",
       () => () => "red"
     );
     const games = new Map<string, Carcassonne>();
@@ -82,8 +83,8 @@ describe("testing the handleRotateTile", () => {
     });
 
     const actual = await rotatedTileRes.json();
+    console.log(actual);
 
-    const expectedTile = { desc: "invalid game Id" };
-    assertEquals(actual, expectedTile);
+    assertEquals(actual, { desc: "invalid game Id" });
   });
 });

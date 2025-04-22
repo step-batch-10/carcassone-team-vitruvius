@@ -41,13 +41,9 @@ const handleRotateTile = (ctx: Context) => {
   const games = ctx.get("games");
 
   const roomID = String(getCookie(ctx, "room-id"));
-  const game: Carcassonne = games.get(roomID);
-  if (game) {
-    const rotatedTile = game.rotateCurrentTile();
-    return ctx.json(rotatedTile, 200);
-  }
-
-  return ctx.json({ desc: "invalid game Id" }, 200);
+  const game = games.get(roomID);
+  const rotatedTile = game.rotateCurrentTile();
+  return ctx.json(rotatedTile, 200);
 };
 
 export {
