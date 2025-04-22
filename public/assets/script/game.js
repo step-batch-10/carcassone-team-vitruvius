@@ -29,11 +29,12 @@ const fetchCurrentPlayer = async () => {
 const showCurrentPlayer = (interval) => {
   const currentPlayerLabel = document.querySelector(".player-turn");
   const textLabel = currentPlayerLabel.querySelector("p");
-
+  
   setInterval(async () => {
     const currentPlayer = await fetchCurrentPlayer();
-
+    
     textLabel.textContent = `${currentPlayer}'s turn`;
+    currentPlayerLabel.style.display = "flex";
   }, interval);
 };
 

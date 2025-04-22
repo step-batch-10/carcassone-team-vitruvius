@@ -109,21 +109,21 @@ body {
 }
 
 .player-turn {
-  font-size: 1.4rem;
-  margin-top: 10px;
-  margin-right: 10px;
-
-  padding-left: 4px;
-  padding-right: 4px;
+  font-size: 1.2rem;
+  font-family: "Medieval";
+  font-weight: bolder;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #e7af14, #b32f04);
+  color: #333;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  width: max-content;
-  height: 4vh;
-  border: 1px solid red;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.706);
+
   position: fixed;
-  top: 0px;
-  right: 0px;
+  top: 20px;
+  right: 20px;
 }

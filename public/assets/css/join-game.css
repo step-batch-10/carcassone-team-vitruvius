@@ -77,3 +77,13 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+.custom-alert {
+  position: fixed;
+  color: rgb(215, 6, 6);
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid goldenrod;
+  padding: 10px 20px;
+  border-radius: 8px;
+  bottom: 34%;
+}

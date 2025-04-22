@@ -1,6 +1,4 @@
-const joinRoom = async (event) => {
-  event.preventDefault();
-
+const getJoinRoomId = () => {
   const formData = new FormData();
   const boxes = document.querySelectorAll(".join-box");
   const roomID = Array.from(boxes)
@@ -8,16 +6,37 @@ const joinRoom = async (event) => {
     .join("");
 
   formData.append("roomID", roomID);
+  return formData;
+};
 
+const sendLobbyRequest = async () => {
+  const formData = getJoinRoomId();
   const response = await fetch("/joinRoom", {
     method: "POST",
     body: formData,
   });
+  return await response.json();
+};
 
-  const { isRoomJoined } = await response.json();
+const createAlertDiv = () => {
+  const alertDiv = document.createElement("div");
+  alertDiv.classList.add("custom-alert");
+  alertDiv.textContent = "Please Enter Valid Room ID";
+  document.body.append(alertDiv);
+  return alertDiv;
+};
+
+const joinRoom = async (event) => {
+  event.preventDefault();
+
+  const { isRoomJoined } = await sendLobbyRequest();
 
   if (!isRoomJoined) {
-    alert("invalid room Id");
+    const alertDiv = createAlertDiv();
+
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 2000);
     return;
   }
 
