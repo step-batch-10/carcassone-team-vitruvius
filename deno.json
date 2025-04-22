@@ -14,12 +14,20 @@
     "commit": "./commit.sh",
     "start": "deno run -A --watch src/server.ts",
     "open-app": "open -a 'Google Chrome' https://amankumarbh-carcassone-69.deno.dev/",
-    "test": "deno test -A",
+    "test": "deno test -A --coverage --clean",
     "test-watch": "deno test --watch -A",
-    "test-coverage": "deno test -A --coverage=coverage",
+    "fmt": "deno fmt",
+    "lint": "deno lint",
+    "test-coverage": {
+      "command": "deno run -A jsr:@ashishkujoy/deno-coverage-checker",
+      "dependencies": ["test"]
+    },
     "coverage": {
       "command": "deno coverage --html",
       "dependencies": ["test-coverage"]
+    },
+    "dev-check": {
+      "dependencies": ["fmt", "lint", "test-coverage"]
     },
     "qa-deploy": "deployctl deploy --project=sireeshauda-carcassone-qa --entrypoint='./src/server.ts' --org='team-virtuvius'"
   },
