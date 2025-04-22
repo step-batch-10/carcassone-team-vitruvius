@@ -35,10 +35,26 @@ const serveCurrentTile = (ctx: Context) => {
   return ctx.json(game.getCurrentTile(), 200);
 };
 
+const handleRotateTile = (ctx: Context) => {
+  const games = ctx.get("games");
+
+  const roomID = String(getCookie(ctx, "room-id"));
+  const game = games.get(roomID);
+
+  if (game) {
+    const rotatedTile = game.rotateCurrentTile();
+
+    return ctx.json(rotatedTile, 200);
+  }
+
+  return ctx.json({ desc: "invalid game Id" }, 200);
+};
+
 export {
   serveGameBoard,
   serveCurrentTile,
   drawATile,
   serveValidPositions,
   handleTilePlacement,
+  handleRotateTile,
 };
