@@ -157,6 +157,7 @@ export class Carcassonne {
 
   placeAMeeple(subGrid: Sides) {
     const player = this.getCurrentPlayer().username;
+
     const status = this.board.placeMeeple(this.tilePlacedAt, player, subGrid);
     if (status.isPlaced) {
       this.changePlayerTurn();

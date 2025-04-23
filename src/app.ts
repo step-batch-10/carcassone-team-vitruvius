@@ -12,19 +12,19 @@ import {
   drawATile,
   getCurrentPlayer,
   getSelfStatus,
+  handlePlaceMeeple,
   handleRotateTile,
   handleTilePlacement,
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
   serveValidPositions,
-  meeplePlacementHandler,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
 
 const setAppContext = (
-  appContext: AppContext
+  appContext: AppContext,
 ): MiddlewareHandler<{ Variables: AppVariables }> => {
   return async (ctx: Context<{ Variables: AppVariables }>, next: Next) => {
     const { sessions, users, roomManager, games } = appContext;
@@ -66,7 +66,7 @@ const createGameApp = () => {
   gameApp.patch("/tile/rotate", handleRotateTile);
   gameApp.get("/current-player", getCurrentPlayer);
   gameApp.get("/self", getSelfStatus);
-  gameApp.patch("/claim", meeplePlacementHandler);
+  gameApp.patch("/claim", handlePlaceMeeple);
   // gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
   return gameApp;
 };
@@ -78,7 +78,7 @@ const createApp = (appContext: AppContext, logger: MiddlewareHandler) => {
   app.use(setAppContext(appContext));
   app.get(
     "/game-options",
-    serveStatic({ path: "/html/game-options.html", root: "public" })
+    serveStatic({ path: "/html/game-options.html", root: "public" }),
   );
   app.route("/game", createGameApp());
 
