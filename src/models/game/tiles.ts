@@ -1,4 +1,10 @@
-import { Feature, Position, Tile, TileBox } from "../types/models.ts";
+import {
+  Feature,
+  Position,
+  Tile,
+  TileBox,
+  TileEdges,
+} from "../types/models.ts";
 
 export class TileBoxManager {
   private board: TileBox[][];
@@ -10,7 +16,7 @@ export class TileBoxManager {
     this.maxCol = board[0].length;
   }
 
-  resPos(position: Position) {
+  adjacentPosition(position: Position) {
     const { row, col } = position;
     return {
       left: { row, col: col - 1 },
@@ -18,6 +24,17 @@ export class TileBoxManager {
       top: { row: row - 1, col },
       bottom: { row: row + 1, col },
     };
+  }
+
+  extractEdges(tile: Tile): TileEdges {
+    const edges = {
+      left: tile.tileEdges[0],
+      top: tile.tileEdges[1],
+      right: tile.tileEdges[2],
+      bottom: tile.tileEdges[3],
+    };
+
+    return edges;
   }
 
   getCell(position: Position) {
@@ -34,7 +51,7 @@ export class TileBoxManager {
   }
 
   adjacentCells(position: Position) {
-    const resPosition = this.resPos(position);
+    const resPosition = this.adjacentPosition(position);
     return {
       leftCell: this.getCell(resPosition.left),
       rightCell: this.getCell(resPosition.right),
@@ -62,6 +79,16 @@ export class TileBoxManager {
       rightEdge: adjCells.rightCell?.occupiedRegion.left,
       bottomEdge: adjCells.bottomCell?.occupiedRegion.top,
     };
+  }
+
+  adjOccupiedRegionArray(position: Position) {
+    const adjCellEdge = this.adjacentOccupiedRegion(position);
+    return [
+      adjCellEdge.leftEdge,
+      adjCellEdge.topEdge,
+      adjCellEdge.rightEdge,
+      adjCellEdge.bottomEdge,
+    ];
   }
 }
 

@@ -1,11 +1,13 @@
 import { createTileBox, firstTileBox, TileBoxManager } from "./tiles.ts";
 import {
+  Edge,
   Position,
   ResTiles,
   Sides,
   Tile,
   TileBox,
   TileEdges,
+  Transpose,
 } from "../types/models.ts";
 import { ScoreManager } from "./score-board.ts";
 
@@ -13,11 +15,13 @@ export class Board {
   private board: TileBox[][];
   private scoreManager: ScoreManager;
   private tileBoxes;
+  private edges: Edge[];
 
   constructor(tileBoxes: TileBox[][]) {
     this.board = tileBoxes;
     this.tileBoxes = new TileBoxManager(this.board);
     this.scoreManager = new ScoreManager(this.board, this.tileBoxes);
+    this.edges = ["left", "top", "right", "bottom"];
   }
 
   static create(rows: number, cols: number) {
@@ -30,56 +34,48 @@ export class Board {
     return new Board(tileBoxes);
   }
 
-  extractEdges(tile: Tile): TileEdges {
-    const edges = {
-      left: tile.tileEdges[0],
-      top: tile.tileEdges[1],
-      right: tile.tileEdges[2],
-      bottom: tile.tileEdges[3],
-    };
-
-    return edges;
-  }
-
-  areAllResEmpty(resTiles: ResTiles): boolean {
-    const { leftTile, topTile, rightTile, bottomTile } = resTiles;
+  allNeighboursEmpty(tiles: ResTiles): boolean {
+    const { leftTile, topTile, rightTile, bottomTile } = tiles;
     return !(leftTile || topTile || rightTile || bottomTile);
   }
 
-  isTileFeatureMatching(placingTile: TileEdges, resTiles: ResTiles): boolean {
+  isEdgeMatching(
+    edge: Tile | null | undefined,
+    placingTile: TileEdges,
+    direction: Edge,
+  ) {
+    const transpose: Transpose = {
+      left: "right",
+      right: "left",
+      top: "bottom",
+      bottom: "top",
+    };
+
+    const val: Edge = transpose[direction];
+    return edge &&
+      this.tileBoxes.extractEdges(edge)[val] !== placingTile[direction];
+  }
+
+  private objectToArray(resTiles: ResTiles) {
     const { leftTile, rightTile, topTile, bottomTile } = resTiles;
+    return [leftTile, topTile, rightTile, bottomTile];
+  }
 
-    if (leftTile && this.extractEdges(leftTile).right !== placingTile.left) {
-      return false;
-    }
-    if (topTile && this.extractEdges(topTile).bottom !== placingTile.top) {
-      return false;
-    }
-    if (rightTile && this.extractEdges(rightTile).left !== placingTile.right) {
-      return false;
-    }
-    if (
-      bottomTile &&
-      this.extractEdges(bottomTile).top !== placingTile.bottom
-    ) {
-      return false;
-    }
+  isTileFeatureMatching(placingTile: TileEdges, resTiles: ResTiles): boolean {
+    const resTilesArr = this.objectToArray(resTiles);
 
-    return true;
+    return !this.edges.some((edge, index) =>
+      this.isEdgeMatching(resTilesArr[index], placingTile, edge)
+    );
   }
 
   isTilePlaceable(tile: Tile | null, position: Position): boolean {
     if (!tile) return false;
-    const placingTileEdges = this.extractEdges(tile);
+    const placingTileEdges = this.tileBoxes.extractEdges(tile);
     const resTiles = this.tileBoxes.adjacentTile(position);
 
-    if (this.areAllResEmpty(resTiles)) {
-      console.log("all cells are empty");
-
-      return false;
-    }
-
-    return this.isTileFeatureMatching(placingTileEdges, resTiles);
+    return !this.allNeighboursEmpty(resTiles) &&
+      this.isTileFeatureMatching(placingTileEdges, resTiles);
   }
 
   getBoard() {
@@ -105,6 +101,6 @@ export class Board {
 
   isBoxUnlockToPlace(position: Position) {
     const resTile = this.tileBoxes.adjacentTile(position);
-    return !this.areAllResEmpty(resTile);
+    return !this.allNeighboursEmpty(resTile);
   }
 }

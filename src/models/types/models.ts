@@ -15,7 +15,6 @@ export enum Sides {
   RIGHT = "right",
   TOP = "top",
   BOTTOM = "bottom",
-  MIDDLE = "middle",
 }
 
 export enum EdgesOccu {
@@ -40,6 +39,14 @@ export interface OccupanceSubGrid {
   occupiedBy: Set<string>;
 }
 
+export type Edge = "left" | "right" | "top" | "bottom";
+export interface Transpose {
+  left: Edge;
+  right: Edge;
+  top: Edge;
+  bottom: Edge;
+}
+
 export interface TileBox {
   tile: null | Tile;
   meeple: {
@@ -62,6 +69,13 @@ export type TileEdges = {
   right: string;
   left: string;
 };
+
+export interface Moves {
+  [Sides.TOP]: (arg: Position) => void;
+  [Sides.BOTTOM]: (arg: Position) => void;
+  [Sides.LEFT]: (arg: Position) => void;
+  [Sides.RIGHT]: (arg: Position) => void;
+}
 
 interface Neighbors {
   left?: Tile;
