@@ -49,6 +49,17 @@ export const dummyTiles = () => [
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
     Feature.ROAD,
   ),
+  createTile(
+    "3",
+    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
+    Feature.ROAD,
+  ),
+
+  createTile(
+    "4",
+    [Feature.FIELD, Feature.FIELD, Feature.FIELD, Feature.FIELD],
+    Feature.MONASTERY,
+  ),
 ];
 
 export const dummyTiles3 = () => [

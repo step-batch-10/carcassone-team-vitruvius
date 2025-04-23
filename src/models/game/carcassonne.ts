@@ -1,7 +1,13 @@
 import { shuffler, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import { CardinalDegrees, Position, Sides, Tile } from "../types/models.ts";
+import {
+  CardinalDegrees,
+  Center,
+  Position,
+  Sides,
+  Tile,
+} from "../types/models.ts";
 import { dummyTiles as tiles } from "../../../test/dummy-data.ts";
 import _ from "lodash";
 
@@ -155,14 +161,14 @@ export class Carcassonne {
     return { desc: "invalid tile to place" };
   }
 
-  private updateMeeple(subGrid: Sides, player: Player) {
+  private updateMeeple(subGrid: Sides | Center, player: Player) {
     const { row, col } = this.tilePlacedAt;
     this.getBoard()[row][col].meeple.region = subGrid;
     this.getBoard()[row][col].meeple.color = player.meepleColor;
     this.getBoard()[row][col].meeple.playerName = player.username;
   }
 
-  placeAMeeple(subGrid: Sides) {
+  placeAMeeple(subGrid: Sides | Center) {
     const player = this.getCurrentPlayer();
 
     const status = this.board.placeMeeple(

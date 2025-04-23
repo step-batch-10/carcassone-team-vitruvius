@@ -1,5 +1,6 @@
 import { createTileBox, firstTileBox, TileBoxManager } from "./tiles.ts";
 import {
+  Center,
   Edge,
   Position,
   ResTiles,
@@ -25,13 +26,13 @@ export class Board {
   }
 
   static create(rows: number, cols: number) {
-    const emptyBoard = Array(rows).fill(Array(cols).fill(null));
-    const tileBoxes: TileBox[][] = emptyBoard.map((rows: null[]) =>
-      rows.map(createTileBox)
+    const board: TileBox[][] = Array.from(
+      { length: rows },
+      () => Array.from({ length: cols }, () => createTileBox()),
     );
-    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox();
+    board[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox();
 
-    return new Board(tileBoxes);
+    return new Board(board);
   }
 
   allNeighboursEmpty(tiles: ResTiles): boolean {
@@ -95,7 +96,7 @@ export class Board {
     }
   }
 
-  placeMeeple(position: Position, playerName: string, subGrid: Sides) {
+  placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
     return this.scoreManager.placeMeeple(position, playerName, subGrid);
   }
 

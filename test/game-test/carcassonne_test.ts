@@ -11,7 +11,7 @@ import {
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { Sides, Tile } from "../../src/models/types/models.ts";
+import { Center, Sides, Tile } from "../../src/models/types/models.ts";
 import { ScoreManager } from "../../src/models/game/score-board.ts";
 
 describe("testing getCurrentPlayer", () => {
@@ -208,6 +208,30 @@ describe("testing place a meeple", () => {
     const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
 
     assertFalse(scoreBoard.markOccupance({ row: 0, col: 0 }));
+  });
+
+  it("should  claim the monastry", () => {
+    const players = [
+      createPlayer("user1", "black", true, "121"),
+      createPlayer("user2", "blue", false, "121"),
+    ];
+
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    game.drawATile();
+    game.placeATile({ row: 42, col: 44 });
+    game.drawATile();
+    game.placeATile({ row: 42, col: 45 });
+    game.drawATile();
+    game.placeATile({ row: 41, col: 45 });
+    game.placeAMeeple(Center.MIDDlE);
+
+    assertEquals(
+      game.getBoard()[41][45].occupiedRegion.middle.occupiedBy.size,
+      1,
+    );
   });
 });
 

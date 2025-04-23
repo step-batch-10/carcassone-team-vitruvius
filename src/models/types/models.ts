@@ -17,6 +17,10 @@ export enum Sides {
   BOTTOM = "bottom",
 }
 
+export enum Center {
+  MIDDlE = "middle",
+}
+
 export enum EdgesOccu {
   LEFT = "leftEdge",
   RIGHT = "rightEdge",

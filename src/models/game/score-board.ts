@@ -1,5 +1,5 @@
 import { TileBoxManager } from "./tiles.ts";
-import { Moves, Position, Sides, TileBox } from "../types/models.ts";
+import { Center, Moves, Position, Sides, TileBox } from "../types/models.ts";
 
 export class ScoreManager {
   private board;
@@ -60,12 +60,9 @@ export class ScoreManager {
     const occupiedEdges = [leftEdge, topEdge, rightEdge, bottomEdge];
 
     this.edges.forEach((edge, index) => {
+      if (!occupiedEdges[index]) return;
       currentTile.occupiedRegion[edge].occupiedBy = currentTile
-        .occupiedRegion[edge].occupiedBy.union(
-          occupiedEdges[index]?.feature
-            ? occupiedEdges[index].occupiedBy
-            : currentTile.occupiedRegion[edge].occupiedBy,
-        );
+        .occupiedRegion[edge].occupiedBy.union(occupiedEdges[index].occupiedBy);
     });
   }
   private moveTo = (edge: Sides) => (position: Position) => {
@@ -98,7 +95,7 @@ export class ScoreManager {
     this.moveReccursively(currentTile, tilePosition);
   }
 
-  placeMeeple(position: Position, playerName: string, subGrid: Sides) {
+  placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
     const cell = this.board[position.row][position.col];
     if (!cell.occupiedRegion[subGrid].occupiedBy.size) {
       cell.occupiedRegion[subGrid].occupiedBy.add(playerName);
