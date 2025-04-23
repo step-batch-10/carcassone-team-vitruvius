@@ -154,7 +154,7 @@ body {
   padding: 10px 20px;
   border-radius: 8px;
 }
-.grid div > .subgrid {
+.grid div > .sub-grid {
   width: 32%;
   height: 32%;
   position: absolute;

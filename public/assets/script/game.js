@@ -70,13 +70,13 @@ const handlePlaceMeeple = (side) => {
   return placeMeeple;
 };
 
-const createSubgrid = () => {
+const createSubGrid = () => {
   const sides = ["left", "top", "right", "bottom", "middle"];
 
   return sides.map((side) => {
     const element = document.createElement("div");
 
-    element.classList.add("subgrid");
+    element.classList.add("sub-grid");
     element.classList.add(side);
     element.addEventListener("click", handlePlaceMeeple(side));
 
@@ -91,12 +91,12 @@ const handleSkip = (cell) => {
 };
 
 const addMeepleOptions = (cell) => {
-  const subgrid = createSubgrid();
+  const subGrid = createSubGrid();
   const skipButton = document.createElement("button");
   skipButton.classList.add("skip");
   skipButton.addEventListener("click", handleSkip(cell));
 
-  cell.replaceChildren(...subgrid, skipButton);
+  cell.replaceChildren(...subGrid, skipButton);
 };
 
 const handleTilePlacement = async (event, board, events) => {
@@ -106,6 +106,7 @@ const handleTilePlacement = async (event, board, events) => {
     return;
   }
 
+  removePlaceableCellsHighlight();
   const cell = event.target.parentNode;
   setBackground(cell, board);
 
@@ -135,8 +136,18 @@ const reqForPlaceablePositions = async () => {
 };
 
 const getCell = (row, col) => document.getElementById(`${row}/${col}`);
+const getHighlightedCells = () => document.querySelectorAll(".placeable-tile");
 
+const removePlaceableCellsHighlight = () => {
+  const highlightedCells = getHighlightedCells();
+
+  highlightedCells.forEach((cell) => {
+    cell.classList.remove("placeable-tile");
+  });
+};
 const heightLightPlaceableCells = async () => {
+  removePlaceableCellsHighlight();
+
   const validPositions = await reqForPlaceablePositions();
   validPositions.placablePositions.forEach(({ row, col }) => {
     const cell = getCell(row, col);
