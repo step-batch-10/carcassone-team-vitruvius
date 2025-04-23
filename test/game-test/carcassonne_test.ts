@@ -168,7 +168,7 @@ describe("testing placablePositions", () => {
 });
 
 describe("testing place a meeple", () => {
-  it("should place a meeple when it is not occupied by any player ", () => {
+  it("should place a meeple when it is not occupied by any player and their meeple count should reduce", () => {
     const players = [
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
@@ -180,10 +180,11 @@ describe("testing place a meeple", () => {
     game.placeATile({ row: 42, col: 43 });
     const status = game.placeAMeeple(Sides.LEFT);
 
+    assertEquals(players[0].noOfMeeples, 6);
     assert(status.isPlaced);
   });
 
-  it("should not place when it is already occupied by any player", () => {
+  it("should not place when it is already occupied by any player and their meeple count should not reduce", () => {
     const players = [
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
@@ -197,6 +198,7 @@ describe("testing place a meeple", () => {
     game.placeATile({ row: 42, col: 44 });
     const status = game.placeAMeeple(Sides.LEFT);
 
+    assertEquals(players[1].noOfMeeples, 7);
     assertFalse(status.isPlaced);
   });
 

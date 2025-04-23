@@ -156,10 +156,15 @@ export class Carcassonne {
   }
 
   placeAMeeple(subGrid: Sides) {
-    const player = this.getCurrentPlayer().username;
+    const player = this.getCurrentPlayer();
 
-    const status = this.board.placeMeeple(this.tilePlacedAt, player, subGrid);
+    const status = this.board.placeMeeple(
+      this.tilePlacedAt,
+      player.username,
+      subGrid,
+    );
     if (status.isPlaced) {
+      player.noOfMeeples -= 1;
       this.changePlayerTurn();
     }
 
