@@ -30,6 +30,7 @@ table {
   background: rgba(0, 0, 0, 0.6);
   padding: 25px 40px;
   border-radius: 15px;
+  color: white;
   border: 2px solid goldenrod;
   margin-bottom: 20px;
 }
@@ -58,12 +59,11 @@ button:hover {
   background-color: #ffcc33;
 }
 
-#waiting-message {
-  color: rgb(242, 67, 8);
-}
-
-#room-id {
-  color: rgb(242, 67, 8);
+#waiting-message, #room-id {
+  color: white;
+  font-weight: bolder;
+  text-shadow: none;
+  text-shadow: 1px 1px 5px #ffcc33;
 }
 
 .form-container {

@@ -107,6 +107,7 @@ body {
 .player-turn {
   padding: 8px 16px;
   border-radius: 8px;
+  z-index: 1;
   background: linear-gradient(to right, #e7af14, #d33a07);
   color: #333;
   display: flex;
