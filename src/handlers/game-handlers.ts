@@ -9,7 +9,7 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
 const getUserOfSessionId = (
   ctx: Context<{ Variables: Variables }>,
   sessions: Sessions,
-  users: Users,
+  users: Users
 ) => {
   const sessionID = String(getCookie(ctx, "session-id"));
   const userID = String(sessions.get(sessionID));
@@ -90,6 +90,17 @@ const serveGameState = (ctx: Context) => {
   return ctx.json({ ...game.state(), self }, 200);
 };
 
+const handlePlaceMeeple = async (ctx: Context) => {
+  const game = ctx.get("game");
+  const { side } = await ctx.req.json();
+
+  const desc = game.placeAMeeple(side);
+
+  if (desc) return ctx.json(desc, 400);
+
+  return ctx.json(null, 201);
+};
+
 // const handlePlaceablePositions = (ctx: Context) => {
 //   console.log("in handleplacable");
 
@@ -109,4 +120,5 @@ export {
   serveGameBoard,
   serveGameState,
   serveValidPositions,
+  handlePlaceMeeple as meeplePlacementHandler,
 };

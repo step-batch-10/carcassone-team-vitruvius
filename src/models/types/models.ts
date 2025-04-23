@@ -15,6 +15,7 @@ export enum Sides {
   RIGHT = "right",
   TOP = "top",
   BOTTOM = "bottom",
+  MIDDLE = "middle",
 }
 
 type Edges = [Feature, Feature, Feature, Feature];

@@ -32,6 +32,74 @@ const setBackground = (cell, board) => {
   cell.style.opacity = "1";
 };
 
+const showPlacedMeeple = async (event) => {
+  const playerRes = await fetch("/game/self");
+  const { meepleColor } = await playerRes.json();
+
+  const meeple = document.createElement("img");
+
+  meeple.classList.add("used-meeple");
+  meeple.setAttribute("src", `/assets/images/${meepleColor}-meeple.png`);
+
+  event.target.appendChild(meeple);
+};
+
+const removeMeepleListeners = (event, listener) => {
+  const placed = event.target;
+
+  placed.parentNode.replaceChildren(placed);
+  placed.removeEventListener("click", listener);
+};
+
+const handlePlaceMeeple = (side) => {
+  const placeMeeple = async (event) => {
+    const res = await fetch("/game/claim", {
+      method: "PATCH",
+      body: JSON.stringify({ side }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status === 201) {
+      await showPlacedMeeple(event);
+      removeMeepleListeners(event, placeMeeple);
+    }
+  };
+
+  return placeMeeple;
+};
+
+const createSubgrid = async () => {
+  const sidesResponse = await fetch("/game/claimables");
+  const { sides } = await sidesResponse.json();
+
+  return sides.map((side) => {
+    const element = document.createElement("div");
+
+    element.classList.add("subgrid");
+    element.classList.add(side);
+    element.addEventListener("click", handlePlaceMeeple(side));
+
+    return element;
+  });
+};
+
+const handleSkip = (cell) => {
+  return (_) => {
+    cell.replaceChildren();
+  };
+};
+
+const addMeepleOptions = (cell) => {
+  const subgrid = createSubgrid();
+  const skipButton = document.createElement("button");
+  skipButton.classList.add("skip");
+  skipButton.addEventListener("click", handleSkip(cell));
+
+  cell.replaceChildren(...subgrid, skipButton);
+};
+
 const handleTilePlacement = async (event, board, events) => {
   const tilePlacementRes = await placeTile(event.target.parentNode);
   if (tilePlacementRes.status !== 201) {
@@ -39,9 +107,11 @@ const handleTilePlacement = async (event, board, events) => {
     return;
   }
 
-  setBackground(event.target.parentNode, board);
+  const cell = event.target.parentNode;
+  setBackground(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
+  addMeepleOptions(cell);
 };
 
 const createCellEvents = (board) => {

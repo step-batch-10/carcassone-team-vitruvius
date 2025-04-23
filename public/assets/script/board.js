@@ -102,21 +102,22 @@ class Board {
     return await response.json();
   }
 
-  async addGhostEffect(events = {}) {
-    this.#currentTile = await this.#fetchCurrentTile();
+  addGhostEffect(events = {}) {
     this.#ghostEffectEvents = {
-      mouseenter: (event) => {
+      mouseenter: async (event) => {
         event.stopPropagation();
         const cell = event.target;
+        this.#currentTile = await this.#fetchCurrentTile();
 
         if (this.#currentTile) {
           this.#insertTileInCell(cell, this.#currentTile);
           this.#addRotateRightButton(cell, events);
         }
       },
-      mouseleave: (event) => {
+      mouseleave: async (event) => {
         event.stopPropagation();
 
+        this.#currentTile = await this.#fetchCurrentTile();
         this.#removeChildren(event.target);
       },
     };
