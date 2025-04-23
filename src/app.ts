@@ -12,6 +12,7 @@ import {
   drawATile,
   getCurrentPlayer,
   getSelfStatus,
+  handlePlaceablePositions,
   handlePlaceMeeple,
   handleRotateTile,
   handleTilePlacement,
@@ -19,7 +20,6 @@ import {
   serveGameBoard,
   serveGameState,
   serveValidPositions,
-  handlePlaceablePositions,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
