@@ -70,9 +70,8 @@ const handlePlaceMeeple = (side) => {
   return placeMeeple;
 };
 
-const createSubgrid = async () => {
-  const sidesResponse = await fetch("/game/claimables");
-  const { sides } = await sidesResponse.json();
+const createSubgrid = () => {
+  const sides = ["left", "top", "right", "bottom", "middle"];
 
   return sides.map((side) => {
     const element = document.createElement("div");
