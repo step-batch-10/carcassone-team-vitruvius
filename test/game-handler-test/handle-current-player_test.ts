@@ -22,7 +22,7 @@ describe("testing current Player", () => {
       Carcassonne.initGame(
         createDummyPlayers(),
         (arr: Tile[]): Tile[] => arr,
-        dummyTiles,
+        dummyTiles(),
       ),
     );
 

@@ -24,7 +24,7 @@ describe("testing the handleRotateTile", () => {
     const game = Carcassonne.initGame(
       createDummyPlayers(),
       (arr) => arr,
-      dummyTiles,
+      dummyTiles(),
     );
 
     game.drawATile();
@@ -64,7 +64,7 @@ describe("testing the handleRotateTile", () => {
     const game = Carcassonne.initGame(
       createDummyPlayers(),
       (arr) => arr,
-      dummyTiles,
+      dummyTiles(),
     );
 
     game.drawATile();

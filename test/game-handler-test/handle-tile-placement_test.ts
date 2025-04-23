@@ -18,7 +18,7 @@ describe("handleTilePlacement", () => {
     const games = new Map<string, Carcassonne>();
     games.set(
       "1",
-      Carcassonne.initGame(createDummyPlayers(), (arr) => arr, dummyTiles),
+      Carcassonne.initGame(createDummyPlayers(), (arr) => arr, dummyTiles()),
     );
 
     const context: AppContext = { sessions, users, roomManager, games };
@@ -65,7 +65,7 @@ describe("handleTilePlacement", () => {
     const games = new Map<string, Carcassonne>();
     games.set(
       "1",
-      Carcassonne.initGame(createDummyPlayers(), (arr) => arr, dummyTiles),
+      Carcassonne.initGame(createDummyPlayers(), (arr) => arr, dummyTiles()),
     );
 
     const context: AppContext = { sessions, users, roomManager, games };

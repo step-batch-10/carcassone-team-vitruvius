@@ -22,7 +22,7 @@ describe("testing draw a tile handler", () => {
       Carcassonne.initGame(
         createDummyPlayers(),
         (arr: Tile[]): Tile[] => arr,
-        dummyTiles,
+        dummyTiles(),
       ),
     );
 

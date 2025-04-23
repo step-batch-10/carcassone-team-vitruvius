@@ -24,7 +24,7 @@ describe("testing player Status", () => {
       Carcassonne.initGame(
         createDummyPlayers(),
         (arr: Tile[]): Tile[] => arr,
-        dummyTiles,
+        dummyTiles(),
       ),
     );
 

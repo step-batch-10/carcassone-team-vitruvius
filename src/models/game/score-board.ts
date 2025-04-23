@@ -1,21 +1,14 @@
 import { TileBoxManager } from "./tiles.ts";
-import { OccupanceSubGrid, Position, Sides, TileBox } from "../types/models.ts";
+import { Position, Sides, TileBox } from "../types/models.ts";
 
 export class ScoreManager {
   private board;
   private edges;
-  private tileBoxes;
+  private readonly tileBoxes;
   constructor(board: TileBox[][], tileBoxes: TileBoxManager) {
     this.board = board;
     this.tileBoxes = tileBoxes;
     this.edges = [Sides.LEFT, Sides.TOP, Sides.RIGHT, Sides.BOTTOM];
-  }
-
-  private addPlayerToCenter(
-    middleOccupance: OccupanceSubGrid,
-    adjacentSubGrid: OccupanceSubGrid,
-  ) {
-    middleOccupance.occupiedBy.union(adjacentSubGrid.occupiedBy);
   }
 
   private markCenterOccupance(cell: TileBox) {
@@ -24,7 +17,16 @@ export class ScoreManager {
 
     this.edges.forEach((edge: Sides) => {
       if (middleOccupance.feature === occupances[edge].feature) {
-        this.addPlayerToCenter(middleOccupance, occupances[edge]);
+        middleOccupance.occupiedBy = middleOccupance.occupiedBy.union(
+          occupances[edge].occupiedBy,
+        );
+      }
+    });
+    this.edges.forEach((edge: Sides) => {
+      if (middleOccupance.feature === occupances[edge].feature) {
+        occupances[edge].occupiedBy = middleOccupance.occupiedBy.union(
+          occupances[edge].occupiedBy,
+        );
       }
     });
   }
@@ -42,34 +44,107 @@ export class ScoreManager {
   }
 
   private markOccupiedRegion(currentTile: TileBox, tilePosition: Position) {
-    const { leftEdge, topEdge, rightEdge, bottomEdge } = this.tileBoxes
-      .adjacentOccupiedRegion(tilePosition);
+    const { leftEdge, topEdge, rightEdge, bottomEdge } = {
+      ...this.tileBoxes
+        .adjacentOccupiedRegion(tilePosition),
+    };
 
     const occupiedEdges = [leftEdge, topEdge, rightEdge, bottomEdge];
 
     this.edges.forEach((edge, index) => {
-      currentTile.occupiedRegion[edge] = occupiedEdges[index]?.feature
-        ? occupiedEdges[index]
-        : currentTile.occupiedRegion[edge];
+      currentTile.occupiedRegion[edge].occupiedBy = currentTile
+        .occupiedRegion[edge].occupiedBy.union(
+          occupiedEdges[index]?.feature
+            ? occupiedEdges[index].occupiedBy
+            : currentTile.occupiedRegion[edge].occupiedBy,
+        );
     });
   }
 
   markOccupance(tilePosition: Position) {
     const { col, row } = tilePosition;
     const currentTile = this.board[row][col];
+
     this.markOccupiedRegion(currentTile, tilePosition);
 
     this.markFeature(currentTile);
-    this.markCenterOccupance(this.board[row][col]);
+    this.markCenterOccupance(currentTile);
+
+    const cellOccu = currentTile.occupiedRegion;
+    const adjCellEdge = this.tileBoxes.adjacentOccupiedRegion(tilePosition);
+    // const move = {
+    //   left: this.moveLeft,
+    //   top: this.moveTop,
+    //   bottom: this.moveBottom,
+    //   right: this.moveRight,
+    // };
+    // this.edges.forEach((edge) => {
+    //   if (cellOccu[edge].occupiedBy.size > 0) {
+    //     move[edge](tilePosition);
+    //   }
+    // });
+
+    if (
+      cellOccu.left.occupiedBy.size > 0 &&
+      adjCellEdge.leftEdge?.occupiedBy.size === 0
+    ) {
+      this.moveLeft(tilePosition);
+    }
+    if (
+      cellOccu.right.occupiedBy.size > 0 &&
+      adjCellEdge.rightEdge?.occupiedBy.size === 0
+    ) {
+      this.moveRight(tilePosition);
+    }
+    if (
+      cellOccu.top.occupiedBy.size > 0 &&
+      adjCellEdge.topEdge?.occupiedBy.size === 0
+    ) {
+      this.moveTop(tilePosition);
+    }
+    if (
+      cellOccu.bottom.occupiedBy.size > 0 &&
+      adjCellEdge.bottomEdge?.occupiedBy.size === 0
+    ) {
+      this.moveBottom(tilePosition);
+    }
   }
 
   placeMeeple(position: Position, playerName: string, subGrid: Sides) {
     const cell = this.board[position.row][position.col];
     if (!cell.occupiedRegion[subGrid].occupiedBy.size) {
       cell.occupiedRegion[subGrid].occupiedBy.add(playerName);
+
+      this.markOccupance(position);
       return { isPlaced: true };
     }
 
     return { isPlaced: false };
+  }
+
+  private moveTop(position: Position) {
+    const newPos = this.tileBoxes.resPos(position).top;
+    if (this.tileBoxes.getTile(newPos)) {
+      this.markOccupance(newPos);
+    }
+  }
+
+  private moveLeft(position: Position) {
+    const newPos = this.tileBoxes.resPos(position).left;
+    if (this.tileBoxes.getTile(newPos)) {
+      this.markOccupance(newPos);
+    }
+  }
+  private moveRight(position: Position) {
+    const newPos = this.tileBoxes.resPos(position).right;
+    if (this.tileBoxes.getTile(newPos)) {
+      this.markOccupance(newPos);
+    }
+  }
+  private moveBottom(position: Position) {
+    const newPos = this.tileBoxes.resPos(position).bottom;
+    if (this.tileBoxes.getTile(newPos)) {
+      this.markOccupance(newPos);
+    }
   }
 }

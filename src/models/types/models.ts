@@ -18,6 +18,13 @@ export enum Sides {
   MIDDLE = "middle",
 }
 
+export enum EdgesOccu {
+  LEFT = "leftEdge",
+  RIGHT = "rightEdge",
+  TOP = "topEdge",
+  BOTTOM = "bottomEdge",
+}
+
 type Edges = [Feature, Feature, Feature, Feature];
 
 export enum CardinalDegrees {

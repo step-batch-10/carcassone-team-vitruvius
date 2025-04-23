@@ -25,7 +25,7 @@ export class Board {
     const tileBoxes: TileBox[][] = emptyBoard.map((rows: null[]) =>
       rows.map(createTileBox)
     );
-    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox;
+    tileBoxes[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox();
 
     return new Board(tileBoxes);
   }

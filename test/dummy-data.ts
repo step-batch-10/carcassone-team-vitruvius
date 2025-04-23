@@ -37,7 +37,7 @@ export const createATileBox = (
   };
 };
 
-export const dummyTiles = [
+export const dummyTiles = () => [
   createTile(
     "2",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
@@ -51,7 +51,7 @@ export const dummyTiles = [
   ),
 ];
 
-export const dummyTiles3 = [
+export const dummyTiles3 = () => [
   createTile(
     "2",
     [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.CITY],
@@ -76,7 +76,33 @@ export const dummyTiles3 = [
   ),
 ];
 
-export const dummyTiles2 = [
+export const dummyTiles4 = () => [
+  createTile(
+    "2",
+    [Feature.ROAD, Feature.CITY, Feature.FIELD, Feature.ROAD],
+    Feature.ROAD,
+  ),
+  createTile(
+    "3",
+    [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
+    Feature.ROAD,
+  ),
+];
+
+export const dummyTiles5 = () => [
+  createTile(
+    "2",
+    [Feature.ROAD, Feature.ROAD, Feature.FIELD, Feature.FIELD],
+    Feature.ROAD,
+  ),
+  createTile(
+    "3",
+    [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
+    Feature.ROAD,
+  ),
+];
+
+export const dummyTiles2 = () => [
   createTile(
     "3",
     [

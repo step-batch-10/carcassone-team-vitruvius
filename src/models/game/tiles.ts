@@ -10,7 +10,7 @@ export class TileBoxManager {
     this.maxCol = board[0].length;
   }
 
-  respectivePosition(position: Position) {
+  resPos(position: Position) {
     const { row, col } = position;
     return {
       left: { row, col: col - 1 },
@@ -34,7 +34,7 @@ export class TileBoxManager {
   }
 
   adjacentCells(position: Position) {
-    const resPosition = this.respectivePosition(position);
+    const resPosition = this.resPos(position);
     return {
       leftCell: this.getCell(resPosition.left),
       rightCell: this.getCell(resPosition.right),
@@ -117,7 +117,7 @@ export const createTileBox = (): TileBox => {
   };
 };
 
-export const firstTileBox: TileBox = {
+export const firstTileBox = (): TileBox => ({
   tile: {
     id: "1",
     orientation: 0,
@@ -137,4 +137,4 @@ export const firstTileBox: TileBox = {
     bottom: { feature: Feature.FIELD, occupiedBy: new Set<string>() },
     middle: { feature: Feature.ROAD, occupiedBy: new Set<string>() },
   },
-};
+});

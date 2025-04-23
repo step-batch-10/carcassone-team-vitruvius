@@ -62,7 +62,7 @@ export class Carcassonne {
   static initGame(
     players: Player[],
     tileShuffler = shuffler,
-    tilesArr = tiles,
+    tilesArr = tiles(),
   ) {
     const tileManager = new TileStacker(tilesArr, tileShuffler);
     const board = Board.create(84, 84);
@@ -88,8 +88,9 @@ export class Carcassonne {
     );
   }
 
-  isValidTileToPlace(tile: Tile) {
-    const rotated = { ...tile };
+  isValidTileToPlace({ ...tile }: Tile) {
+    const rotated = tile;
+    rotated.tileEdges = [...tile.tileEdges];
     for (let i = 0; i < 4; i++) {
       if (this.isTilePlacableAtUnlockedPos(rotated)) {
         return true;
@@ -109,8 +110,7 @@ export class Carcassonne {
 
   drawATile(): Tile | null {
     const drawnTile = this.tileManager.pickTile();
-
-    if (drawnTile && !this.isValidTileToPlace(drawnTile)) {
+    if (drawnTile && !this.isValidTileToPlace({ ...drawnTile })) {
       this.tileManager.pushTile(drawnTile);
       return this.drawATile();
     }
