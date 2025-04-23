@@ -87,12 +87,6 @@ const setupGrid = (gridSize) => {
   return grid;
 };
 
-const drawATile = async () => {
-  const response = await fetch("/game/draw-tile");
-
-  return response.json();
-};
-
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
     await drawATile();
@@ -172,6 +166,16 @@ const atRightEdge = () => {
   );
 };
 
+const createAlertDiv = (content) => {
+  const alertDiv = document.createElement("div");
+  alertDiv.classList.add("custom-alert");
+  alertDiv.textContent = content;
+  document.body.append(alertDiv);
+  setTimeout(() => {
+    alertDiv.remove();
+  }, 1000);
+};
+
 const mouseDown = () => {
   const upArrow = document.querySelector("#a-bottom");
   upArrow.addEventListener("click", () => {
@@ -181,12 +185,13 @@ const mouseDown = () => {
         behavior: "smooth",
       });
     } else {
-      alert("You are already in bottom edge!");
+      createAlertDiv("You are already in the bottom edge");
     }
   });
 };
 
 const mouseUp = () => {
+  console.log("hello");
   const upArrow = document.querySelector("#a-top");
   upArrow.addEventListener("click", () => {
     if (!atTopEdge()) {
@@ -195,7 +200,7 @@ const mouseUp = () => {
         behavior: "smooth",
       });
     } else {
-      alert("You are already in top edge!");
+      createAlertDiv("You are already in the top edge");
     }
   });
 };
@@ -209,7 +214,7 @@ const mouseLeft = () => {
         behavior: "smooth",
       });
     } else {
-      alert("You are already in Left edge!");
+      createAlertDiv("You are already in the left edge");
     }
   });
 };
@@ -223,7 +228,7 @@ const mouseRight = () => {
         behavior: "smooth",
       });
     } else {
-      alert("You are already in Right edge!");
+      createAlertDiv("You are already in the right edge");
     }
   });
 };

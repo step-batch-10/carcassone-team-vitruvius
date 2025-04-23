@@ -35,7 +35,6 @@ const isRoomFull = (players, maxPlayers) => players.length === maxPlayers;
 
 const updateMessage = (maxPlayers, players) => {
   const message = document.querySelector("#waiting-message");
-
   message.textContent = `Waiting for ${maxPlayers - players.length} player(s)`;
 };
 

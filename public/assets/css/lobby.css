@@ -58,6 +58,14 @@ button:hover {
   background-color: #ffcc33;
 }
 
+#waiting-message {
+  color: rgb(242, 67, 8);
+}
+
+#room-id {
+  color: rgb(242, 67, 8);
+}
+
 .form-container {
   display: flex;
   justify-content: center;
