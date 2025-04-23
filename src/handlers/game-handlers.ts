@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { Position, Sessions, Users } from "../models/types/models.ts";
+import { Position, Sessions, Users } from "../models/models.ts";
 import { Variables } from "hono/types";
 import { getCookie } from "hono/cookie";
 import { Carcassonne } from "../models/game/carcassonne.ts";

@@ -9,7 +9,7 @@ import {
   TileBox,
   TileEdges,
   Transpose,
-} from "../types/models.ts";
+} from "../models.ts";
 import { ScoreManager } from "./score-board.ts";
 
 export class Board {

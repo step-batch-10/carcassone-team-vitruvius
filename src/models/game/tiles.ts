@@ -1,10 +1,4 @@
-import {
-  Feature,
-  Position,
-  Tile,
-  TileBox,
-  TileEdges,
-} from "../types/models.ts";
+import { Feature, Position, Tile, TileBox, TileEdges } from "../models.ts";
 
 export class TileBoxManager {
   private board: TileBox[][];

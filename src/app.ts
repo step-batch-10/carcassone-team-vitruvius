@@ -1,6 +1,6 @@
 import { getCookie } from "hono/cookie";
 import { serveStatic } from "hono/deno";
-import { AppContext, AppVariables } from "./models/types/models.ts";
+import { AppContext, AppVariables } from "./models/models.ts";
 import { MiddlewareHandler, Next } from "hono/types";
 import {
   handleGetLobbyDetails,

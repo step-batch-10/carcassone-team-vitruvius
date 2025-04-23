@@ -11,7 +11,7 @@ import {
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { Center, Sides, Tile } from "../../src/models/types/models.ts";
+import { Center, Sides, Tile } from "../../src/models/models.ts";
 import { ScoreManager } from "../../src/models/game/score-board.ts";
 
 describe("testing getCurrentPlayer", () => {
@@ -384,10 +384,7 @@ describe("testing markOccupance", () => {
       game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
       1,
     );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.top.occupiedBy.size,
-      1,
-    );
+    assertEquals(game.getBoard()[42][43].occupiedRegion.top.occupiedBy.size, 1);
   });
 
   it("should mark the all the connecting tile occupances", () => {

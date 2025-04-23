@@ -1,4 +1,4 @@
-import { PlayerJson } from "../types/models.ts";
+import { PlayerJson } from "../models.ts";
 class Player {
   readonly username: string;
   readonly roomID;

@@ -1,6 +1,6 @@
 import createApp from "./app.ts";
 import { Carcassonne } from "./models/game/carcassonne.ts";
-import { User } from "./models/types/models.ts";
+import { User } from "./models/models.ts";
 import RoomManager from "./models/room/room-manager.ts";
 import { logger } from "hono/logger";
 

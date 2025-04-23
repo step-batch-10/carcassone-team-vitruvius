@@ -1,5 +1,5 @@
 import { TileBoxManager } from "./tiles.ts";
-import { Center, Moves, Position, Sides, TileBox } from "../types/models.ts";
+import { Center, Moves, Position, Sides, TileBox } from "../models.ts";
 
 export class ScoreManager {
   private board;
@@ -13,10 +13,10 @@ export class ScoreManager {
 
   private moves(): Moves {
     return {
-      "left": this.moveTo(Sides.LEFT).bind(this),
-      "top": this.moveTo(Sides.TOP).bind(this),
-      "bottom": this.moveTo(Sides.BOTTOM).bind(this),
-      "right": this.moveTo(Sides.RIGHT).bind(this),
+      left: this.moveTo(Sides.LEFT).bind(this),
+      top: this.moveTo(Sides.TOP).bind(this),
+      bottom: this.moveTo(Sides.BOTTOM).bind(this),
+      right: this.moveTo(Sides.RIGHT).bind(this),
     };
   }
 
@@ -61,8 +61,9 @@ export class ScoreManager {
 
     this.edges.forEach((edge, index) => {
       if (!occupiedEdges[index]) return;
-      currentTile.occupiedRegion[edge].occupiedBy = currentTile
-        .occupiedRegion[edge].occupiedBy.union(occupiedEdges[index].occupiedBy);
+      currentTile.occupiedRegion[edge].occupiedBy = currentTile.occupiedRegion[
+        edge
+      ].occupiedBy.union(occupiedEdges[index].occupiedBy);
     });
   }
   private moveTo = (edge: Sides) => (position: Position) => {

@@ -1,5 +1,5 @@
-import { Carcassonne } from "../game/carcassonne.ts";
-import RoomManager from "../room/room-manager.ts";
+import { Carcassonne } from "./game/carcassonne.ts";
+import RoomManager from "./room/room-manager.ts";
 
 export enum Feature {
   CITY = "city",
@@ -67,12 +67,12 @@ export interface TileBox {
     middle: OccupanceSubGrid;
   };
 }
-export type TileEdges = {
+export interface TileEdges {
   top: string;
   bottom: string;
   right: string;
   left: string;
-};
+}
 
 export interface Moves {
   [Sides.TOP]: (arg: Position) => void;
@@ -81,18 +81,12 @@ export interface Moves {
   [Sides.RIGHT]: (arg: Position) => void;
 }
 
-interface Neighbors {
-  left?: Tile;
-  right?: Tile;
-  top?: Tile;
-  bottom?: Tile;
-}
-export type ResTiles = {
+export interface ResTiles {
   leftTile: Tile | null | undefined;
   rightTile: Tile | null | undefined;
   topTile: Tile | null | undefined;
   bottomTile: Tile | null | undefined;
-};
+}
 export interface Tile {
   id: string;
   orientation: CardinalDegrees;
@@ -128,40 +122,16 @@ export interface GameRoomJson {
   gameStatus: GameStatus;
 }
 
-interface TileHandler {
-  tiles: Tile[];
-}
-
-// export interface Carcassonne {
-//   tileHandler: TileHandler;
-//   players: Player[];
-//   board: Cell[][];
-// }
-
-type SubGrid = "left" | "top" | "right" | "bottom" | "center";
-
-interface PlacedMeeple {
-  feature: Feature;
-  playerId: string;
-  tileId: string;
-  subGrid: SubGrid;
-}
-
-interface Cell {
-  tile: null | Tile;
-  placedMeeple: PlacedMeeple | null;
-}
-
-export type AppVariables = {
+export interface AppVariables {
   sessions: Map<string, string>;
   users: Map<string, User>;
   roomManager: RoomManager;
   games: Map<string, Carcassonne>;
-};
+}
 
-export type GameVariables = {
+export interface GameVariables {
   game: Carcassonne;
-};
+}
 
 export type Sessions = Map<string, string>;
 
@@ -184,9 +154,6 @@ export type resPositions = (arg0: Position) => {
   bottom: Position;
 };
 
-interface TileHandler {
-  tiles: Tile[];
-}
 export interface RespectivePosition {
   (position: Position): {
     left: { row: number; col: number };
@@ -201,8 +168,3 @@ export interface RespectivePosition {
     bottom: Position;
   };
 }
-// export interface Carcassonne {
-//   tileHandler: TileHandler;
-//   players: Player[];
-//   board: Cell[][];
-// }

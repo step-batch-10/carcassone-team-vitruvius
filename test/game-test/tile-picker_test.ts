@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { shuffler, TileStacker } from "../../src/models/game/tiles.ts";
-import { Feature, Tile } from "../../src/models/types/models.ts";
+import { Feature, Tile } from "../../src/models/models.ts";
 
 describe("testing pickTile", () => {
   it("should return a tile from the top of the stack", () => {

@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/types/models.ts";
+import { AppContext, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { silentLogger } from "../game-handler-test/silent-logger.ts";

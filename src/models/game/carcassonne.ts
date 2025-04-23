@@ -1,13 +1,7 @@
 import { shuffler, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import {
-  CardinalDegrees,
-  Center,
-  Position,
-  Sides,
-  Tile,
-} from "../types/models.ts";
+import { CardinalDegrees, Center, Position, Sides, Tile } from "../models.ts";
 import { dummyTiles as tiles } from "../../../test/dummy-data.ts";
 import _ from "lodash";
 

@@ -4,7 +4,7 @@ import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { Tile, User } from "../../src/models/types/models.ts";
+import { Tile, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 
