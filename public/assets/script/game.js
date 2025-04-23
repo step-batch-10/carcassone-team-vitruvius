@@ -1,4 +1,5 @@
 import Board from "./board.js";
+import API from "./api.js";
 
 const querySelector = (selector) => {
   return document.querySelector(selector);
@@ -7,18 +8,6 @@ const querySelector = (selector) => {
 const getImgUrl = (cell) => {
   const img = cell.querySelector("img");
   return img.src;
-};
-
-const placeTile = (cell) => {
-  const [row, col] = cell.id.split("/");
-
-  return fetch("/game/place-tile", {
-    method: "PATCH",
-    body: JSON.stringify({ row: Number(row), col: Number(col) }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 };
 
 const setBackground = (cell, board) => {
@@ -33,8 +22,7 @@ const setBackground = (cell, board) => {
 };
 
 const showPlacedMeeple = async (event) => {
-  const playerRes = await fetch("/game/self");
-  const { meepleColor } = await playerRes.json();
+  const { meepleColor } = await API.self();
 
   const meeple = document.createElement("img");
 
@@ -53,13 +41,7 @@ const removeMeepleListeners = (event, listener) => {
 
 const handlePlaceMeeple = (side) => {
   const placeMeeple = async (event) => {
-    const res = await fetch("/game/claim", {
-      method: "PATCH",
-      body: JSON.stringify({ side }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await API.claim(side);
 
     if (res.status === 201) {
       await showPlacedMeeple(event);
@@ -101,8 +83,12 @@ const addMeepleOptions = (cell) => {
 };
 
 const handleTilePlacement = async (event, board, events) => {
-  const tilePlacementRes = await placeTile(event.target.parentNode);
   const cell = event.target.parentNode;
+
+  const [row, col] = cell.id.split("/");
+  const position = { row: Number(row), col: Number(col) };
+
+  const tilePlacementRes = await API.placeTile(position);
 
   if (tilePlacementRes.status !== 201) {
     cell.classList.add("invalid-placement");
@@ -128,17 +114,6 @@ const createCellEvents = (board) => {
   return events;
 };
 
-const fetchRotatedTile = async () => {
-  const response = await fetch("game/tile/rotate", { method: "PATCH" });
-
-  return await response.json();
-};
-
-const reqForPlaceablePositions = async () => {
-  const res = await fetch("/game/tile/placeable-positions");
-  return await res.json();
-};
-
 const getCell = (row, col) => document.getElementById(`${row}/${col}`);
 const getHighlightedCells = () => document.querySelectorAll(".placeable-tile");
 
@@ -153,7 +128,8 @@ const removePlaceableCellsHighlight = () => {
 const highlightPlaceableCells = async () => {
   removePlaceableCellsHighlight();
 
-  const validPositions = await reqForPlaceablePositions();
+  const validPositions = await API.placeablePositions();
+
   validPositions.placablePositions.forEach(({ row, col }) => {
     const cell = getCell(row, col);
     cell.classList.add("placeable-tile");
@@ -161,7 +137,7 @@ const highlightPlaceableCells = async () => {
 };
 
 const rotateRight = async (event) => {
-  const rotatedTile = await fetchRotatedTile();
+  const rotatedTile = await API.rotateTile();
 
   if (rotatedTile) {
     const tileImage = event.target.parentNode.querySelector("img");
@@ -180,16 +156,9 @@ const setupGrid = (gridSize) => {
   return grid;
 };
 
-const drawATile = async () => {
-  const response = await fetch("/game/draw-tile");
-
-  return await response.json();
-};
-
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
-    await drawATile();
-    await highlightPlaceableCells();
+    await API.drawATile();
   }
 };
 
@@ -216,18 +185,12 @@ const changeFocusToStartingTile = () =>
     });
   }, 2000);
 
-const fetchCurrentPlayer = async () => {
-  const response = await fetch("/game/current-player");
-
-  return await response.json();
-};
-
 const showCurrentPlayer = (interval) => {
   const currentPlayerLabel = querySelector(".player-turn");
   const textLabel = currentPlayerLabel.querySelector("p");
 
   setInterval(async () => {
-    const currentPlayer = await fetchCurrentPlayer();
+    const currentPlayer = await API.currentPlayer();
 
     textLabel.textContent = `${currentPlayer}'s turn`;
     currentPlayerLabel.style.display = "flex";
@@ -235,8 +198,7 @@ const showCurrentPlayer = (interval) => {
 };
 
 const showPlayerStatus = async () => {
-  const playerRes = await fetch("/game/self");
-  const { noOfMeeples, points, meepleColor } = await playerRes.json();
+  const { noOfMeeples, points, meepleColor } = await API.self();
 
   const meepleImg = querySelector("#meeple");
   const meepleCount = querySelector("#meeple-count");
@@ -244,12 +206,6 @@ const showPlayerStatus = async () => {
   meepleCount.textContent = noOfMeeples;
   score.textContent = points;
   meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
-};
-
-const fetchGameState = async () => {
-  const response = await fetch("/game/state");
-
-  return await response.json();
 };
 
 const atTopEdge = () => globalThis.scrollY <= 0;
@@ -336,10 +292,10 @@ const mouseRight = () => {
 };
 
 const main = async () => {
-  const gameState = await fetchGameState();
-  showPlayerStatus();
-
+  const gameState = await API.gameState();
   updateGameState(gameState);
+
+  showPlayerStatus();
   mouseUp();
   mouseDown();
   mouseLeft();

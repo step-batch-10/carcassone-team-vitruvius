@@ -1,3 +1,5 @@
+import API from "./api.js";
+
 const createRow = (index, { username, meepleColor }) => {
   const row = document.createElement("tr");
   const serial = document.createElement("td");
@@ -15,14 +17,6 @@ const createRow = (index, { username, meepleColor }) => {
   row.append(serial, name, color);
 
   return row;
-};
-
-const fetchRoomData = async () => {
-  const roomData = await fetch("/room");
-
-  const { maxPlayers, roomID, players } = await roomData.json();
-
-  return { maxPlayers, roomID, players };
 };
 
 const playerRows = (player, index) => {
@@ -47,7 +41,7 @@ const startGameCountdown = () => {
 
     if (countdown === 0) {
       clearInterval(intervalID);
-      const response = await fetch("/game");
+      const response = await API.gamePage();
       globalThis.location = response.url;
     }
   }, 1000);
@@ -56,7 +50,7 @@ const startGameCountdown = () => {
 const startRoom = () => {
   const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
-    const { maxPlayers, roomID, players } = await fetchRoomData();
+    const { maxPlayers, roomID, players } = await API.roomInfo();
     const table = document.querySelector("#table");
     table.replaceChildren(...players.map(playerRows));
     roomIDDisplay.textContent = `ROOM ID : ${roomID}`;
@@ -76,7 +70,7 @@ const main = () => {
   const leave = document.querySelector("#leave-button");
 
   leave.addEventListener("click", async (_event) => {
-    await fetch("/leave", { method: "POST" });
+    await API.leaveRoom();
 
     globalThis.location = "/game-options";
   });

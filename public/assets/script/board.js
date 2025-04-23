@@ -1,3 +1,5 @@
+import API from "./api.js";
+
 class Board {
   #parentNode;
   #cellNodes;
@@ -127,20 +129,13 @@ class Board {
     );
   }
 
-  async #fetchCurrentTile() {
-    const response = await fetch("/game/current-tile");
-
-    return await response.json();
-  }
-
   addGhostEffect(events = {}) {
     this.#ghostEffectEvents = {
       mouseenter: async (event) => {
         event.stopPropagation();
 
-        this.#currentTile = await this.#fetchCurrentTile();
+        this.#currentTile = await API.currentTile();
         const cell = event.target;
-        this.#currentTile = await this.#fetchCurrentTile();
 
         if (this.#currentTile) {
           this.#insertTileInCell(cell, this.#currentTile);
@@ -150,7 +145,7 @@ class Board {
       mouseleave: async (event) => {
         event.stopPropagation();
 
-        this.#currentTile = await this.#fetchCurrentTile();
+        this.#currentTile = await API.currentTile();
         this.#removeChildren(event.target);
       },
     };

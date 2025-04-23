@@ -1,8 +1,10 @@
-const addUser = async (e) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const res = await fetch("/login", { method: "POST", body: formData });
-  e.target.reset();
+import API from "./api.js";
+
+const addUser = async (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const res = await API.login(formData);
+  event.target.reset();
 
   globalThis.location = res.url;
 };

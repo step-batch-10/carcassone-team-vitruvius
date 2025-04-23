@@ -1,3 +1,5 @@
+import API from "./api.js";
+
 const getJoinRoomId = () => {
   const formData = new FormData();
   const boxes = document.querySelectorAll(".join-box");
@@ -11,18 +13,17 @@ const getJoinRoomId = () => {
 
 const sendLobbyRequest = async () => {
   const formData = getJoinRoomId();
-  const response = await fetch("/joinRoom", {
-    method: "POST",
-    body: formData,
-  });
-  return await response.json();
+
+  return await API.joinRoom(formData);
 };
 
 const createAlertDiv = () => {
   const alertDiv = document.createElement("div");
+
   alertDiv.classList.add("custom-alert");
   alertDiv.textContent = "Please Enter Valid Room ID";
   document.body.append(alertDiv);
+
   return alertDiv;
 };
 
@@ -34,13 +35,12 @@ const joinRoom = async (event) => {
   if (!isRoomJoined) {
     const alertDiv = createAlertDiv();
 
-    setTimeout(() => {
-      alertDiv.remove();
-    }, 2000);
+    setTimeout(() => alertDiv.remove(), 2000);
+
     return;
   }
 
-  globalThis.location = (await fetch("/lobby")).url;
+  globalThis.location = (await API.lobby()).url;
 };
 
 const focusNext = (input, inputs, index) => {
