@@ -53,7 +53,17 @@ describe("handlePlaceMeeple", () => {
       },
     });
 
+    const response3 = await app.request("/game/board", {
+      headers: {
+        cookie: "room-id=1",
+      },
+    });
+    const board = await response3.json();
+
     assertEquals(response2.status, 201);
+    assertEquals(board[42][43].meeple.region, "left");
+    assertEquals(board[42][43].meeple.color, "black");
+    assertEquals(board[42][43].meeple.playerName, "user1");
   });
   it("should not place a meeple and return a response of status code 400 when a meeple is placed incorrectly", async () => {
     const sessions = new Map<string, string>();

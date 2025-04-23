@@ -43,10 +43,7 @@ export class Carcassonne {
   }
 
   private placablePositions(): Position[] {
-    console.log(this.currentTile, "current TIle ");
     if (!this.currentTile) {
-      console.log("there is no current tile");
-
       return [];
     }
 
@@ -58,7 +55,7 @@ export class Carcassonne {
   validPositions() {
     return {
       unlockedPositions: this.unlockedPositions,
-      placablePositions: (this.placablePositions()),
+      placablePositions: this.placablePositions(),
     };
   }
 
@@ -158,6 +155,13 @@ export class Carcassonne {
     return { desc: "invalid tile to place" };
   }
 
+  private updateMeeple(subGrid: Sides, player: Player) {
+    const { row, col } = this.tilePlacedAt;
+    this.getBoard()[row][col].meeple.region = subGrid;
+    this.getBoard()[row][col].meeple.color = player.meepleColor;
+    this.getBoard()[row][col].meeple.playerName = player.username;
+  }
+
   placeAMeeple(subGrid: Sides) {
     const player = this.getCurrentPlayer();
 
@@ -167,6 +171,8 @@ export class Carcassonne {
       subGrid,
     );
     if (status.isPlaced) {
+      this.updateMeeple(subGrid, player);
+
       player.noOfMeeples -= 1;
       this.changePlayerTurn();
     }
