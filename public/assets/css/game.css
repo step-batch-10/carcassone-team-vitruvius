@@ -61,7 +61,7 @@ body {
   bottom: 8px;
   right: 0px;
   color: black;
-  background: rgba(0, 0, 0, 0.161);
+  background: rgba(255, 228, 196, 0.5);
   border: 1px solid #e7af14;
   box-shadow: #333;
 }
@@ -108,7 +108,7 @@ body {
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 1;
-  background: linear-gradient(to right, #e7af14, #d33a07);
+  background: bisque;
   color: #333;
   display: flex;
   align-items: center;
@@ -130,13 +130,13 @@ body {
   height: 40px;
   padding: 12px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: rgb(252, 219, 159);
   border: 1px solid goldenrod;
   box-sizing: content-box;
 }
 
 #options img:hover {
-  background-color: #e6e6e6;
+  background-color: bisque;
   transform: scale(1.1);
 }
 

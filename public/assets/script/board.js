@@ -32,6 +32,36 @@ class Board {
     return `/assets/images/tiles/${edges}-${center}${guard}.png`;
   }
 
+  #createSubGrid(side, region, color, cellElement) {
+    const subGrid = document.createElement("div");
+    subGrid.classList.add("sub-grid");
+
+    if (side === region) {
+      subGrid.classList.add(side);
+      this.setMeeple(color, subGrid);
+    }
+
+    cellElement.appendChild(subGrid);
+  }
+
+  #addMeepleToCell(cell, cellElement) {
+    const { region, color } = cell.meeple;
+
+    if (!color) return;
+    const sides = ["left", "top", "right", "bottom", "middle"];
+
+    sides.forEach((side) =>
+      this.#createSubGrid(side, region, color, cellElement)
+    );
+  }
+
+  setMeeple(color, subGrid) {
+    const meeple = document.createElement("img");
+    meeple.classList.add("used-meeple");
+    meeple.setAttribute("src", `/assets/images/${color}-meeple.png`);
+    subGrid.appendChild(meeple);
+  }
+
   #createCell(cell, events, chord) {
     const id = chord.join("/");
 
@@ -42,6 +72,7 @@ class Board {
     if (cell.tile) {
       const imgPath = Board.extractTileImagePath(cell.tile);
       cellElement.style.backgroundImage = `url("${imgPath}")`;
+      this.#addMeepleToCell(cell, cellElement);
     } else {
       this.#addEvents(cellElement, events);
     }

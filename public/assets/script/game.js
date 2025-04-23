@@ -64,6 +64,7 @@ const handlePlaceMeeple = (side) => {
     if (res.status === 201) {
       await showPlacedMeeple(event);
       removeMeepleListeners(event, placeMeeple);
+      showPlayerStatus();
     }
   };
 
@@ -102,7 +103,7 @@ const addMeepleOptions = (cell) => {
 const handleTilePlacement = async (event, board, events) => {
   const tilePlacementRes = await placeTile(event.target.parentNode);
   if (tilePlacementRes.status !== 201) {
-    alert("isInvalid Place");
+    alert("Invalid Place");
     return;
   }
 
@@ -145,6 +146,7 @@ const removePlaceableCellsHighlight = () => {
     cell.classList.remove("placeable-tile");
   });
 };
+
 const heightLightPlaceableCells = async () => {
   removePlaceableCellsHighlight();
 
