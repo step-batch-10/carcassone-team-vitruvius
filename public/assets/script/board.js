@@ -106,6 +106,8 @@ class Board {
     this.#ghostEffectEvents = {
       mouseenter: async (event) => {
         event.stopPropagation();
+
+        this.#currentTile = await this.#fetchCurrentTile();
         const cell = event.target;
         this.#currentTile = await this.#fetchCurrentTile();
 

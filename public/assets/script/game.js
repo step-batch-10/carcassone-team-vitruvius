@@ -130,13 +130,20 @@ const fetchRotatedTile = async () => {
   return await response.json();
 };
 
-// const reqForPlaceablePositions = async () => {
-//   return await fetch("/game/tile/placeable-positions");
-// };
+const reqForPlaceablePositions = async () => {
+  const res = await fetch("/game/tile/placeable-positions");
+  return await res.json();
+};
 
-// const heightLightPlaceableCell = async () => {
-//   const placeablePositions = await reqForPlaceablePositions();
-// };
+const getCell = (row, col) => document.getElementById(`${row}/${col}`);
+
+const heightLightPlaceableCells = async () => {
+  const validPositions = await reqForPlaceablePositions();
+  validPositions.placablePositions.forEach(({ row, col }) => {
+    const cell = getCell(row, col);
+    cell.classList.add("placeable-tile");
+  });
+};
 
 const rotateRight = async (event) => {
   const rotatedTile = await fetchRotatedTile();
@@ -144,7 +151,8 @@ const rotateRight = async (event) => {
   if (rotatedTile) {
     const tileImage = event.target.parentNode.querySelector("img");
     tileImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
-    // await heightLightPlaceableCell();
+
+    await heightLightPlaceableCells();
   }
 };
 
@@ -157,9 +165,16 @@ const setupGrid = (gridSize) => {
   return grid;
 };
 
+const drawATile = async () => {
+  const response = await fetch("/game/draw-tile");
+
+  return await response.json();
+};
+
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
     await drawATile();
+    await heightLightPlaceableCells();
   }
 };
 
@@ -169,9 +184,11 @@ const updateGameState = async (gameState) => {
   const grid = setupGrid(84);
   const board = new Board(grid);
   board.build(tiles, createCellEvents(board));
+
   if (self.username === currentPlayer.username) {
-    drawTileIfNotDrawn(currentTile);
-    await board.addGhostEffect({ click: rotateRight });
+    await drawTileIfNotDrawn(currentTile);
+    board.addGhostEffect({ click: rotateRight });
+    await heightLightPlaceableCells();
   }
 };
 
@@ -206,12 +223,12 @@ const showPlayerStatus = async () => {
   const playerRes = await fetch("/game/self");
   const { noOfMeeples, points, meepleColor } = await playerRes.json();
 
-  const meepleimg = querySelector("#meeple");
+  const meepleImg = querySelector("#meeple");
   const meepleCount = querySelector("#meeple-count");
   const score = querySelector("#score");
   meepleCount.textContent = noOfMeeples;
   score.textContent = points;
-  meepleimg.src = `assets/images/${meepleColor}-meeple.png`;
+  meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
 };
 
 const fetchGameState = async () => {

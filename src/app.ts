@@ -19,6 +19,7 @@ import {
   serveGameBoard,
   serveGameState,
   serveValidPositions,
+  handlePlaceablePositions,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
@@ -67,7 +68,8 @@ const createGameApp = () => {
   gameApp.get("/current-player", getCurrentPlayer);
   gameApp.get("/self", getSelfStatus);
   gameApp.patch("/claim", handlePlaceMeeple);
-  // gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
+  gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
+
   return gameApp;
 };
 

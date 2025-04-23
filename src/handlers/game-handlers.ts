@@ -3,6 +3,7 @@ import { Position, Sessions, Users } from "../models/types/models.ts";
 import { Variables } from "hono/types";
 import { getCookie } from "hono/cookie";
 import { Carcassonne } from "../models/game/carcassonne.ts";
+
 const parseAppContexts = (ctx: Context, ...keys: string[]) => {
   return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
 };
@@ -94,7 +95,6 @@ const serveGameState = (ctx: Context) => {
 const handlePlaceMeeple = async (ctx: Context) => {
   const game: Carcassonne = ctx.get("game");
   const { side } = await ctx.req.json();
-
   const desc = game.placeAMeeple(side);
 
   if (!desc.isPlaced) return ctx.json(desc, 400);
@@ -102,20 +102,18 @@ const handlePlaceMeeple = async (ctx: Context) => {
   return ctx.json(null, 201);
 };
 
-// const handlePlaceablePositions = (ctx: Context) => {
-//   console.log("in handleplacable");
+const handlePlaceablePositions = (ctx: Context) => {
+  const game: Carcassonne = ctx.get("game");
 
-//   const game: Carcassonne = ctx.get("game");
-
-//   return ctx.json(game.validPositions());
-// };
+  return ctx.json(game.validPositions());
+};
 
 export {
   drawATile,
   getCurrentPlayer,
   getSelfStatus,
+  handlePlaceablePositions,
   handlePlaceMeeple,
-  // handlePlaceablePositions,
   handleRotateTile,
   handleTilePlacement,
   serveCurrentTile,

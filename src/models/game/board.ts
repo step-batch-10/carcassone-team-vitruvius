@@ -74,6 +74,8 @@ export class Board {
     const resTiles = this.tileBoxes.adjacentTile(position);
 
     if (this.areAllResEmpty(resTiles)) {
+      console.log("all cells are empty");
+
       return false;
     }
 

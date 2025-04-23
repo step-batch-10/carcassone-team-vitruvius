@@ -62,6 +62,13 @@ export type TileEdges = {
   right: string;
   left: string;
 };
+
+interface Neighbors {
+  left?: Tile;
+  right?: Tile;
+  top?: Tile;
+  bottom?: Tile;
+}
 export type ResTiles = {
   leftTile: Tile | null | undefined;
   rightTile: Tile | null | undefined;

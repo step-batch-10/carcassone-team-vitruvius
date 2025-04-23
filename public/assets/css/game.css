@@ -137,7 +137,7 @@ body {
 
 #options img:hover {
   background-color: #e6e6e6;
-  transform: scale(1.10);
+  transform: scale(1.1);
 }
 
 .tile-img {
@@ -198,4 +198,11 @@ body {
   height: 32%;
   background-image: url("/assets/images/symbols/skip.png");
   background-size: contain;
+}
+.placeable-tile {
+  background-color: greenyellow;
+}
+
+.invalid-placement {
+  border: 1px solid red;
 }

@@ -43,7 +43,10 @@ export class Carcassonne {
   }
 
   private placablePositions(): Position[] {
+    console.log(this.currentTile, "current TIle ");
     if (!this.currentTile) {
+      console.log("there is no current tile");
+
       return [];
     }
 
@@ -55,7 +58,7 @@ export class Carcassonne {
   validPositions() {
     return {
       unlockedPositions: this.unlockedPositions,
-      placablePositions: this.placablePositions(),
+      placablePositions: (this.placablePositions()),
     };
   }
 
