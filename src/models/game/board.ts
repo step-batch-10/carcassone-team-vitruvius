@@ -25,12 +25,20 @@ export class Board {
     this.edges = ["left", "top", "right", "bottom"];
   }
 
+  private static putCenterTile(tileBoxes: TileBox[][]) {
+    const [row, col] = [
+      Math.floor(tileBoxes.length / 2),
+      Math.floor(tileBoxes[0].length / 2),
+    ];
+    return (tileBoxes[row][col] = firstTileBox());
+  }
+
   static create(rows: number, cols: number) {
     const board: TileBox[][] = Array.from(
       { length: rows },
       () => Array.from({ length: cols }, () => createTileBox()),
     );
-    board[Math.floor(rows / 2)][Math.floor(cols / 2)] = firstTileBox();
+    Board.putCenterTile(board);
 
     return new Board(board);
   }
@@ -53,8 +61,9 @@ export class Board {
     };
 
     const val: Edge = transpose[direction];
-    return edge &&
-      this.tileBoxes.extractEdges(edge)[val] !== placingTile[direction];
+    return (
+      edge && this.tileBoxes.extractEdges(edge)[val] !== placingTile[direction]
+    );
   }
 
   private objectToArray(resTiles: ResTiles) {
@@ -75,8 +84,10 @@ export class Board {
     const placingTileEdges = this.tileBoxes.extractEdges(tile);
     const resTiles = this.tileBoxes.adjacentTile(position);
 
-    return !this.allNeighboursEmpty(resTiles) &&
-      this.isTileFeatureMatching(placingTileEdges, resTiles);
+    return (
+      !this.allNeighboursEmpty(resTiles) &&
+      this.isTileFeatureMatching(placingTileEdges, resTiles)
+    );
   }
 
   getBoard() {
