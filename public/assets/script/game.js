@@ -102,13 +102,16 @@ const addMeepleOptions = (cell) => {
 
 const handleTilePlacement = async (event, board, events) => {
   const tilePlacementRes = await placeTile(event.target.parentNode);
+  const cell = event.target.parentNode;
+
   if (tilePlacementRes.status !== 201) {
-    alert("Invalid Place");
+    cell.classList.add("invalid-placement");
+    setTimeout(() => cell.classList.remove("invalid-placement"), 200);
+
     return;
   }
 
   removePlaceableCellsHighlight();
-  const cell = event.target.parentNode;
   setBackground(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
@@ -147,7 +150,7 @@ const removePlaceableCellsHighlight = () => {
   });
 };
 
-const heightLightPlaceableCells = async () => {
+const highlightPlaceableCells = async () => {
   removePlaceableCellsHighlight();
 
   const validPositions = await reqForPlaceablePositions();
@@ -164,7 +167,7 @@ const rotateRight = async (event) => {
     const tileImage = event.target.parentNode.querySelector("img");
     tileImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
 
-    await heightLightPlaceableCells();
+    await highlightPlaceableCells();
   }
 };
 
@@ -186,7 +189,7 @@ const drawATile = async () => {
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
     await drawATile();
-    await heightLightPlaceableCells();
+    await highlightPlaceableCells();
   }
 };
 
@@ -200,7 +203,7 @@ const updateGameState = async (gameState) => {
   if (self.username === currentPlayer.username) {
     await drawTileIfNotDrawn(currentTile);
     board.addGhostEffect({ click: rotateRight });
-    await heightLightPlaceableCells();
+    await highlightPlaceableCells();
   }
 };
 
