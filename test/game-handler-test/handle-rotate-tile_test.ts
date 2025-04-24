@@ -39,7 +39,7 @@ describe("testing the handleRotateTile", () => {
 
     const expectedTile: Tile = {
       hasShield: false,
-      id: "2",
+      id: "22",
       orientation: 90,
       tileCenter: Feature.ROAD,
       tileEdges: [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],

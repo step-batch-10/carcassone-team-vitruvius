@@ -39,24 +39,25 @@ export const createATileBox = (
 
 export const dummyTiles = () => [
   createTile(
-    "2",
+    "22",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
     Feature.ROAD,
   ),
 
   createTile(
-    "3",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD,
-  ),
-  createTile(
-    "3",
+    "22",
     [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
     Feature.ROAD,
   ),
 
   createTile(
-    "4",
+    "22",
+    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
+    Feature.ROAD,
+  ),
+
+  createTile(
+    "16",
     [Feature.FIELD, Feature.FIELD, Feature.FIELD, Feature.FIELD],
     Feature.MONASTERY,
   ),

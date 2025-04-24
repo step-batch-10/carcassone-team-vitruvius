@@ -41,7 +41,7 @@ describe("testing draw a tile handler", () => {
     assertEquals(response.status, 200);
     assertEquals(await response.json(), {
       hasShield: false,
-      id: "2",
+      id: "22",
       orientation: 0,
       tileCenter: "road",
       tileEdges: ["road", "field", "road", "field"],

@@ -44,7 +44,7 @@ describe("testing draw a tile", () => {
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
     assertEquals(game.drawATile(), {
       hasShield: false,
-      id: "2",
+      id: "22",
       orientation: 0,
       tileCenter: "road",
       tileEdges: ["road", "field", "road", "field"],

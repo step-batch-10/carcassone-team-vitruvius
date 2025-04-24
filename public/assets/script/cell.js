@@ -54,13 +54,13 @@ const Cell = {
   },
 
   extractTileImagePath: (tile) => {
-    const { tileEdges, orientation, tileCenter, hasShield } = tile;
+    // const { tileEdges, orientation, tileCenter, hasShield } = tile;
 
-    const edges = Cell.extractEdgesOfOriginalTile(tileEdges, orientation);
-    const center = tileCenter.at(0);
-    const guard = hasShield ? "-g" : "";
+    // const edges = Cell.extractEdgesOfOriginalTile(tileEdges, orientation);
+    // const center = tileCenter.at(0);
+    // const guard = hasShield ? "-g" : "";
 
-    return `/assets/images/tiles/${edges}-${center}${guard}.png`;
+    return `/assets/images/tiles/${tile.id}.png`;
   },
 
   makeCellId: (row, col) => {
