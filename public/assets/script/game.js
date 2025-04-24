@@ -2,6 +2,7 @@ import Board from "./board.js";
 import API from "./api.js";
 import Cell from "./cell.js";
 import addScrollFeatures from "./scroll.js";
+import { Poller } from "./multiplayer.js";
 
 const getImgUrl = (cell) => cell.querySelector("img").src;
 
@@ -170,11 +171,45 @@ const showPlayerStatus = async () => {
   meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
 };
 
-const main = async () => {
+const loadGame = async () => {
   const gameState = await API.gameState();
-  updateGameState(gameState);
+
+  await updateGameState(gameState);
+  await showPlayerStatus();
+};
+
+const refreshGame = () => {
+  loadGame();
+};
+
+const pollTurn = (gameStatePoller) => {
+  return async () => {
+    const currentPlayer = await API.currentPlayer();
+    const self = await API.self();
+
+    const isPlayerTurn = self.username === currentPlayer;
+
+    if (isPlayerTurn && gameStatePoller.isPolling()) {
+      loadGame();
+      gameStatePoller.stopPolling();
+    }
+
+    if (!isPlayerTurn && !gameStatePoller.isPolling()) {
+      gameStatePoller.startPolling();
+    }
+  };
+};
+
+const main = async () => {
+  await loadGame();
+
+  const gameStatePoller = new Poller(refreshGame, 1000);
+  gameStatePoller.startPolling();
+
+  const turnPoller = new Poller(pollTurn(gameStatePoller), 1000);
+  turnPoller.startPolling();
+
   addScrollFeatures();
-  showPlayerStatus();
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
 };
