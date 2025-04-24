@@ -1,9 +1,14 @@
-import { createDummyPlayers, dummyTiles } from "../dummy-data.ts";
+import { createDummyPlayers, createTile, dummyTiles } from "../dummy-data.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, Feature, Tile, User } from "../../src/models/models.ts";
+import {
+  AppContext,
+  CardinalDegrees,
+  Tile,
+  User,
+} from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 
@@ -37,15 +42,10 @@ describe("testing the handleRotateTile", () => {
 
     const rotatedTile: Tile = await rotatedTileRes.json();
 
-    const expectedTile: Tile = {
-      hasShield: false,
-      id: "22",
-      orientation: 90,
-      tileCenter: Feature.ROAD,
-      tileEdges: [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-    };
-
-    assertEquals(rotatedTile, expectedTile);
+    assertEquals(
+      rotatedTile,
+      createTile("2", ["f", "r", "f", "r"], "r", CardinalDegrees.ninety),
+    );
   });
 
   it("should return an object containing desc key with value 'invalid game id' if roomID is invalid ", async () => {

@@ -1,5 +1,6 @@
 import { TileBoxManager } from "./tiles.ts";
 import { Center, Moves, Position, Sides, TileBox } from "../models.ts";
+import Player from "../room/player.ts";
 
 export class ScoreManager {
   private board;
@@ -104,5 +105,79 @@ export class ScoreManager {
       return { isPlaced: true };
     }
     return { isPlaced: false };
+  }
+
+  hasAdjacent9Tiles(position: Position): boolean {
+    return this.tileBoxes
+      .adjacentPositionArray(position)
+      .every((pos) => this.tileBoxes.getTile(pos));
+  }
+
+  isMonastery(position: Position): boolean {
+    return this.tileBoxes.getTile(position)?.tileCenter === "monastery";
+  }
+
+  isClaimed(position: Position): boolean | void {
+    const cell = this.tileBoxes.getCell(position);
+    if (cell) return cell.occupiedRegion.middle.occupiedBy.size > 0;
+  }
+
+  markScored(position: Position, subGrid: Sides | Center) {
+    const cell = this.tileBoxes.getCell(position);
+    if (cell) cell.occupiedRegion[subGrid].isScored = true;
+  }
+
+  updateScoreToPlayers(
+    playerNames: Set<string> | undefined,
+    players: Player[],
+    score: number,
+  ) {
+    playerNames?.values().forEach((playerName) => {
+      const player = players.find((player) => player.username === playerName);
+      if (player) {
+        player.points += score;
+      }
+    });
+  }
+
+  getClaimedBy(position: Position, subGrid: Sides | Center) {
+    const cell = this.tileBoxes.getCell(position);
+    if (cell) {
+      return cell.occupiedRegion[subGrid].occupiedBy;
+    }
+  }
+
+  private canScoreMonastery(position: Position) {
+    return (
+      this.isMonastery(position) &&
+      this.isClaimed(position) &&
+      this.hasAdjacent9Tiles(position) &&
+      !this.isScored(position)
+    );
+  }
+
+  private isScored(position: Position) {
+    return this.tileBoxes.getCell(position)?.occupiedRegion.middle.isScored;
+  }
+
+  updateScoreForMonastry(position: Position, players: Player[]) {
+    if (this.canScoreMonastery(position)) {
+      this.updateScoreToPlayers(
+        this.getClaimedBy(position, Center.MIDDlE),
+        players,
+        9,
+      );
+      this.markScored(position, Center.MIDDlE);
+    }
+
+    this.tileBoxes.adjacentPositionArray(position).forEach((adjPos) => {
+      if (this.isMonastery(adjPos) && !this.isScored(adjPos)) {
+        this.updateScoreForMonastry(adjPos, players);
+      }
+    });
+  }
+
+  score(position: Position, players: Player[]) {
+    this.updateScoreForMonastry(position, players);
   }
 }

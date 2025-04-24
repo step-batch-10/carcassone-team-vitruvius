@@ -44,7 +44,7 @@ describe("testing draw a tile", () => {
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
     assertEquals(game.drawATile(), {
       hasShield: false,
-      id: "22",
+      id: "2",
       orientation: 0,
       tileCenter: "road",
       tileEdges: ["road", "field", "road", "field"],
@@ -184,12 +184,22 @@ describe("testing place a meeple", () => {
     assert(status.isPlaced);
   });
 
-  it("should not place when it is already occupied by any player and their meeple count should not reduce", () => {
+  it(" should not place tile when try to place without placing any tile", () => {
     const players = [
       createPlayer("user1", "black", true, "121"),
       createPlayer("user2", "blue", false, "121"),
     ];
 
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+
+    game.placeATile({ row: 42, col: 42 });
+    const status = game.placeAMeeple(Sides.LEFT);
+
+    assertFalse(status.isPlaced);
+  });
+
+  it("should not place when it is already occupied by any player and their meeple count should not reduce", () => {
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
     game.drawATile();
@@ -202,7 +212,7 @@ describe("testing place a meeple", () => {
     assertFalse(status.isPlaced);
   });
 
-  it("when tile placed and connects to claimed feature should marked as claim", () => {
+  it("when there is no tile placed then the occupance should not mark", () => {
     const tiles = [[createATileBox()]];
 
     const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
@@ -211,11 +221,7 @@ describe("testing place a meeple", () => {
   });
 
   it("should  claim the monastry", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
     game.drawATile();
@@ -237,11 +243,7 @@ describe("testing place a meeple", () => {
 
 describe("testing markOccupance", () => {
   it("should mark the occurence to tile when it is place to connected feature which is claimed", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
     game.drawATile();
@@ -256,11 +258,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the occupance when the tile are of same feature", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
     game.drawATile();
@@ -283,11 +281,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the adjacent left connecting tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
 
     game.drawATile();
@@ -309,11 +303,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the adjacent right connecting tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
 
     game.drawATile();
@@ -335,11 +325,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the adjacent top connecting tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles4());
 
     game.drawATile();
@@ -363,11 +349,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the adjacent bottom connecting tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles5());
 
     game.drawATile();
@@ -388,11 +370,7 @@ describe("testing markOccupance", () => {
   });
 
   it("should mark the all the connecting tile occupances", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
-
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
 
     game.drawATile();

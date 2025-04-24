@@ -1,25 +1,14 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { shuffler, TileStacker } from "../../src/models/game/tiles.ts";
-import { Feature, Tile } from "../../src/models/models.ts";
+import { Tile } from "../../src/models/models.ts";
+import { createTile } from "../dummy-data.ts";
 
 describe("testing pickTile", () => {
   it("should return a tile from the top of the stack", () => {
     const tiles: Tile[] = [
-      {
-        id: "123",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
-      {
-        id: "124",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
+      createTile("123", ["r", "r", "r", "r"], "f"),
+      createTile("124", ["r", "r", "r", "r"], "f"),
     ];
     const tileManager = new TileStacker(tiles, (tile) => tile);
 
@@ -27,23 +16,9 @@ describe("testing pickTile", () => {
   });
 
   it("should put a tile in bottom of the stack", () => {
-    const tiles: Tile[] = [
-      {
-        id: "123",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
-    ];
+    const tiles: Tile[] = [createTile("123", ["r", "r", "r", "r"], "f")];
 
-    const tile: Tile = {
-      id: "124",
-      orientation: 0,
-      hasShield: false,
-      tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-      tileCenter: Feature.FIELD,
-    };
+    const tile: Tile = createTile("124", ["r", "r", "r", "r"], "f");
 
     const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pushTile(tile);
@@ -59,15 +34,7 @@ describe("testing pickTile", () => {
   });
 
   it("when picked a tile the remaining tile should be less", () => {
-    const tiles: Tile[] = [
-      {
-        id: "123",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
-    ];
+    const tiles: Tile[] = [createTile("123", ["r", "r", "r", "r"], "f")];
 
     const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pickTile();
@@ -78,24 +45,8 @@ describe("testing pickTile", () => {
 
 describe("testing shuffler", () => {
   it("should shuffle", () => {
-    const actual = shuffler([
-      {
-        id: "123",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
-    ]);
-    const expected = [
-      {
-        id: "123",
-        orientation: 0,
-        hasShield: false,
-        tileEdges: [Feature.ROAD, Feature.ROAD, Feature.ROAD, Feature.ROAD],
-        tileCenter: Feature.FIELD,
-      },
-    ];
+    const actual = shuffler([createTile("123", ["r", "r", "r", "r"], "f")]);
+    const expected = [createTile("123", ["r", "r", "r", "r"], "f"), ,];
     assertEquals(actual, expected);
   });
 });

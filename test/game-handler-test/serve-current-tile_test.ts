@@ -1,11 +1,12 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { Feature, Tile, User } from "../../src/models/models.ts";
+import { Tile, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import Player from "../../src/models/room/player.ts";
 import { silentLogger } from "./silent-logger.ts";
+import { createTile } from "../dummy-data.ts";
 
 describe("serveCurrentTile", () => {
   it("should return null if tile didn't draw", async () => {
@@ -51,15 +52,7 @@ describe("serveCurrentTile", () => {
     ];
 
     const tileShuffler = (tiles: Tile[]): Tile[] => tiles;
-    const tiles: Tile[] = [
-      {
-        hasShield: false,
-        id: "0",
-        orientation: 0,
-        tileCenter: Feature.CITY,
-        tileEdges: [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY],
-      },
-    ];
+    const tiles: Tile[] = [createTile("0", ["c", "c", "c", "c"], "c")];
 
     const game = Carcassonne.initGame(players, tileShuffler, tiles);
 

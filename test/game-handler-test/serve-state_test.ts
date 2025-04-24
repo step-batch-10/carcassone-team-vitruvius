@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, Feature, Tile, User } from "../../src/models/models.ts";
+import { AppContext, Tile, User } from "../../src/models/models.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { createDummyPlayers, createTile } from "../dummy-data.ts";
@@ -38,11 +38,7 @@ describe("serveGameState", () => {
     const response = await app.request(gameStateRequest);
     const gameState = await response.json();
 
-    const expectedTile = createTile(
-      "1",
-      [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-      Feature.ROAD,
-    );
+    const expectedTile = createTile("1", ["r", "c", "r", "f"], "r");
 
     assertEquals(response.status, 200);
     assertEquals(gameState.board[42][42].tile, expectedTile);

@@ -12,7 +12,7 @@ export class Carcassonne {
   private tileManager: TileStacker;
   private currentTile: Tile | null;
   private unlockedPositions: Position[];
-  private tilePlacedAt: Position;
+  private tilePlacedAt: Position | null;
 
   constructor(
     players: Player[],
@@ -26,7 +26,7 @@ export class Carcassonne {
     this.currentTile = null;
     this.tileManager = tileManager;
     this.unlockedPositions = unlockedPosition;
-    this.tilePlacedAt = { row: 42, col: 42 };
+    this.tilePlacedAt = null;
   }
 
   static getAllUnlockedPosition(board: Board): Position[] {
@@ -149,35 +149,45 @@ export class Carcassonne {
       this.board.isTilePlaceable(this.currentTile, position)
     ) {
       this.tilePlacedAt = position;
-      return this.board.placeTile(this.currentTile, position);
+      this.board.placeTile(this.currentTile, position);
+      this.updateScore();
+      return;
     }
 
     return { desc: "invalid tile to place" };
   }
 
-  private updateMeeple(subGrid: Sides | Center, player: Player) {
-    const { row, col } = this.tilePlacedAt;
-    this.getBoard()[row][col].meeple.region = subGrid;
-    this.getBoard()[row][col].meeple.color = player.meepleColor;
-    this.getBoard()[row][col].meeple.playerName = player.username;
+  private updateMeeple(
+    subGrid: Sides | Center,
+    player: Player,
+    position: Position,
+  ) {
+    const cell = this.getBoard()[position.row][position.col];
+    cell.meeple.region = subGrid;
+    cell.meeple.color = player.meepleColor;
+    cell.meeple.playerName = player.username;
   }
 
   placeAMeeple(subGrid: Sides | Center) {
     const player = this.getCurrentPlayer();
-
+    if (!this.tilePlacedAt) return { isPlaced: false };
     const status = this.board.placeMeeple(
       this.tilePlacedAt,
       player.username,
       subGrid,
     );
     if (status.isPlaced) {
-      this.updateMeeple(subGrid, player);
-
+      this.updateMeeple(subGrid, player, this.tilePlacedAt);
+      this.updateScore();
       player.noOfMeeples -= 1;
       this.changePlayerTurn();
     }
 
     return status;
+  }
+
+  updateScore() {
+    if (this.tilePlacedAt) this.board.score(this.tilePlacedAt, this.players);
   }
 
   state() {

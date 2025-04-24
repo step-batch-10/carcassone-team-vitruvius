@@ -1,23 +1,17 @@
 import { Board } from "../../src/models/game/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { Feature } from "../../src/models/models.ts";
-import { createATileBox, createTile } from "../dummy-data.ts";
+import { createDummyPlayers, createTile } from "../dummy-data.ts";
 
 describe("testing static method 'create' of board to create board", () => {
   it("should create an empty board of given size with first tile already present", () => {
     const board = Board.create(1, 1);
 
     assertEquals(board.getBoard().length, 1);
-    assertEquals(board.getBoard(), [
-      [
-        createATileBox(
-          "1",
-          [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-          Feature.ROAD,
-        ),
-      ],
-    ]);
+    assertEquals(
+      board.getBoard()[0][0].tile,
+      createTile("1", ["r", "c", "r", "f"], "r"),
+    );
   });
 });
 
@@ -69,11 +63,7 @@ describe("testing putTile method of Board", () => {
   describe("valid positions", () => {
     it("should put the tile when it is valid place", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["r", "c", "r", "f"], "r");
       board.placeTile(tile, { row: 2, col: 3 });
 
       assertEquals(board.getTile({ row: 2, col: 3 }), {
@@ -89,11 +79,7 @@ describe("testing putTile method of Board", () => {
   describe("invalid positions", () => {
     it("should not put the tile when it is putting the tile where no neighbour tile present", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["r", "c", "r", "f"], "r");
 
       board.placeTile(tile, { row: 1, col: 1 });
 
@@ -104,11 +90,7 @@ describe("testing putTile method of Board", () => {
   describe("invalid matching positions", () => {
     it("road should not match with monastery (invalid position right)", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["m", "c", "r", "f"], "r");
       board.placeTile(tile, { row: 2, col: 3 });
 
       assertEquals(board.getTile({ row: 2, col: 3 }), null);
@@ -116,11 +98,7 @@ describe("testing putTile method of Board", () => {
 
     it("field should not match with monastery (invalid position top)", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.MONASTERY, Feature.CITY, Feature.ROAD, Feature.ROAD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["m", "c", "r", "r"], "r");
       board.placeTile(tile, { row: 1, col: 2 });
 
       assertEquals(board.getTile({ row: 1, col: 2 }), null);
@@ -128,11 +106,7 @@ describe("testing putTile method of Board", () => {
 
     it("road should not match with field (invalid position left)", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.MONASTERY, Feature.CITY, Feature.FIELD, Feature.ROAD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["m", "c", "f", "r"], "r");
       board.placeTile(tile, { row: 2, col: 1 });
 
       assertEquals(board.getTile({ row: 2, col: 1 }), null);
@@ -140,11 +114,7 @@ describe("testing putTile method of Board", () => {
 
     it("road should not place with monastery (invalid position bottom)", () => {
       const board = Board.create(5, 5);
-      const tile = createTile(
-        "2",
-        [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-        Feature.ROAD,
-      );
+      const tile = createTile("2", ["m", "r", "f", "r"], "r");
       board.placeTile(tile, { row: 3, col: 2 });
 
       assertEquals(board.getTile({ row: 3, col: 2 }), null);
@@ -155,11 +125,7 @@ describe("testing putTile method of Board", () => {
 describe("testing placing of tile", () => {
   it("should return when the tile being placed outside the board", () => {
     const board = Board.create(5, 5);
-    const tile = createTile(
-      "2",
-      [Feature.MONASTERY, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-      Feature.ROAD,
-    );
+    const tile = createTile("2", ["m", "r", "f", "r"], "r");
     board.placeTile(tile, { row: 6, col: 6 });
 
     assertEquals(board.getTile({ row: 6, col: 6 }), undefined);
@@ -173,5 +139,14 @@ describe("testing isTilePlacable", () => {
     const tilePlaced = board.isTilePlaceable(null, { row: 1, col: 1 });
 
     assertEquals(tilePlaced, false);
+  });
+});
+
+describe("score", () => {
+  it("should return invalid position when no position given", () => {
+    const board = Board.create(5, 5);
+    assertEquals(board.score(undefined, createDummyPlayers()), {
+      desc: "invalid position",
+    });
   });
 });

@@ -8,7 +8,7 @@ import { AppContext, Tile, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 
-describe("testing draw a tile handler", () => {
+describe("draw a tile handler", () => {
   it("should return a valid drawn tile", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
@@ -41,7 +41,7 @@ describe("testing draw a tile handler", () => {
     assertEquals(response.status, 200);
     assertEquals(await response.json(), {
       hasShield: false,
-      id: "22",
+      id: "2",
       orientation: 0,
       tileCenter: "road",
       tileEdges: ["road", "field", "road", "field"],

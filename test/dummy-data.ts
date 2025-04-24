@@ -1,135 +1,100 @@
-import { Feature, Tile, TileBox } from "../src/models/models.ts";
+import {
+  CardinalDegrees,
+  Feature,
+  Tile,
+  TileBox,
+} from "../src/models/models.ts";
 import Player from "../src/models/room/player.ts";
+
+type featureAbbr = "r" | "c" | "f" | "m";
 
 export const createTile = (
   id: string,
-  edges: [Feature, Feature, Feature, Feature],
-  center: Feature,
+  edges: featureAbbr[],
+  center: featureAbbr,
+  orientation = CardinalDegrees.zero,
 ): Tile => {
+  const some = {
+    r: Feature.ROAD,
+    c: Feature.CITY,
+    f: Feature.FIELD,
+    m: Feature.MONASTERY,
+  };
+
   return {
     hasShield: false,
     id,
-    orientation: 0,
-    tileCenter: center,
-    tileEdges: edges,
+    orientation,
+    tileCenter: some[center],
+    tileEdges: edges.map((x) => some[x]),
   };
 };
 
-export const createATileBox = (
-  id: string = "1",
-  edges: [Feature, Feature, Feature, Feature] | null = null,
-  center: Feature = Feature.ROAD,
-): TileBox => {
-  const tile = edges ? createTile(id, edges, center) : null;
-  edges = edges
-    ? edges
-    : [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY];
+export const createATileBox = (): TileBox => {
   return {
-    tile: tile,
+    tile: null,
     meeple: { color: null, playerName: null, region: null },
     occupiedRegion: {
-      left: { feature: edges[0], occupiedBy: new Set<string>() },
-      top: { feature: edges[1], occupiedBy: new Set<string>() },
-      right: { feature: edges[2], occupiedBy: new Set<string>() },
-      bottom: { feature: edges[3], occupiedBy: new Set<string>() },
-      middle: { feature: center, occupiedBy: new Set<string>() },
+      left: {
+        feature: null,
+        occupiedBy: new Set<string>(),
+        isScored: false,
+      },
+      top: {
+        feature: null,
+        occupiedBy: new Set<string>(),
+        isScored: false,
+      },
+      right: {
+        feature: null,
+        occupiedBy: new Set<string>(),
+        isScored: false,
+      },
+      bottom: {
+        feature: null,
+        occupiedBy: new Set<string>(),
+        isScored: false,
+      },
+      middle: {
+        feature: null,
+        occupiedBy: new Set<string>(),
+        isScored: false,
+      },
     },
   };
 };
 
 export const dummyTiles = () => [
-  createTile(
-    "22",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD,
-  ),
+  createTile("2", ["r", "f", "r", "f"], "r"),
 
-  createTile(
-    "22",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD,
-  ),
+  createTile("3", ["r", "f", "r", "f"], "r"),
+  createTile("3", ["r", "f", "r", "f"], "r"),
 
-  createTile(
-    "22",
-    [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD,
-  ),
-
-  createTile(
-    "16",
-    [Feature.FIELD, Feature.FIELD, Feature.FIELD, Feature.FIELD],
-    Feature.MONASTERY,
-  ),
+  createTile("4", ["f", "f", "f", "f"], "m"),
 ];
 
 export const dummyTiles3 = () => [
-  createTile(
-    "2",
-    [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.CITY],
-    Feature.ROAD,
-  ),
+  createTile("2", ["r", "c", "r", "c"], "r"),
 
-  createTile(
-    "3",
-    [Feature.ROAD, Feature.FIELD, Feature.FIELD, Feature.ROAD],
-    Feature.ROAD,
-  ),
+  createTile("3", ["r", "f", "f", "r"], "r"),
 
-  createTile(
-    "4",
-    [Feature.FIELD, Feature.ROAD, Feature.ROAD, Feature.FIELD],
-    Feature.ROAD,
-  ),
-  createTile(
-    "5",
-    [Feature.FIELD, Feature.FIELD, Feature.ROAD, Feature.ROAD],
-    Feature.ROAD,
-  ),
+  createTile("4", ["f", "r", "r", "f"], "r"),
+  createTile("5", ["f", "f", "r", "r"], "r"),
 ];
 
 export const dummyTiles4 = () => [
-  createTile(
-    "2",
-    [Feature.ROAD, Feature.CITY, Feature.FIELD, Feature.ROAD],
-    Feature.ROAD,
-  ),
-  createTile(
-    "3",
-    [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-    Feature.ROAD,
-  ),
+  createTile("2", ["r", "c", "f", "r"], "r"),
+  createTile("3", ["f", "r", "f", "r"], "r"),
 ];
 
 export const dummyTiles5 = () => [
-  createTile(
-    "2",
-    [Feature.ROAD, Feature.ROAD, Feature.FIELD, Feature.FIELD],
-    Feature.ROAD,
-  ),
-  createTile(
-    "3",
-    [Feature.FIELD, Feature.ROAD, Feature.FIELD, Feature.ROAD],
-    Feature.ROAD,
-  ),
+  createTile("2", ["r", "r", "f", "f"], "r"),
+  createTile("3", ["f", "r", "f", "r"], "r"),
 ];
 
 export const dummyTiles2 = () => [
-  createTile(
-    "3",
-    [
-      Feature.MONASTERY,
-      Feature.MONASTERY,
-      Feature.MONASTERY,
-      Feature.MONASTERY,
-    ],
-    Feature.ROAD,
-  ),
-  createTile(
-    "2",
-    [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY],
-    Feature.CITY,
-  ),
+  createTile("3", ["m", "m", "m", "m"], "r"),
+  createTile("2", ["c", "c", "c", "c"], "c"),
 ];
 
 export const createPlayer = (
@@ -145,5 +110,49 @@ export const createDummyPlayers = () => {
   return [
     createPlayer("user1", "black", true, "121"),
     createPlayer("user2", "blue", false, "121"),
+  ];
+};
+
+export const dummyTilesToClaimMonastery = () => {
+  return [
+    createTile("3", ["r", "c", "f", "r"], "r"),
+    createTile("4", ["f", "r", "f", "r"], "r"),
+    createTile("5", ["r", "r", "f", "f"], "r"),
+    createTile("6", ["r", "f", "r", "f"], "r"),
+    createTile("7", ["c", "r", "r", "f"], "r"),
+    createTile("8", ["f", "r", "f", "r"], "r"),
+    createTile("9", ["r", "f", "r", "r"], "r"),
+    createTile("2", ["f", "f", "f", "f"], "m"),
+  ];
+};
+
+export const dummyTilesToClaimMonastery1 = () => {
+  return [
+    createTile("2", ["f", "f", "f", "f"], "m"),
+    createTile("3", ["r", "c", "f", "r"], "r"),
+    createTile("4", ["f", "r", "f", "r"], "r"),
+    createTile("5", ["r", "r", "f", "f"], "r"),
+    createTile("6", ["r", "f", "r", "f"], "r"),
+    createTile("7", ["c", "r", "r", "f"], "r"),
+    createTile("8", ["f", "r", "f", "r"], "r"),
+    createTile("9", ["r", "f", "r", "r"], "r"),
+  ];
+};
+
+export const dummyTilesToClaimMonastery2 = () => {
+  return [
+    createTile("2", ["r", "f", "f", "r"], "r"),
+    createTile("3", ["f", "r", "f", "r"], "r"),
+    createTile("4", ["f", "f", "f", "f"], "m"),
+    createTile("5", ["r", "r", "f", "c"], "r"),
+    createTile("6", ["f", "f", "r", "r"], "r"),
+    createTile("7", ["r", "r", "f", "f"], "r"),
+    createTile("8", ["r", "f", "r", "f"], "r"),
+    createTile("9", ["c", "r", "r", "f"], "r"),
+    createTile("10", ["f", "r", "f", "r"], "r"),
+    createTile("11", ["f", "c", "r", "r"], "r"),
+    createTile("12", ["r", "r", "f", "f"], "r"),
+    createTile("13", ["f", "f", "r", "r"], "r"),
+    createTile("14", ["f", "f", "f", "f"], "m"),
   ];
 };

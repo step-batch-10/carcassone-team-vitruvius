@@ -41,6 +41,7 @@ export type Position = { row: number; col: number };
 export interface OccupanceSubGrid {
   feature: null | string;
   occupiedBy: Set<string>;
+  isScored: boolean;
 }
 
 export type Edge = "left" | "right" | "top" | "bottom";
@@ -91,10 +92,8 @@ export interface Tile {
   id: string;
   orientation: CardinalDegrees;
   hasShield: boolean;
-  //tileEdges: [L,T,R,B]
-  tileEdges: Edges;
+  tileEdges: Feature[];
   tileCenter: Feature;
-  // CCCC-C.jpg
 }
 
 export interface User {

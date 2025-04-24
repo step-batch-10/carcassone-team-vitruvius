@@ -11,6 +11,7 @@ import {
   Transpose,
 } from "../models.ts";
 import { ScoreManager } from "./score-board.ts";
+import Player from "../room/player.ts";
 
 export class Board {
   private board: TileBox[][];
@@ -114,5 +115,10 @@ export class Board {
   isBoxUnlockToPlace(position: Position) {
     const resTile = this.tileBoxes.adjacentTile(position);
     return !this.allNeighboursEmpty(resTile);
+  }
+
+  score(position: Position | undefined, players: Player[]) {
+    if (!position) return { desc: "invalid position" };
+    this.scoreManager.score(position, players);
   }
 }

@@ -1,4 +1,11 @@
-import { Feature, Position, Tile, TileBox, TileEdges } from "../models.ts";
+import {
+  Feature,
+  OccupanceSubGrid,
+  Position,
+  Tile,
+  TileBox,
+  TileEdges,
+} from "../models.ts";
 
 export class TileBoxManager {
   private board: TileBox[][];
@@ -17,6 +24,10 @@ export class TileBoxManager {
       right: { row, col: col + 1 },
       top: { row: row - 1, col },
       bottom: { row: row + 1, col },
+      topLeft: { row: row - 1, col: col - 1 },
+      topRight: { row: row - 1, col: col + 1 },
+      bottomLeft: { row: row + 1, col: col - 1 },
+      bottomRight: { row: row + 1, col: col + 1 },
     };
   }
 
@@ -84,6 +95,10 @@ export class TileBoxManager {
       adjCellEdge.bottomEdge,
     ];
   }
+
+  adjacentPositionArray(position: Position): Position[] {
+    return Object.values(this.adjacentPosition(position));
+  }
 }
 
 export const shuffler = (tiles: Tile[]): Tile[] => {
@@ -116,8 +131,8 @@ export class TileStacker {
   }
 }
 
-const createPosition = () => {
-  return { feature: null, occupiedBy: new Set<string>() };
+const createPosition = (): OccupanceSubGrid => {
+  return { feature: null, occupiedBy: new Set<string>(), isScored: false };
 };
 
 const createOccupiedRegion = () => {
@@ -152,10 +167,30 @@ export const firstTileBox = (): TileBox => ({
     region: null,
   },
   occupiedRegion: {
-    left: { feature: Feature.ROAD, occupiedBy: new Set<string>() },
-    top: { feature: Feature.CITY, occupiedBy: new Set<string>() },
-    right: { feature: Feature.ROAD, occupiedBy: new Set<string>() },
-    bottom: { feature: Feature.FIELD, occupiedBy: new Set<string>() },
-    middle: { feature: Feature.ROAD, occupiedBy: new Set<string>() },
+    left: {
+      feature: Feature.ROAD,
+      occupiedBy: new Set<string>(),
+      isScored: false,
+    },
+    top: {
+      feature: Feature.CITY,
+      occupiedBy: new Set<string>(),
+      isScored: false,
+    },
+    right: {
+      feature: Feature.ROAD,
+      occupiedBy: new Set<string>(),
+      isScored: false,
+    },
+    bottom: {
+      feature: Feature.FIELD,
+      occupiedBy: new Set<string>(),
+      isScored: false,
+    },
+    middle: {
+      feature: Feature.ROAD,
+      occupiedBy: new Set<string>(),
+      isScored: false,
+    },
   },
 });
