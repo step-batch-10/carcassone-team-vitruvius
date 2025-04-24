@@ -71,28 +71,28 @@ body {
   height: 24px;
 }
 
-#a-top {
+#top-navigator {
   position: fixed;
   top: 0px;
   left: 50%;
   transform: rotate(180deg);
 }
 
-#a-right {
+#right-navigator {
   position: fixed;
   top: 50%;
   right: 0px;
   transform: rotate(270deg);
 }
 
-#a-bottom {
+#bottom-navigator {
   position: fixed;
   bottom: 0px;
   left: 50%;
   transform: rotate(0deg);
 }
 
-#a-left {
+#left-navigator {
   position: fixed;
   top: 50%;
   left: 0px;

@@ -1,6 +1,7 @@
 import Board from "./board.js";
 import API from "./api.js";
 import Cell from "./cell.js";
+import addScrollFeatures from "./scroll.js";
 
 const getImgUrl = (cell) => cell.querySelector("img").src;
 
@@ -137,14 +138,15 @@ const updateGameState = async (gameState) => {
   }
 };
 
-const changeFocusToStartingTile = () =>
-  setTimeout(() => {
-    globalThis.scrollTo({
-      top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
-      left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
-      behavior: "smooth",
-    });
-  }, 2000);
+const getOriginCoordinates = () => ({
+  top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
+  left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
+  behavior: "smooth",
+});
+
+const focusOnOrigin = () => globalThis.scrollTo(getOriginCoordinates());
+
+const changeFocusToStartingTile = () => setTimeout(focusOnOrigin, 2000);
 
 const showCurrentPlayer = (interval) => {
   const currentPlayerLabel = document.querySelector(".player-turn");
@@ -152,7 +154,6 @@ const showCurrentPlayer = (interval) => {
 
   setInterval(async () => {
     const currentPlayer = await API.currentPlayer();
-
     textLabel.textContent = `${currentPlayer}'s turn`;
     currentPlayerLabel.style.display = "flex";
   }, interval);
@@ -169,97 +170,11 @@ const showPlayerStatus = async () => {
   meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
 };
 
-const atTopEdge = () => globalThis.scrollY <= 0;
-
-const atBottomEdge = () => {
-  return (
-    globalThis.scrollY + globalThis.innerHeight >= document.body.scrollHeight
-  );
-};
-
-const atLeftEdge = () => globalThis.scrollX <= 0;
-
-const atRightEdge = () => {
-  return (
-    globalThis.scrollX + globalThis.innerWidth >= document.body.scrollWidth
-  );
-};
-
-const createAlertDiv = (content) => {
-  const alertDiv = document.createElement("div");
-  alertDiv.classList.add("custom-alert");
-  alertDiv.textContent = content;
-  document.body.append(alertDiv);
-  setTimeout(() => {
-    alertDiv.remove();
-  }, 1000);
-};
-
-const mouseDown = () => {
-  const upArrow = document.querySelector("#a-bottom");
-  upArrow.addEventListener("click", () => {
-    if (!atBottomEdge()) {
-      globalThis.scrollBy({
-        top: 450,
-        behavior: "smooth",
-      });
-    } else {
-      createAlertDiv("You are already in the bottom edge");
-    }
-  });
-};
-
-const mouseUp = () => {
-  const upArrow = document.querySelector("#a-top");
-  upArrow.addEventListener("click", () => {
-    if (!atTopEdge()) {
-      globalThis.scrollBy({
-        top: -450,
-        behavior: "smooth",
-      });
-    } else {
-      createAlertDiv("You are already in the top edge");
-    }
-  });
-};
-
-const mouseLeft = () => {
-  const upArrow = document.querySelector("#a-left");
-  upArrow.addEventListener("click", () => {
-    if (!atLeftEdge()) {
-      globalThis.scrollBy({
-        left: -450,
-        behavior: "smooth",
-      });
-    } else {
-      createAlertDiv("You are already in the left edge");
-    }
-  });
-};
-
-const mouseRight = () => {
-  const upArrow = document.querySelector("#a-right");
-  upArrow.addEventListener("click", () => {
-    if (!atRightEdge()) {
-      globalThis.scrollBy({
-        left: 450,
-        behavior: "smooth",
-      });
-    } else {
-      createAlertDiv("You are already in the right edge");
-    }
-  });
-};
-
 const main = async () => {
   const gameState = await API.gameState();
   updateGameState(gameState);
-
+  addScrollFeatures();
   showPlayerStatus();
-  mouseUp();
-  mouseDown();
-  mouseLeft();
-  mouseRight();
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
 };
