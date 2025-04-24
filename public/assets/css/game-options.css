@@ -6,8 +6,8 @@ body {
   width: 100vw;
   height: 100vh;
   font-family: "MedievalSharp", cursive;
-  font-weight: 300;
-  font-size: 2rem;
+  font-weight: 400;
+  font-size: 2.5rem;
   color: goldenrod;
   margin: 0;
   padding: 0;
@@ -19,19 +19,36 @@ body {
 }
 
 header {
-  margin-top: 20px;
-  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10%;
+  gap: 5px;
 }
 
 form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: rgba(0, 0, 0, 0.6);
   padding: 25px 40px;
   border-radius: 15px;
   border: 2px solid goldenrod;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 label {
@@ -60,15 +77,13 @@ button {
   color: black;
   font-family: inherit;
   transition: transform 0.2s;
+  margin-bottom: 10px;
 }
 
 button:hover {
   background-color: #ffcc33;
 }
 
-.form-container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 10%;
+#join-btn {
+  margin-top: 10px;
 }
