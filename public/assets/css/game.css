@@ -199,6 +199,7 @@ body {
   height: 32%;
   background-image: url("/assets/images/symbols/skip.png");
   background-size: contain;
+  background-repeat: no-repeat;
 }
 .placeable-tile {
   background-color: greenyellow;
@@ -208,5 +209,3 @@ div > .invalid-placement {
   background-color: red;
   box-shadow: 1px 1px 20px red;
 }
-
-.empty-cell {}

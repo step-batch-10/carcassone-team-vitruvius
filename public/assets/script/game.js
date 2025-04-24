@@ -63,7 +63,8 @@ const createSubGrid = () => {
 };
 
 const handleSkip = (cell) => {
-  return (_) => {
+  return async (_) => {
+    await fetch("/game/skip-claim", { method: "PATCH" });
     cell.replaceChildren();
   };
 };

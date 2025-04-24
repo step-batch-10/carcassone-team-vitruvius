@@ -20,12 +20,13 @@ import {
   serveGameBoard,
   serveGameState,
   serveValidPositions,
+  handleSkip,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
 import { Hono } from "hono";
 
 const setAppContext = (
-  appContext: AppContext,
+  appContext: AppContext
 ): MiddlewareHandler<{ Variables: AppVariables }> => {
   return async (ctx: Context<{ Variables: AppVariables }>, next: Next) => {
     const { sessions, users, roomManager, games } = appContext;
@@ -68,6 +69,7 @@ const createGameApp = () => {
   gameApp.get("/current-player", getCurrentPlayer);
   gameApp.get("/self", getSelfStatus);
   gameApp.patch("/claim", handlePlaceMeeple);
+  gameApp.patch("/skip-claim", handleSkip);
   gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
 
   return gameApp;
@@ -80,7 +82,7 @@ const createApp = (appContext: AppContext, logger: MiddlewareHandler) => {
   app.use(setAppContext(appContext));
   app.get(
     "/game-options",
-    serveStatic({ path: "/html/game-options.html", root: "public" }),
+    serveStatic({ path: "/html/game-options.html", root: "public" })
   );
   app.route("/game", createGameApp());
 
