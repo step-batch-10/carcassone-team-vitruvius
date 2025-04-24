@@ -1,18 +1,11 @@
 import Board from "./board.js";
 import API from "./api.js";
+import Cell from "./cell.js";
 
-const querySelector = (selector) => {
-  return document.querySelector(selector);
-};
+const getImgUrl = (cell) => cell.querySelector("img").src;
 
-const getImgUrl = (cell) => {
-  const img = cell.querySelector("img");
-  return img.src;
-};
-
-const setBackground = (cell, board) => {
+const setBackground = (cell) => {
   const imgPath = getImgUrl(cell);
-  board.removeGhostEffect();
   const img = cell.querySelector("img");
   const btn = cell.querySelector("button");
   cell.removeChild(img);
@@ -76,6 +69,7 @@ const handleSkip = (cell) => {
 const addMeepleOptions = (cell) => {
   const subGrid = createSubGrid();
   const skipButton = document.createElement("button");
+
   skipButton.classList.add("skip");
   skipButton.addEventListener("click", handleSkip(cell));
 
@@ -84,9 +78,7 @@ const addMeepleOptions = (cell) => {
 
 const handleTilePlacement = async (event, board, events) => {
   const cell = event.target.parentNode;
-
-  const [row, col] = cell.id.split("/");
-  const position = { row: Number(row), col: Number(col) };
+  const position = Cell.parseCellId(cell.id);
 
   const tilePlacementRes = await API.placeTile(position);
 
@@ -97,7 +89,8 @@ const handleTilePlacement = async (event, board, events) => {
     return;
   }
 
-  removePlaceableCellsHighlight();
+  board.removeGhostEffect();
+  Board.removePlaceableCellsHighlight();
   setBackground(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
@@ -112,39 +105,6 @@ const createCellEvents = (board) => {
   };
 
   return events;
-};
-
-const getCell = (row, col) => document.getElementById(`${row}/${col}`);
-const getHighlightedCells = () => document.querySelectorAll(".placeable-tile");
-
-const removePlaceableCellsHighlight = () => {
-  const highlightedCells = getHighlightedCells();
-
-  highlightedCells.forEach((cell) => {
-    cell.classList.remove("placeable-tile");
-  });
-};
-
-const highlightPlaceableCells = async () => {
-  removePlaceableCellsHighlight();
-
-  const validPositions = await API.placeablePositions();
-
-  validPositions.placablePositions.forEach(({ row, col }) => {
-    const cell = getCell(row, col);
-    cell.classList.add("placeable-tile");
-  });
-};
-
-const rotateRight = async (event) => {
-  const rotatedTile = await API.rotateTile();
-
-  if (rotatedTile) {
-    const tileImage = event.target.parentNode.querySelector("img");
-    tileImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
-
-    await highlightPlaceableCells();
-  }
 };
 
 const setupGrid = (gridSize) => {
@@ -169,10 +129,11 @@ const updateGameState = async (gameState) => {
   const board = new Board(grid);
   board.build(tiles, createCellEvents(board));
 
+  // make it as a function
   if (self.username === currentPlayer.username) {
     await drawTileIfNotDrawn(currentTile);
-    board.addGhostEffect({ click: rotateRight });
-    await highlightPlaceableCells();
+    board.addGhostEffect();
+    Board.highlightPlaceableCells();
   }
 };
 
@@ -186,7 +147,7 @@ const changeFocusToStartingTile = () =>
   }, 2000);
 
 const showCurrentPlayer = (interval) => {
-  const currentPlayerLabel = querySelector(".player-turn");
+  const currentPlayerLabel = document.querySelector(".player-turn");
   const textLabel = currentPlayerLabel.querySelector("p");
 
   setInterval(async () => {
@@ -200,9 +161,9 @@ const showCurrentPlayer = (interval) => {
 const showPlayerStatus = async () => {
   const { noOfMeeples, points, meepleColor } = await API.self();
 
-  const meepleImg = querySelector("#meeple");
-  const meepleCount = querySelector("#meeple-count");
-  const score = querySelector("#score");
+  const meepleImg = document.querySelector("#meeple");
+  const meepleCount = document.querySelector("#meeple-count");
+  const score = document.querySelector("#score");
   meepleCount.textContent = noOfMeeples;
   score.textContent = points;
   meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
@@ -249,7 +210,6 @@ const mouseDown = () => {
 };
 
 const mouseUp = () => {
-  console.log("hello");
   const upArrow = document.querySelector("#a-top");
   upArrow.addEventListener("click", () => {
     if (!atTopEdge()) {

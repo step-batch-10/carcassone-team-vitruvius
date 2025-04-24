@@ -1,120 +1,37 @@
 import API from "./api.js";
+import Cell from "./cell.js";
 
 class Board {
   #parentNode;
-  #cellNodes;
   #ghostEffectEvents;
-  #currentTile;
 
   constructor(parentNode) {
     this.#parentNode = parentNode;
-    this.#cellNodes = [];
     this.#ghostEffectEvents = {};
-    this.#currentTile = null;
   }
 
-  static extractEdgesOfOriginalTile(edges, orientation) {
-    const rotated = [...edges];
-    const totalRotations = (orientation / 90) % 4;
+  static #getHighlightedCells() {
+    return document.querySelectorAll(".placeable-tile");
+  }
 
-    Array.from({ length: totalRotations }, () => {
-      rotated.push(rotated.shift());
+  static removePlaceableCellsHighlight() {
+    const highlightedCells = this.#getHighlightedCells();
+
+    highlightedCells.forEach((cell) => {
+      cell.classList.remove("placeable-tile");
     });
-
-    return rotated.map((edge) => edge.at(0)).join("");
   }
 
-  static extractTileImagePath(tile) {
-    const { tileEdges, orientation, tileCenter, hasShield } = tile;
+  static async highlightPlaceableCells() {
+    this.removePlaceableCellsHighlight();
 
-    const edges = Board.extractEdgesOfOriginalTile(tileEdges, orientation);
-    const center = tileCenter.at(0);
-    const guard = hasShield ? "-g" : "";
+    const validPositions = await API.placeablePositions();
 
-    return `/assets/images/tiles/${edges}-${center}${guard}.png`;
-  }
+    validPositions.placablePositions.forEach(({ row, col }) => {
+      const cell = Cell.getCell(row, col);
 
-  #createSubGrid(side, region, color, cellElement) {
-    const subGrid = document.createElement("div");
-    subGrid.classList.add("sub-grid");
-
-    if (side === region) {
-      subGrid.classList.add(side);
-      this.setMeeple(color, subGrid);
-    }
-
-    cellElement.appendChild(subGrid);
-  }
-
-  #addMeepleToCell(cell, cellElement) {
-    const { region, color } = cell.meeple;
-
-    if (!color) return;
-    const sides = ["left", "top", "right", "bottom", "middle"];
-
-    sides.forEach((side) =>
-      this.#createSubGrid(side, region, color, cellElement)
-    );
-  }
-
-  setMeeple(color, subGrid) {
-    const meeple = document.createElement("img");
-    meeple.classList.add("used-meeple");
-    meeple.setAttribute("src", `/assets/images/${color}-meeple.png`);
-    subGrid.appendChild(meeple);
-  }
-
-  #createCell(cell, events, chord) {
-    const id = chord.join("/");
-
-    const cellElement = document.createElement("div");
-    cellElement.id = id;
-    cellElement.className = "cell";
-
-    if (cell.tile) {
-      const imgPath = Board.extractTileImagePath(cell.tile);
-      cellElement.style.backgroundImage = `url("${imgPath}")`;
-      this.#addMeepleToCell(cell, cellElement);
-    } else {
-      this.#addEvents(cellElement, events);
-    }
-
-    return cellElement;
-  }
-
-  #insertTileInCell(cell, tile) {
-    if (tile) {
-      const imgPath = Board.extractTileImagePath(tile);
-      const imgElement = document.createElement("img");
-
-      imgElement.setAttribute("src", imgPath);
-      imgElement.style.transform = `rotateZ(${tile.orientation}deg)`;
-      imgElement.style.opacity = "0.6";
-
-      cell.appendChild(imgElement);
-    }
-  }
-
-  #addRotateRightButton(parentNode, events = {}) {
-    const rotateButton = document.createElement("button");
-
-    rotateButton.textContent = "->";
-    rotateButton.classList.add("rotate-right");
-    this.#addEvents(rotateButton, events);
-
-    parentNode.appendChild(rotateButton);
-  }
-
-  #removeChildren(parentNode) {
-    const imgElement = parentNode.querySelector("img");
-    const button = parentNode.querySelector("button");
-
-    if (imgElement) {
-      button.remove();
-      imgElement.remove();
-    }
-
-    parentNode.style.opacity = "1";
+      cell.classList.add("placeable-tile");
+    });
   }
 
   #addEvents(node, events) {
@@ -129,48 +46,52 @@ class Board {
     );
   }
 
-  addGhostEffect(events = {}) {
+  static async handleGhostTile(event) {
+    event.stopPropagation();
+
+    const currentTile = await API.currentTile();
+    const cellElement = event.target;
+
+    if (currentTile) {
+      Cell.insertGhostTile(currentTile, cellElement);
+    }
+  }
+
+  static removeGhostTile(event) {
+    event.stopPropagation();
+
+    event.target.innerHTML = "";
+  }
+
+  addGhostEffect() {
     this.#ghostEffectEvents = {
-      mouseenter: async (event) => {
-        event.stopPropagation();
-
-        this.#currentTile = await API.currentTile();
-        const cell = event.target;
-
-        if (this.#currentTile) {
-          this.#insertTileInCell(cell, this.#currentTile);
-          this.#addRotateRightButton(cell, events);
-        }
-      },
-      mouseleave: async (event) => {
-        event.stopPropagation();
-
-        this.#currentTile = await API.currentTile();
-        this.#removeChildren(event.target);
-      },
+      mouseenter: Board.handleGhostTile,
+      mouseleave: Board.removeGhostTile,
     };
 
-    this.#cellNodes.forEach((cell) => {
-      if (!cell.style.backgroundImage) {
-        this.#addEvents(cell, this.#ghostEffectEvents);
-      }
-    });
+    const emptyCells = document.querySelectorAll(".empty-cell");
+
+    emptyCells.forEach((cellElement) =>
+      this.#addEvents(cellElement, this.#ghostEffectEvents)
+    );
   }
 
   removeGhostEffect() {
-    this.#cellNodes.forEach((cell) => {
-      this.#removeEvents(cell, this.#ghostEffectEvents);
+    const emptyCells = document.querySelectorAll(".empty-cell");
+
+    emptyCells.forEach((cellElement) => {
+      this.#removeEvents(cellElement, this.#ghostEffectEvents);
     });
   }
 
   build(tiles, events = {}) {
-    this.#cellNodes = tiles.flatMap((row, rowIndex) =>
+    const cellNodes = tiles.flatMap((row, rowIndex) =>
       row.map((cell, cellIndex) =>
-        this.#createCell(cell, events, [rowIndex, cellIndex])
+        Cell.createCell(cell, [rowIndex, cellIndex], events)
       )
     );
 
-    this.#parentNode.replaceChildren(...this.#cellNodes);
+    this.#parentNode.replaceChildren(...cellNodes);
   }
 }
 
