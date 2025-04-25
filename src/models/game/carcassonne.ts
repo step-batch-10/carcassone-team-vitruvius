@@ -19,7 +19,7 @@ export class Carcassonne {
     players: Player[],
     tileManager: TileStacker,
     board: Board,
-    unlockedPosition: Position[],
+    unlockedPosition: Position[]
   ) {
     this.players = players;
     this.turn = 0;
@@ -51,7 +51,7 @@ export class Carcassonne {
     return this.unlockedPositions.filter(
       (position: Position) =>
         this.board.isTilePlaceable(this.currentTile, position) &&
-        !this.board.getTile(position),
+        !this.board.getTile(position)
     );
   }
 
@@ -65,7 +65,7 @@ export class Carcassonne {
   static initGame(
     players: Player[],
     tileShuffler = shuffler,
-    tilesArr = generateTiles(),
+    tilesArr = generateTiles()
   ) {
     const tileManager = new TileStacker(tilesArr, tileShuffler);
     const board = Board.create(84, 84);
@@ -137,7 +137,7 @@ export class Carcassonne {
   }
 
   getAllPlayers() {
-    return this.players;
+    return this.players.map((player) => player.json());
   }
 
   getPlayerOf(username: string) {
@@ -166,7 +166,7 @@ export class Carcassonne {
   private updateMeeple(
     subGrid: Sides | Center,
     player: Player,
-    position: Position,
+    position: Position
   ) {
     const cell = this.getBoard()[position.row][position.col];
     cell.meeple.region = subGrid;
@@ -180,7 +180,7 @@ export class Carcassonne {
     const status = this.board.placeMeeple(
       this.tilePlacedAt,
       player.username,
-      subGrid,
+      subGrid
     );
     if (status.isPlaced) {
       this.updateMeeple(subGrid, player, this.tilePlacedAt);

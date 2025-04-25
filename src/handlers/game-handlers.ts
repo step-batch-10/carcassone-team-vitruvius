@@ -11,7 +11,7 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
 const getUserOfSessionId = (
   ctx: Context<{ Variables: Variables }>,
   sessions: Sessions,
-  users: Users,
+  users: Users
 ) => {
   const sessionID = String(getCookie(ctx, "session-id"));
   const userID = String(sessions.get(sessionID));
@@ -114,6 +114,11 @@ const handleSkip = (ctx: Context) => {
   return ctx.json(null, 200);
 };
 
+const serveAllPlayers = (ctx: Context) => {
+  const game: Carcassonne = ctx.get("game");
+
+  return ctx.json(game.getAllPlayers(), 200);
+};
 export {
   drawATile,
   getCurrentPlayer,
@@ -126,5 +131,6 @@ export {
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
+  serveAllPlayers,
   serveValidPositions,
 };

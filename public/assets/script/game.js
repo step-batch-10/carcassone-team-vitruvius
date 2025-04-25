@@ -42,7 +42,7 @@ const handlePlaceMeeple = (side) => {
     if (res.status === 201) {
       await showPlacedMeeple(event);
       removeMeepleListeners(event, placeMeeple);
-      showPlayerStatus();
+      showAllPlayerStatus();
     }
   };
 
@@ -168,26 +168,62 @@ const showCurrentPlayer = (interval) => {
   }, interval);
 };
 
-const showPlayerStatus = async () => {
-  const { noOfMeeples, points, meepleColor } = await API.self();
+const retrivePlayers = () => {
+  const player1 = {
+    username: "user1",
+    roomID: "121",
+    noOfMeeples: 2,
+    points: 0,
+    meepleColor: "red",
+    isHost: true,
+  };
+  return [player1];
+};
 
-  const meepleImg = document.querySelector("#meeple");
-  const meepleCount = document.querySelector("#meeple-count");
-  const score = document.querySelector("#score");
+const selectNodes = (selectors, parentNode) =>
+  selectors.map((selector) => parentNode.querySelector(selector));
+
+const createPlayerElement = (player) => {
+  const { username, meepleColor, noOfMeeples, points } = player;
+
+  const template = document.querySelector("#player-template");
+  const playerStatusClone = template.content.cloneNode(true);
+  const selectors = ["#player-name", ".meeple", "#meeple-count", "#score"];
+
+  const [playerNameNode, meepleImage, meepleCount, score] = selectNodes(
+    selectors,
+    playerStatusClone
+  );
+
+  playerNameNode.textContent = username;
+  meepleImage.setAttribute("src", `assets/images/${meepleColor}-meeple.png`);
   meepleCount.textContent = noOfMeeples;
   score.textContent = points;
-  meepleImg.src = `assets/images/${meepleColor}-meeple.png`;
+
+  return playerStatusClone;
+};
+
+const setUpStatusBox = async () => {
+  const statusBox = document.querySelector("#players-status");
+  const self = await API.self();
+  const APIs = [async () => [await API.self()], API.allPlayers];
+
+  statusBox.addEventListener("click", createShowPlayerTableHandler(APIs, self));
+};
+
+const showCurrentPlayerStatus = async () => {
+  const player = await API.self();
+  const playerStatusNode = createPlayerElement(player);
+  const playersStatus = document.querySelector("#players-status");
+  const statusBody = playersStatus.querySelector("tbody");
+
+  statusBody.replaceChildren(playerStatusNode);
 };
 
 const loadGame = async () => {
   const gameState = await API.gameState();
 
   await updateGameState(gameState);
-  await showPlayerStatus();
-};
-
-const refreshGame = () => {
-  loadGame();
 };
 
 const pollTurn = (gameStatePoller) => {
@@ -208,10 +244,35 @@ const pollTurn = (gameStatePoller) => {
   };
 };
 
+const toggleShowPlayersTable = async (currentAPI, self) => {
+  const playersTable = document.querySelector("#players-status");
+  const statusBody = playersTable.querySelector("tbody");
+  const players = await currentAPI();
+  const selfNode = createPlayerElement(self);
+  const otherPlayers = players.filter(
+    ({ username }) => self.username !== username
+  );
+  const otherPlayerNodes = otherPlayers.map(createPlayerElement);
+
+  statusBody.replaceChildren(...otherPlayerNodes, selfNode);
+};
+
+const createShowPlayerTableHandler = (APIs, self) => {
+  let index = 0;
+
+  return (_event) => {
+    const currentAPI = APIs.at(index);
+    toggleShowPlayersTable(currentAPI, self);
+    index = (index + 1) % APIs.length;
+  };
+};
+
 const main = async () => {
   await loadGame();
+  setUpStatusBox();
+  showCurrentPlayerStatus();
 
-  const gameStatePoller = new Poller(refreshGame, 1000);
+  const gameStatePoller = new Poller(loadGame, 1000);
   gameStatePoller.startPolling();
 
   const turnPoller = new Poller(pollTurn(gameStatePoller), 1000);

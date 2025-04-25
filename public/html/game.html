@@ -59,13 +59,19 @@
         />
         <img src="/assets/images/symbols/rotate-map.png" alt="rotate-map" />
       </div>
-      <div id="status" class="footer">
-        <p>You</p>
-        <img id="meeple" src="" alt="meeple" />
-        <p id="meeple-count"></p>
-        <img src="/assets/images/symbols/score.png" alt="meeple" />
-        <p id="score"></p>
-      </div>
+
+      <template id="player-template">
+        <tr id="player">
+          <td><p id="player-name"></p></td>
+          <td><img class="meeple" src="" alt="meeple" /></td>
+          <td><p id="meeple-count"></p></td>
+          <td><img src="/assets/images/symbols/score.png" alt="meeple" /></td>
+          <td><p id="score"></p></td>
+        </tr>
+      </template>
+      <table id="players-status">
+        <tbody></tbody>
+      </table>
     </footer>
   </body>
 </html>

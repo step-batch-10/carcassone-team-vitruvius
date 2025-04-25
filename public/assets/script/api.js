@@ -40,6 +40,12 @@ const API = {
     return await playerRes.json();
   },
 
+  allPlayers: async () => {
+    const playerRes = await fetch("/game/players");
+
+    return await playerRes.json();
+  },
+
   placeTile: (position) => {
     return fetch("/game/place-tile", {
       method: "PATCH",
