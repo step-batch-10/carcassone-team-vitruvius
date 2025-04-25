@@ -10,7 +10,7 @@ import {
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { Center, Sides, Tile } from "../../src/models/models.ts";
+import { Center, Feature, Sides, Tile } from "../../src/models/models.ts";
 import { ScoreManager } from "../../src/models/game/score-board.ts";
 
 describe("testing getCurrentPlayer", () => {
@@ -215,6 +215,16 @@ describe("testing place a meeple", () => {
     assertFalse(scoreBoard.markOccupance({ row: 0, col: 0 }));
   });
 
+  it("when there is no tile placed then the occupance should not mark", () => {
+    const tiles = [[]];
+
+    const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
+
+    assertFalse(
+      scoreBoard.hasFeature({ row: 0, col: 0 }, Feature.CITY, Sides.BOTTOM),
+    );
+  });
+
   it("should  claim the monastry", () => {
     const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
@@ -372,6 +382,35 @@ describe("testing markOccupance", () => {
 
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
+    game.drawATile();
+    game.placeATile({ row: 43, col: 42 });
+    game.drawATile();
+    game.placeATile({ row: 43, col: 41 });
+    game.placeAMeeple(Sides.TOP);
+    game.drawATile();
+    game.placeATile({ row: 42, col: 41 });
+
+    assertEquals(
+      game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
+      1,
+    );
+    assertEquals(
+      game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
+      1,
+    );
+    assertEquals(
+      game.getBoard()[42][43].occupiedRegion.right.occupiedBy.size,
+      1,
+    );
+  });
+
+  it("should mark the all the connecting tile occupance of all players claiming", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 43 });
+    game.placeAMeeple(Sides.LEFT);
     game.drawATile();
     game.placeATile({ row: 43, col: 42 });
     game.drawATile();

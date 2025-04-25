@@ -1,5 +1,5 @@
 import { TileBoxManager } from "./tiles.ts";
-import { Center, Moves, Position, Sides, TileBox } from "../models.ts";
+import { Center, Feature, Moves, Position, Sides, TileBox } from "../models.ts";
 import Player from "../room/player.ts";
 
 export class ScoreManager {
@@ -113,8 +113,14 @@ export class ScoreManager {
       .every((pos) => this.tileBoxes.getTile(pos));
   }
 
-  isMonastery(position: Position): boolean {
-    return this.tileBoxes.getTile(position)?.tileCenter === "monastery";
+  hasFeature(
+    position: Position,
+    feature: Feature,
+    subGrid: Sides | Center,
+  ): boolean {
+    const cell = this.tileBoxes.getCell(position);
+    if (cell) return cell.occupiedRegion[subGrid].feature === feature;
+    return false;
   }
 
   isClaimed(position: Position): boolean | void {
@@ -127,13 +133,17 @@ export class ScoreManager {
     if (cell) cell.occupiedRegion[subGrid].isScored = true;
   }
 
+  private findPlayer(players: Player[], playerName: string | null) {
+    return players.find((player) => player.username === playerName);
+  }
+
   updateScoreToPlayers(
     playerNames: Set<string> | undefined,
     players: Player[],
     score: number,
   ) {
     playerNames?.values().forEach((playerName) => {
-      const player = players.find((player) => player.username === playerName);
+      const player = this.findPlayer(players, playerName);
       if (player) {
         player.points += score;
       }
@@ -147,11 +157,14 @@ export class ScoreManager {
     }
   }
 
-  private canScoreMonastery(position: Position) {
+  private canScoreFeature(
+    position: Position,
+    feature: Feature,
+    subGrid: Sides | Center,
+  ) {
     return (
-      this.isMonastery(position) &&
+      this.hasFeature(position, feature, subGrid) &&
       this.isClaimed(position) &&
-      this.hasAdjacent9Tiles(position) &&
       !this.isScored(position)
     );
   }
@@ -160,24 +173,133 @@ export class ScoreManager {
     return this.tileBoxes.getCell(position)?.occupiedRegion.middle.isScored;
   }
 
-  updateScoreForMonastry(position: Position, players: Player[]) {
-    if (this.canScoreMonastery(position)) {
+  private removeMeeple(position: Position, players: Player[]) {
+    const cell = this.tileBoxes.getCell(position);
+    if (cell) {
+      const player = this.findPlayer(players, cell.meeple.playerName);
+      if (player) player.noOfMeeples += 1;
+
+      cell.meeple.playerName = null;
+      cell.meeple.color = null;
+      cell.meeple.region = null;
+    }
+  }
+
+  updateScoreForMonastry(
+    position: Position,
+    players: Player[],
+    traverse: Set<string>,
+  ) {
+    traverse.add(`${position.row}-${position.col}`);
+
+    if (
+      this.canScoreFeature(position, Feature.MONASTERY, Center.MIDDlE) &&
+      this.hasAdjacent9Tiles(position)
+    ) {
       this.updateScoreToPlayers(
         this.getClaimedBy(position, Center.MIDDlE),
         players,
         9,
       );
       this.markScored(position, Center.MIDDlE);
+      this.removeMeeple(position, players);
     }
 
     this.tileBoxes.adjacentPositionArray(position).forEach((adjPos) => {
-      if (this.isMonastery(adjPos) && !this.isScored(adjPos)) {
-        this.updateScoreForMonastry(adjPos, players);
+      if (
+        this.hasFeature(adjPos, Feature.MONASTERY, Center.MIDDlE) &&
+        !this.isScored(adjPos) &&
+        !traverse.has(`${adjPos.row}-${adjPos.col}`)
+      ) {
+        this.updateScoreForMonastry(adjPos, players, traverse);
       }
     });
   }
 
+  private isTraversed(traversedPositions: Set<string>, position: Position) {
+    return traversedPositions.has(`${position.row}-${position.col}`);
+  }
+
+  getOppositeEdge(edge: Sides) {
+    const opposite = {
+      right: Sides.LEFT,
+      top: Sides.BOTTOM,
+      bottom: Sides.TOP,
+      left: Sides.RIGHT,
+    };
+    return opposite[edge];
+  }
+
+  private something(
+    position: Position,
+    traversedPositions: Set<string>,
+    endOfRoad: number,
+    players: Player[],
+    lastEdge: Sides = Sides.LEFT,
+  ): number {
+    if (endOfRoad >= 2) {
+      lastEdge = this.getOppositeEdge(lastEdge);
+      const playerNames = this.tileBoxes.getCell(position)
+        ?.occupiedRegion[lastEdge].occupiedBy;
+      this.updateScoreToPlayers(playerNames, players, traversedPositions.size);
+
+      return endOfRoad;
+    }
+
+    if (this.isTraversed(traversedPositions, position)) return endOfRoad;
+
+    if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
+      this.edges.forEach((edge) => {
+        if (this.hasFeature(position, Feature.ROAD, edge)) {
+          traversedPositions.add(`${position.row}-${position.col}`);
+          lastEdge = edge;
+
+          endOfRoad = this.something(
+            this.tileBoxes.adjacentPosition(position)[edge],
+            traversedPositions,
+            endOfRoad,
+            players,
+            lastEdge,
+          );
+        }
+      });
+
+      return endOfRoad;
+    }
+
+    if (this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE)) {
+      traversedPositions.add(`${position.row}-${position.col}`);
+      return this.something(
+        position,
+        traversedPositions,
+        endOfRoad + 1,
+        players,
+        lastEdge,
+      );
+    }
+    return endOfRoad;
+  }
+
+  updateScoreForRoad(position: Position, players: Player[]) {
+    const traversedPositions: Set<string> = new Set();
+
+    if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
+      this.something(position, traversedPositions, 0, players);
+    }
+
+    if (this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE)) {
+      traversedPositions.add(`${position.row}-${position.col}`);
+      this.edges.forEach((edge) => {
+        if (this.hasFeature(position, Feature.ROAD, edge)) {
+          const newPosition = this.tileBoxes.adjacentPosition(position)[edge];
+          this.something(newPosition, traversedPositions, 1, players, edge);
+        }
+      });
+    }
+  }
+
   score(position: Position, players: Player[]) {
-    this.updateScoreForMonastry(position, players);
+    this.updateScoreForMonastry(position, players, new Set<string>());
+    this.updateScoreForRoad(position, players);
   }
 }

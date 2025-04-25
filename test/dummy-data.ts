@@ -6,7 +6,7 @@ import {
 } from "../src/models/models.ts";
 import Player from "../src/models/room/player.ts";
 
-type featureAbbr = "r" | "c" | "f" | "m";
+type featureAbbr = "r" | "c" | "f" | "m" | "e";
 
 export const createTile = (
   id: string,
@@ -19,6 +19,7 @@ export const createTile = (
     c: Feature.CITY,
     f: Feature.FIELD,
     m: Feature.MONASTERY,
+    e: Feature.ROAD_END,
   };
 
   return {
@@ -75,9 +76,7 @@ export const dummyTiles = () => [
 
 export const dummyTiles3 = () => [
   createTile("2", ["r", "c", "r", "c"], "r"),
-
   createTile("3", ["r", "f", "f", "r"], "r"),
-
   createTile("4", ["f", "r", "r", "f"], "r"),
   createTile("5", ["f", "f", "r", "r"], "r"),
 ];
@@ -154,5 +153,41 @@ export const dummyTilesToClaimMonastery2 = () => {
     createTile("12", ["r", "r", "f", "f"], "r"),
     createTile("13", ["f", "f", "r", "r"], "r"),
     createTile("14", ["f", "f", "f", "f"], "m"),
+  ];
+};
+export const dummyTilesToClaimMonastery3 = () => {
+  return [
+    createTile("2", ["f", "f", "f", "f"], "m"),
+    createTile("3", ["f", "f", "f", "f"], "m"),
+  ];
+};
+
+export const dummyTilesToClaimRoad = () => {
+  return [
+    createTile("2", ["r", "r", "r", "c"], "e"),
+    createTile("3", ["r", "r", "r", "r"], "e"),
+  ];
+};
+
+export const dummyTilesToClaimRoad1 = () => {
+  return [
+    createTile("2", ["r", "r", "r", "c"], "e"),
+    createTile("3", ["r", "r", "r", "r"], "e"),
+    createTile("4", ["r", "c", "f", "r"], "r"),
+  ];
+};
+
+export const dummyTilesToClaimRoad2 = () => {
+  return [
+    createTile("3", ["r", "r", "r", "r"], "e"),
+    createTile("4", ["r", "c", "f", "r"], "r"),
+    createTile("2", ["r", "r", "r", "c"], "e"),
+  ];
+};
+
+export const dummyTilesToClaimRoad3 = () => {
+  return [
+    createTile("2", ["r", "r", "r", "c"], "e"),
+    createTile("3", ["r", "r", "r", "r"], "e"),
   ];
 };
