@@ -47,8 +47,10 @@ export class Carcassonne {
       return [];
     }
 
-    return this.unlockedPositions.filter((position: Position) =>
-      this.board.isTilePlaceable(this.currentTile, position)
+    return this.unlockedPositions.filter(
+      (position: Position) =>
+        this.board.isTilePlaceable(this.currentTile, position) &&
+        !this.board.getTile(position),
     );
   }
 
@@ -116,6 +118,8 @@ export class Carcassonne {
     }
 
     this.currentTile = drawnTile;
+    this.unlockedPositions = Carcassonne.getAllUnlockedPosition(this.board);
+
     return drawnTile;
   }
 

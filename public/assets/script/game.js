@@ -38,7 +38,6 @@ const removeMeepleListeners = (event, listener) => {
 const handlePlaceMeeple = (side) => {
   const placeMeeple = async (event) => {
     const res = await API.claim(side);
-    console.log(res);
 
     if (res.status === 201) {
       await showPlacedMeeple(event);

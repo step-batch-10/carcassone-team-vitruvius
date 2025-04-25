@@ -19,6 +19,7 @@ class Board {
 
     highlightedCells.forEach((cell) => {
       cell.classList.remove("placeable-tile");
+      cell.classList.add("empty-cell");
     });
   }
 

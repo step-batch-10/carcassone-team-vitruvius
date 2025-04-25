@@ -114,7 +114,7 @@ export class Board {
 
   isBoxUnlockToPlace(position: Position) {
     const resTile = this.tileBoxes.adjacentTile(position);
-    return !this.allNeighboursEmpty(resTile);
+    return !this.allNeighboursEmpty(resTile) && !this.getTile(position);
   }
 
   score(position: Position | undefined, players: Player[]) {

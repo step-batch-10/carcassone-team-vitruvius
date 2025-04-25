@@ -106,7 +106,6 @@ const Cell = {
   },
 
   addMeepleToCell: (meeple, cellElement) => {
-    console.log(meeple, cellElement);
     const { color, region } = meeple;
 
     if (!color) return;

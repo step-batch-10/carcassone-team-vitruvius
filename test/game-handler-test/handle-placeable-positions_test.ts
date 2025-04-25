@@ -9,7 +9,7 @@ import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 
 describe("testing handlePlaceablePositions test", () => {
-  it("should return a object with unlockedPositions and placablePositions", async () => {
+  it("should return a object with unlockedPositions and placablePositions when the first tile is already placed", async () => {
     const sessions = new Map<string, string>();
     const users = new Map<string, User>();
     const roomManager = new RoomManager(
@@ -56,6 +56,136 @@ describe("testing handlePlaceablePositions test", () => {
           col: 42,
           row: 43,
         },
+      ],
+    });
+  });
+  it("should return a object with unlockedPositions and placablePositions when the second tile is already placed", async () => {
+    const sessions = new Map<string, string>();
+    const users = new Map<string, User>();
+    const roomManager = new RoomManager(
+      () => "1",
+      () => () => "red",
+    );
+    const games = new Map<string, Carcassonne>();
+    games.set(
+      "1",
+      Carcassonne.initGame(
+        createDummyPlayers(),
+        (arr: Tile[]): Tile[] => arr,
+        dummyTiles(),
+      ),
+    );
+
+    const context: AppContext = { sessions, users, roomManager, games };
+
+    const app = createApp(context, silentLogger);
+
+    await app.request("/game/draw-tile", {
+      method: "GET",
+      headers: { cookie: "room-id=1" },
+    });
+
+    const response = await app.request("/game/tile/placeable-positions", {
+      method: "GET",
+      headers: {
+        cookie: "room-id=1",
+      },
+    });
+
+    assertEquals(await response.json(), {
+      placablePositions: [
+        {
+          col: 41,
+          row: 42,
+        },
+        {
+          col: 43,
+          row: 42,
+        },
+        {
+          col: 42,
+          row: 43,
+        },
+      ],
+      unlockedPositions: [
+        {
+          col: 42,
+          row: 41,
+        },
+        {
+          col: 41,
+          row: 42,
+        },
+        {
+          col: 43,
+          row: 42,
+        },
+        {
+          col: 42,
+          row: 43,
+        },
+      ],
+    });
+  });
+  it("should return a object with unlockedPositions and placablePositions when the third tile is already placed", async () => {
+    const sessions = new Map<string, string>();
+    const users = new Map<string, User>();
+    const roomManager = new RoomManager(
+      () => "1",
+      () => () => "red",
+    );
+    const games = new Map<string, Carcassonne>();
+    games.set(
+      "1",
+      Carcassonne.initGame(
+        createDummyPlayers(),
+        (arr: Tile[]): Tile[] => arr,
+        dummyTiles(),
+      ),
+    );
+
+    const context: AppContext = { sessions, users, roomManager, games };
+
+    const app = createApp(context, silentLogger);
+
+    await app.request("/game/draw-tile", {
+      method: "GET",
+      headers: { cookie: "room-id=1" },
+    });
+
+    await app.request("/game/place-tile", {
+      method: "PATCH",
+      headers: { cookie: "room-id=1" },
+      body: JSON.stringify({ row: 42, col: 43 }),
+    });
+
+    await app.request("/game/draw-tile", {
+      method: "GET",
+      headers: { cookie: "room-id=1" },
+    });
+
+    const response = await app.request("/game/tile/placeable-positions", {
+      method: "GET",
+      headers: {
+        cookie: "room-id=1",
+      },
+    });
+
+    assertEquals(await response.json(), {
+      placablePositions: [
+        { row: 41, col: 43 },
+        { row: 42, col: 41 },
+        { row: 42, col: 44 },
+        { row: 43, col: 42 },
+        { row: 43, col: 43 },
+      ],
+      unlockedPositions: [
+        { row: 41, col: 42 },
+        { row: 41, col: 43 },
+        { row: 42, col: 41 },
+        { row: 42, col: 44 },
+        { row: 43, col: 42 },
+        { row: 43, col: 43 },
       ],
     });
   });
