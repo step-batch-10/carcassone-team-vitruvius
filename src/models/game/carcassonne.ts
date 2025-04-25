@@ -151,6 +151,7 @@ export class Carcassonne {
       this.tilePlacedAt = position;
       this.board.placeTile(this.currentTile, position);
       this.updateScore();
+      this.currentTile = null;
       return;
     }
 

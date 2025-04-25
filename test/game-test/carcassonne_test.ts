@@ -249,6 +249,7 @@ describe("testing markOccupance", () => {
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
     game.placeAMeeple(Sides.RIGHT);
+    game.drawATile();
     game.placeATile({ row: 42, col: 44 });
 
     assertEquals(
@@ -264,6 +265,7 @@ describe("testing markOccupance", () => {
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
     game.placeAMeeple(Sides.RIGHT);
+    game.drawATile();
     game.placeATile({ row: 42, col: 44 });
 
     assertEquals(
