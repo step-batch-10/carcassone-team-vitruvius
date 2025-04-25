@@ -54,6 +54,11 @@ const createSubGrid = () => {
   return sides.map((side) => {
     const element = document.createElement("div");
 
+    const ghostMeeple = document.createElement("img");
+    ghostMeeple.setAttribute("src", `/assets/images/ghost-meeple.png`);
+    ghostMeeple.classList.add("ghost");
+    element.appendChild(ghostMeeple);
+
     element.classList.add("sub-grid");
     element.classList.add(side);
     element.addEventListener("click", handlePlaceMeeple(side));
