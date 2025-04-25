@@ -2,7 +2,6 @@ import { TileBoxManager } from "../../src/models/game/tiles.ts";
 import { createATileBox, dummyTiles5 } from "./../dummy-data.ts";
 import {
   createDummyPlayers,
-  createPlayer,
   dummyTiles,
   dummyTiles2,
   dummyTiles3,
@@ -26,10 +25,7 @@ describe("testing getCurrentPlayer", () => {
 
 describe("testing get Board", () => {
   it("should return the board", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players);
     assertEquals(game.getBoard().length, 84);
   });
@@ -37,10 +33,7 @@ describe("testing get Board", () => {
 
 describe("testing draw a tile", () => {
   it("should give a first tile when top is valid tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
     assertEquals(game.drawATile(), {
       hasShield: false,
@@ -52,10 +45,7 @@ describe("testing draw a tile", () => {
   });
 
   it("should give second Tile when top is invalid tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles2());
     assertEquals(game.drawATile(), {
       hasShield: false,
@@ -69,10 +59,7 @@ describe("testing draw a tile", () => {
 
 describe("testing rotateCurrentTile", () => {
   it("should rotate the current tile by 90 degree", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
     game.drawATile();
     game.rotateCurrentTile();
@@ -81,12 +68,29 @@ describe("testing rotateCurrentTile", () => {
   });
 });
 
+describe("place a tile", () => {
+  it("should place the tile when placing at correct postion", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+    game.drawATile();
+    const result = game.placeATile({ row: 42, col: 43 });
+
+    assertEquals(result, undefined);
+  });
+
+  it("should not place the tile when placing at invalid postion", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+    game.drawATile();
+    const result = game.placeATile({ row: 43, col: 42 });
+
+    assertEquals(result, { desc: "invalid tile to place" });
+  });
+});
+
 describe("testing placablePositions", () => {
   it("should return object having unlockedPosition and placablePositions", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game: Carcassonne = Carcassonne.initGame(
       players,
       (arr) => arr,
@@ -132,10 +136,7 @@ describe("testing placablePositions", () => {
   });
 
   it("should return object having unlockedPosition and with no placeablePositions when no tile drawn", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
     const game: Carcassonne = Carcassonne.initGame(
       players,
       (arr: Tile[]): Tile[] => arr,
@@ -169,10 +170,7 @@ describe("testing placablePositions", () => {
 
 describe("testing place a meeple", () => {
   it("should place a meeple when it is not occupied by any player and their meeple count should reduce", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
 
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
@@ -185,10 +183,7 @@ describe("testing place a meeple", () => {
   });
 
   it(" should not place tile when try to place without placing any tile", () => {
-    const players = [
-      createPlayer("user1", "black", true, "121"),
-      createPlayer("user2", "blue", false, "121"),
-    ];
+    const players = createDummyPlayers();
 
     const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
 
