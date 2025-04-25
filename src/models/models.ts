@@ -94,6 +94,7 @@ export interface Tile {
   hasShield: boolean;
   tileEdges: Feature[];
   tileCenter: Feature;
+  tileID: string;
 }
 
 export interface User {

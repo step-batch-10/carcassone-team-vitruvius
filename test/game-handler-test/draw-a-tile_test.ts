@@ -45,6 +45,7 @@ describe("draw a tile handler", () => {
       orientation: 0,
       tileCenter: "road",
       tileEdges: ["road", "field", "road", "field"],
+      tileID: "0",
     });
   });
 });

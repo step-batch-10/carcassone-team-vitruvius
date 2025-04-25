@@ -39,8 +39,9 @@ describe("testing draw a tile", () => {
       hasShield: false,
       id: "2",
       orientation: 0,
-      tileCenter: "road",
-      tileEdges: ["road", "field", "road", "field"],
+      tileCenter: Feature.ROAD,
+      tileEdges: [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
+      tileID: "0",
     });
   });
 
@@ -51,8 +52,9 @@ describe("testing draw a tile", () => {
       hasShield: false,
       id: "2",
       orientation: 0,
-      tileCenter: "city",
-      tileEdges: ["city", "city", "city", "city"],
+      tileCenter: Feature.CITY,
+      tileEdges: [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY],
+      tileID: "0",
     });
   });
 });

@@ -1,4 +1,8 @@
-import { createDummyPlayers, createTile, dummyTiles } from "../dummy-data.ts";
+import {
+  createDummyPlayers,
+  createDummyTile,
+  dummyTiles,
+} from "../dummy-data.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -44,7 +48,7 @@ describe("testing the handleRotateTile", () => {
 
     assertEquals(
       rotatedTile,
-      createTile("2", ["f", "r", "f", "r"], "r", CardinalDegrees.ninety),
+      createDummyTile("2", ["f", "r", "f", "r"], "r", CardinalDegrees.ninety),
     );
   });
 

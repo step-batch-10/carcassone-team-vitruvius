@@ -155,11 +155,12 @@ export const createTileBox = (): TileBox => {
 
 export const firstTileBox = (): TileBox => ({
   tile: {
-    id: "1",
+    id: "19",
     orientation: 0,
     hasShield: false,
     tileEdges: [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
     tileCenter: Feature.ROAD,
+    tileID: "44",
   },
   meeple: {
     color: null,

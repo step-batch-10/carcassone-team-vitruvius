@@ -8,11 +8,12 @@ import Player from "../src/models/room/player.ts";
 
 type featureAbbr = "r" | "c" | "f" | "m" | "e";
 
-export const createTile = (
+export const createDummyTile = (
   id: string,
   edges: featureAbbr[],
   center: featureAbbr,
   orientation = CardinalDegrees.zero,
+  tileID = "0",
 ): Tile => {
   const some = {
     r: Feature.ROAD,
@@ -28,6 +29,7 @@ export const createTile = (
     orientation,
     tileCenter: some[center],
     tileEdges: edges.map((x) => some[x]),
+    tileID,
   };
 };
 
@@ -66,34 +68,36 @@ export const createATileBox = (): TileBox => {
 };
 
 export const dummyTiles = () => [
-  createTile("2", ["r", "f", "r", "f"], "r"),
+  createDummyTile("2", ["r", "f", "r", "f"], "r"),
 
-  createTile("3", ["r", "f", "r", "f"], "r"),
-  createTile("3", ["r", "f", "r", "f"], "r"),
+  createDummyTile("3", ["r", "f", "r", "f"], "r"),
+  createDummyTile("3", ["r", "f", "r", "f"], "r"),
 
-  createTile("4", ["f", "f", "f", "f"], "m"),
+  createDummyTile("4", ["f", "f", "f", "f"], "m"),
 ];
 
 export const dummyTiles3 = () => [
-  createTile("2", ["r", "c", "r", "c"], "r"),
-  createTile("3", ["r", "f", "f", "r"], "r"),
-  createTile("4", ["f", "r", "r", "f"], "r"),
-  createTile("5", ["f", "f", "r", "r"], "r"),
+  createDummyTile("2", ["r", "c", "r", "c"], "r"),
+
+  createDummyTile("3", ["r", "f", "f", "r"], "r"),
+
+  createDummyTile("4", ["f", "r", "r", "f"], "r"),
+  createDummyTile("5", ["f", "f", "r", "r"], "r"),
 ];
 
 export const dummyTiles4 = () => [
-  createTile("2", ["r", "c", "f", "r"], "r"),
-  createTile("3", ["f", "r", "f", "r"], "r"),
+  createDummyTile("2", ["r", "c", "f", "r"], "r"),
+  createDummyTile("3", ["f", "r", "f", "r"], "r"),
 ];
 
 export const dummyTiles5 = () => [
-  createTile("2", ["r", "r", "f", "f"], "r"),
-  createTile("3", ["f", "r", "f", "r"], "r"),
+  createDummyTile("2", ["r", "r", "f", "f"], "r"),
+  createDummyTile("3", ["f", "r", "f", "r"], "r"),
 ];
 
 export const dummyTiles2 = () => [
-  createTile("3", ["m", "m", "m", "m"], "r"),
-  createTile("2", ["c", "c", "c", "c"], "c"),
+  createDummyTile("3", ["m", "m", "m", "m"], "r"),
+  createDummyTile("2", ["c", "c", "c", "c"], "c"),
 ];
 
 export const createPlayer = (
@@ -114,80 +118,80 @@ export const createDummyPlayers = () => {
 
 export const dummyTilesToClaimMonastery = () => {
   return [
-    createTile("3", ["r", "c", "f", "r"], "r"),
-    createTile("4", ["f", "r", "f", "r"], "r"),
-    createTile("5", ["r", "r", "f", "f"], "r"),
-    createTile("6", ["r", "f", "r", "f"], "r"),
-    createTile("7", ["c", "r", "r", "f"], "r"),
-    createTile("8", ["f", "r", "f", "r"], "r"),
-    createTile("9", ["r", "f", "r", "r"], "r"),
-    createTile("2", ["f", "f", "f", "f"], "m"),
+    createDummyTile("3", ["r", "c", "f", "r"], "r"),
+    createDummyTile("4", ["f", "r", "f", "r"], "r"),
+    createDummyTile("5", ["r", "r", "f", "f"], "r"),
+    createDummyTile("6", ["r", "f", "r", "f"], "r"),
+    createDummyTile("7", ["c", "r", "r", "f"], "r"),
+    createDummyTile("8", ["f", "r", "f", "r"], "r"),
+    createDummyTile("9", ["r", "f", "r", "r"], "r"),
+    createDummyTile("2", ["f", "f", "f", "f"], "m"),
   ];
 };
 
 export const dummyTilesToClaimMonastery1 = () => {
   return [
-    createTile("2", ["f", "f", "f", "f"], "m"),
-    createTile("3", ["r", "c", "f", "r"], "r"),
-    createTile("4", ["f", "r", "f", "r"], "r"),
-    createTile("5", ["r", "r", "f", "f"], "r"),
-    createTile("6", ["r", "f", "r", "f"], "r"),
-    createTile("7", ["c", "r", "r", "f"], "r"),
-    createTile("8", ["f", "r", "f", "r"], "r"),
-    createTile("9", ["r", "f", "r", "r"], "r"),
+    createDummyTile("2", ["f", "f", "f", "f"], "m"),
+    createDummyTile("3", ["r", "c", "f", "r"], "r"),
+    createDummyTile("4", ["f", "r", "f", "r"], "r"),
+    createDummyTile("5", ["r", "r", "f", "f"], "r"),
+    createDummyTile("6", ["r", "f", "r", "f"], "r"),
+    createDummyTile("7", ["c", "r", "r", "f"], "r"),
+    createDummyTile("8", ["f", "r", "f", "r"], "r"),
+    createDummyTile("9", ["r", "f", "r", "r"], "r"),
   ];
 };
 
 export const dummyTilesToClaimMonastery2 = () => {
   return [
-    createTile("2", ["r", "f", "f", "r"], "r"),
-    createTile("3", ["f", "r", "f", "r"], "r"),
-    createTile("4", ["f", "f", "f", "f"], "m"),
-    createTile("5", ["r", "r", "f", "c"], "r"),
-    createTile("6", ["f", "f", "r", "r"], "r"),
-    createTile("7", ["r", "r", "f", "f"], "r"),
-    createTile("8", ["r", "f", "r", "f"], "r"),
-    createTile("9", ["c", "r", "r", "f"], "r"),
-    createTile("10", ["f", "r", "f", "r"], "r"),
-    createTile("11", ["f", "c", "r", "r"], "r"),
-    createTile("12", ["r", "r", "f", "f"], "r"),
-    createTile("13", ["f", "f", "r", "r"], "r"),
-    createTile("14", ["f", "f", "f", "f"], "m"),
+    createDummyTile("2", ["r", "f", "f", "r"], "r"),
+    createDummyTile("3", ["f", "r", "f", "r"], "r"),
+    createDummyTile("4", ["f", "f", "f", "f"], "m"),
+    createDummyTile("5", ["r", "r", "f", "c"], "r"),
+    createDummyTile("6", ["f", "f", "r", "r"], "r"),
+    createDummyTile("7", ["r", "r", "f", "f"], "r"),
+    createDummyTile("8", ["r", "f", "r", "f"], "r"),
+    createDummyTile("9", ["c", "r", "r", "f"], "r"),
+    createDummyTile("10", ["f", "r", "f", "r"], "r"),
+    createDummyTile("11", ["f", "c", "r", "r"], "r"),
+    createDummyTile("12", ["r", "r", "f", "f"], "r"),
+    createDummyTile("13", ["f", "f", "r", "r"], "r"),
+    createDummyTile("14", ["f", "f", "f", "f"], "m"),
   ];
 };
 export const dummyTilesToClaimMonastery3 = () => {
   return [
-    createTile("2", ["f", "f", "f", "f"], "m"),
-    createTile("3", ["f", "f", "f", "f"], "m"),
+    createDummyTile("2", ["f", "f", "f", "f"], "m"),
+    createDummyTile("3", ["f", "f", "f", "f"], "m"),
   ];
 };
 
 export const dummyTilesToClaimRoad = () => {
   return [
-    createTile("2", ["r", "r", "r", "c"], "e"),
-    createTile("3", ["r", "r", "r", "r"], "e"),
+    createDummyTile("2", ["r", "r", "r", "c"], "e"),
+    createDummyTile("3", ["r", "r", "r", "r"], "e"),
   ];
 };
 
 export const dummyTilesToClaimRoad1 = () => {
   return [
-    createTile("2", ["r", "r", "r", "c"], "e"),
-    createTile("3", ["r", "r", "r", "r"], "e"),
-    createTile("4", ["r", "c", "f", "r"], "r"),
+    createDummyTile("2", ["r", "r", "r", "c"], "e"),
+    createDummyTile("3", ["r", "r", "r", "r"], "e"),
+    createDummyTile("4", ["r", "c", "f", "r"], "r"),
   ];
 };
 
 export const dummyTilesToClaimRoad2 = () => {
   return [
-    createTile("3", ["r", "r", "r", "r"], "e"),
-    createTile("4", ["r", "c", "f", "r"], "r"),
-    createTile("2", ["r", "r", "r", "c"], "e"),
+    createDummyTile("3", ["r", "r", "r", "r"], "e"),
+    createDummyTile("4", ["r", "c", "f", "r"], "r"),
+    createDummyTile("2", ["r", "r", "r", "c"], "e"),
   ];
 };
 
 export const dummyTilesToClaimRoad3 = () => {
   return [
-    createTile("2", ["r", "r", "r", "c"], "e"),
-    createTile("3", ["r", "r", "r", "r"], "e"),
+    createDummyTile("2", ["r", "r", "r", "c"], "e"),
+    createDummyTile("3", ["r", "r", "r", "r"], "e"),
   ];
 };

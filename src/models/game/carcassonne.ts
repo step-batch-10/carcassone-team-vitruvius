@@ -2,8 +2,9 @@ import { shuffler, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import { CardinalDegrees, Center, Position, Sides, Tile } from "../models.ts";
-import { dummyTiles as tiles } from "../../../test/dummy-data.ts";
+
 import _ from "lodash";
+import { generateTiles } from "./tile-generator.ts";
 
 export class Carcassonne {
   private readonly board: Board;
@@ -64,7 +65,7 @@ export class Carcassonne {
   static initGame(
     players: Player[],
     tileShuffler = shuffler,
-    tilesArr = tiles(),
+    tilesArr = generateTiles(),
   ) {
     const tileManager = new TileStacker(tilesArr, tileShuffler);
     const board = Board.create(84, 84);

@@ -2,13 +2,13 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { shuffler, TileStacker } from "../../src/models/game/tiles.ts";
 import { Tile } from "../../src/models/models.ts";
-import { createTile } from "../dummy-data.ts";
+import { createDummyTile } from "../dummy-data.ts";
 
 describe("testing pickTile", () => {
   it("should return a tile from the top of the stack", () => {
     const tiles: Tile[] = [
-      createTile("123", ["r", "r", "r", "r"], "f"),
-      createTile("124", ["r", "r", "r", "r"], "f"),
+      createDummyTile("123", ["r", "r", "r", "r"], "f"),
+      createDummyTile("124", ["r", "r", "r", "r"], "f"),
     ];
     const tileManager = new TileStacker(tiles, (tile) => tile);
 
@@ -16,9 +16,9 @@ describe("testing pickTile", () => {
   });
 
   it("should put a tile in bottom of the stack", () => {
-    const tiles: Tile[] = [createTile("123", ["r", "r", "r", "r"], "f")];
+    const tiles: Tile[] = [createDummyTile("123", ["r", "r", "r", "r"], "f")];
 
-    const tile: Tile = createTile("124", ["r", "r", "r", "r"], "f");
+    const tile: Tile = createDummyTile("124", ["r", "r", "r", "r"], "f");
 
     const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pushTile(tile);
@@ -34,7 +34,7 @@ describe("testing pickTile", () => {
   });
 
   it("when picked a tile the remaining tile should be less", () => {
-    const tiles: Tile[] = [createTile("123", ["r", "r", "r", "r"], "f")];
+    const tiles: Tile[] = [createDummyTile("123", ["r", "r", "r", "r"], "f")];
 
     const tileManager = new TileStacker(tiles, (tile) => tile);
     tileManager.pickTile();
@@ -45,8 +45,10 @@ describe("testing pickTile", () => {
 
 describe("testing shuffler", () => {
   it("should shuffle", () => {
-    const actual = shuffler([createTile("123", ["r", "r", "r", "r"], "f")]);
-    const expected = [createTile("123", ["r", "r", "r", "r"], "f"), ,];
+    const actual = shuffler([
+      createDummyTile("123", ["r", "r", "r", "r"], "f"),
+    ]);
+    const expected = [createDummyTile("123", ["r", "r", "r", "r"], "f"), ,];
     assertEquals(actual, expected);
   });
 });

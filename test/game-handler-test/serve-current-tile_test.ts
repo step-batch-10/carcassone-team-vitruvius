@@ -6,7 +6,7 @@ import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import Player from "../../src/models/room/player.ts";
 import { silentLogger } from "./silent-logger.ts";
-import { createTile } from "../dummy-data.ts";
+import { createDummyTile } from "../dummy-data.ts";
 
 describe("serveCurrentTile", () => {
   it("should return null if tile didn't draw", async () => {
@@ -52,7 +52,7 @@ describe("serveCurrentTile", () => {
     ];
 
     const tileShuffler = (tiles: Tile[]): Tile[] => tiles;
-    const tiles: Tile[] = [createTile("0", ["c", "c", "c", "c"], "c")];
+    const tiles: Tile[] = [createDummyTile("0", ["c", "c", "c", "c"], "c")];
 
     const game = Carcassonne.initGame(players, tileShuffler, tiles);
 

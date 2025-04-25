@@ -4,7 +4,7 @@ import createApp from "../../src/app.ts";
 import { AppContext, Tile, User } from "../../src/models/models.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
-import { createDummyPlayers, createTile } from "../dummy-data.ts";
+import { createDummyPlayers, createDummyTile } from "../dummy-data.ts";
 import Player from "../../src/models/room/player.ts";
 import { silentLogger } from "./silent-logger.ts";
 
@@ -38,10 +38,12 @@ describe("serveGameState", () => {
     const response = await app.request(gameStateRequest);
     const gameState = await response.json();
 
-    const expectedTile = createTile("1", ["r", "c", "r", "f"], "r");
+    const dummyTile = createDummyTile("1", ["r", "c", "r", "f"], "r");
+    dummyTile.id = "19";
+    dummyTile.tileID = "44";
 
     assertEquals(response.status, 200);
-    assertEquals(gameState.board[42][42].tile, expectedTile);
+    assertEquals(gameState.board[42][42].tile, dummyTile);
     assertEquals(gameState.currentPlayer, players[0].json());
     assertEquals(gameState.self, players[0].json());
     assertEquals(
