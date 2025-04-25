@@ -7,7 +7,6 @@ import RoomManager from "../../src/models/room/room-manager.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { createDummyPlayers } from "../dummy-data.ts";
 import { stub } from "@std/testing/mock";
-import Player from "../../src/models/room/player.ts";
 
 describe("serveAllPlayers", () => {
   it("should return all players data", async () => {
@@ -15,7 +14,7 @@ describe("serveAllPlayers", () => {
     const sessions = new Map<string, string>();
     const roomManager = new RoomManager(
       () => "1",
-      () => () => "red"
+      () => () => "red",
     );
     const games = new Map<string, Carcassonne>();
     const game = Carcassonne.initGame(createDummyPlayers());

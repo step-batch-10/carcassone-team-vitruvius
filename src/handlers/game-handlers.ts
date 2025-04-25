@@ -11,7 +11,7 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
 const getUserOfSessionId = (
   ctx: Context<{ Variables: Variables }>,
   sessions: Sessions,
-  users: Users
+  users: Users,
 ) => {
   const sessionID = String(getCookie(ctx, "session-id"));
   const userID = String(sessions.get(sessionID));
@@ -128,9 +128,9 @@ export {
   handleRotateTile,
   handleSkip,
   handleTilePlacement,
+  serveAllPlayers,
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
-  serveAllPlayers,
   serveValidPositions,
 };

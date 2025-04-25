@@ -168,18 +168,6 @@ const showCurrentPlayer = (interval) => {
   }, interval);
 };
 
-const retrivePlayers = () => {
-  const player1 = {
-    username: "user1",
-    roomID: "121",
-    noOfMeeples: 2,
-    points: 0,
-    meepleColor: "red",
-    isHost: true,
-  };
-  return [player1];
-};
-
 const selectNodes = (selectors, parentNode) =>
   selectors.map((selector) => parentNode.querySelector(selector));
 
@@ -192,7 +180,7 @@ const createPlayerElement = (player) => {
 
   const [playerNameNode, meepleImage, meepleCount, score] = selectNodes(
     selectors,
-    playerStatusClone
+    playerStatusClone,
   );
 
   playerNameNode.textContent = username;
@@ -250,7 +238,7 @@ const toggleShowPlayersTable = async (currentAPI, self) => {
   const players = await currentAPI();
   const selfNode = createPlayerElement(self);
   const otherPlayers = players.filter(
-    ({ username }) => self.username !== username
+    ({ username }) => self.username !== username,
   );
   const otherPlayerNodes = otherPlayers.map(createPlayerElement);
 

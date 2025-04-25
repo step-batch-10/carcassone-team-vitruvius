@@ -8,6 +8,7 @@ format_input() {
 # Prompt for the story ID and short summary
 read -p "STORY ID (e.g., 3): " story_id
 read -p "Short summary (imperative form, e.g., Add login button): " summary
+read -p "Commited by: " commitedBy
 
 # Ask for description
 echo ""
@@ -43,7 +44,7 @@ notes_raw=$(</dev/stdin)
 notes=$(format_input "$notes_raw")
 
 # Assemble the commit message
-commit_msg="[#$story_id]: $summary
+commit_msg="[#$story_id] | $summary | $commitedBy
 
 Description
 $description
