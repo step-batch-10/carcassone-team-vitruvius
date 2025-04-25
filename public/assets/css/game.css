@@ -159,6 +159,7 @@ body {
   height: 32%;
   position: absolute;
   border: 0;
+  z-index: 1;
 }
 
 .ghost {
@@ -213,4 +214,14 @@ body {
 div > .invalid-placement {
   background-color: red;
   box-shadow: 1px 1px 20px red;
+}
+
+.ghost-img {
+  opacity: 0.6;
+}
+
+div > .tile {
+  position: absolute;
+  opacity: 1;
+  z-index: 0;
 }

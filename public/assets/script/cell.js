@@ -1,6 +1,17 @@
 import API from "./api.js";
 import Board from "./board.js";
 
+const createTileImg = (tile) => {
+  const imgPath = Cell.extractTileImagePath(tile);
+  const img = document.createElement("img");
+
+  img.setAttribute("src", imgPath);
+  img.style.transform = `rotateZ(${tile.orientation}deg)`;
+  img.classList.add("tile");
+
+  return img;
+};
+
 const Cell = {
   rotateRight: async (event) => {
     const rotatedTile = await API.rotateTile();
@@ -21,7 +32,7 @@ const Cell = {
 
     imgElement.setAttribute("src", path);
     imgElement.style.transform = `rotateZ(${orientation}deg)`;
-    imgElement.style.opacity = "0.6";
+    imgElement.classList.add("ghost-img");
 
     return imgElement;
   },
@@ -86,6 +97,7 @@ const Cell = {
   },
 
   addMeepleToCell: (meeple, cellElement) => {
+    console.log(meeple, cellElement);
     const { color, region } = meeple;
 
     if (!color) return;
@@ -96,7 +108,7 @@ const Cell = {
     const occupiedSubGrid = subGrids.at(sides.indexOf(region));
     Cell.placeMeepleOnSubGrid(occupiedSubGrid, color);
 
-    cellElement.replaceChildren(...subGrids);
+    cellElement.append(...subGrids);
   },
 
   parseCellId: (id) => {
@@ -120,9 +132,8 @@ const Cell = {
     const { tile, meeple } = cell;
 
     if (tile) {
-      const imgPath = Cell.extractTileImagePath(tile);
-
-      cellElement.style.backgroundImage = `url("${imgPath}")`;
+      const tileImg = createTileImg(tile);
+      cellElement.appendChild(tileImg);
       Cell.addMeepleToCell(meeple, cellElement);
     }
   },

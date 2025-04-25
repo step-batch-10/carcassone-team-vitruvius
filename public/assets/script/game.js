@@ -4,15 +4,12 @@ import Cell from "./cell.js";
 import addScrollFeatures from "./scroll.js";
 import { Poller } from "./multiplayer.js";
 
-const getImgUrl = (cell) => cell.querySelector("img").src;
-
-const setBackground = (cell) => {
-  const imgPath = getImgUrl(cell);
+const placeTile = (cell) => {
   const img = cell.querySelector("img");
   const btn = cell.querySelector("button");
-  cell.removeChild(img);
   cell.removeChild(btn);
-  cell.style.backgroundImage = `url("${imgPath}")`;
+  img.classList.remove("ghost-img");
+  img.classList.add("tile");
   cell.style.opacity = "1";
 };
 
@@ -29,14 +26,19 @@ const showPlacedMeeple = async (event) => {
 
 const removeMeepleListeners = (event, listener) => {
   const placed = event.target;
+  const subgrids = document.querySelectorAll(".subgrid");
+  subgrids.forEach((subgrid) => subgrid.remove());
+  const skipBtn = document.querySelectorAll(".skip")[0];
+  skipBtn.remove();
 
-  placed.parentNode.replaceChildren(placed);
+  placed.parentNode.appendChild(placed);
   placed.removeEventListener("click", listener);
 };
 
 const handlePlaceMeeple = (side) => {
   const placeMeeple = async (event) => {
     const res = await API.claim(side);
+    console.log(res);
 
     if (res.status === 201) {
       await showPlacedMeeple(event);
@@ -70,7 +72,8 @@ const createSubGrid = () => {
 const handleSkip = (cell) => {
   return async (_) => {
     await fetch("/game/skip-claim", { method: "PATCH" });
-    cell.replaceChildren();
+    const img = cell.querySelector("img");
+    cell.replaceChildren(img);
   };
 };
 
@@ -81,7 +84,7 @@ const addMeepleOptions = (cell) => {
   skipButton.classList.add("skip");
   skipButton.addEventListener("click", handleSkip(cell));
 
-  cell.replaceChildren(...subGrid, skipButton);
+  cell.append(...subGrid, skipButton);
 };
 
 const handleTilePlacement = async (event, board, events) => {
@@ -99,7 +102,7 @@ const handleTilePlacement = async (event, board, events) => {
 
   board.removeGhostEffect();
   Board.removePlaceableCellsHighlight();
-  setBackground(cell, board);
+  placeTile(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
   addMeepleOptions(cell);
