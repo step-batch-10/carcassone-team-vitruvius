@@ -59,8 +59,7 @@ class Board {
 
   static removeGhostTile(event) {
     event.stopPropagation();
-
-    event.target.innerHTML = "";
+    Cell.removeGhostFromCells();
   }
 
   addGhostEffect() {

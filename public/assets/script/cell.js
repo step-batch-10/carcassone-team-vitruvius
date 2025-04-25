@@ -13,6 +13,8 @@ const createTileImg = (tile) => {
 };
 
 const Cell = {
+  ghostsCells: [],
+
   rotateRight: async (event) => {
     const rotatedTile = await API.rotateTile();
 
@@ -46,7 +48,14 @@ const Cell = {
 
       cellElement.appendChild(ghostImage);
       Cell.addRotateRightButton(cellElement);
+      Cell.ghostsCells.push(cellElement);
     }
+  },
+
+  removeGhostFromCells: () => {
+    Cell.ghostsCells.forEach((cell) => {
+      cell.innerHTML = "";
+    });
   },
 
   getCell: (row, col) => {
