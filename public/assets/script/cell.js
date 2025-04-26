@@ -12,10 +12,28 @@ const createTileImg = (tile) => {
   return img;
 };
 
+const capitalize = (text) => text.at(0).toUpperCase().concat(text.slice(1));
+
 const Cell = {
   ghostsCells: [],
 
   rotateRight: async (event) => {
+    const rotatedTile = await API.rotateTile();
+
+    if (rotatedTile) {
+      const cellElement = event.target.parentNode;
+
+      cellElement.querySelector(
+        "img",
+      ).style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
+
+      await Board.highlightPlaceableCells();
+    }
+  },
+
+  rotateLeft: async (event) => {
+    await API.rotateTile();
+    await API.rotateTile();
     const rotatedTile = await API.rotateTile();
 
     if (rotatedTile) {
@@ -47,7 +65,8 @@ const Cell = {
       const ghostImage = Cell.createGhostImage(imgPath, tile.orientation);
 
       cellElement.appendChild(ghostImage);
-      Cell.addRotateRightButton(cellElement);
+      Cell.addRotateButton(cellElement, "right");
+      Cell.addRotateButton(cellElement, "left");
       Cell.ghostsCells.push(cellElement);
     }
   },
@@ -126,12 +145,15 @@ const Cell = {
     return { row: Number(chord.row), col: Number(chord.col) };
   },
 
-  addRotateRightButton: (cellElement) => {
+  addRotateButton: (cellElement, direction) => {
     const rotateButton = document.createElement("button");
-
-    rotateButton.textContent = "->";
-    rotateButton.classList.add("rotate-right");
-    rotateButton.addEventListener("click", Cell.rotateRight);
+    rotateButton.style.backgroundImage =
+      `url('assets/images/symbols/rotate-${direction}.png')`;
+    rotateButton.classList.add(`rotate-${direction}`);
+    rotateButton.addEventListener(
+      "click",
+      Cell[`rotate${capitalize(direction)}`],
+    );
 
     cellElement.appendChild(rotateButton);
   },

@@ -92,7 +92,26 @@ body {
 
 .rotate-right {
   position: absolute;
-  top: 0px;
+  top: 0%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: rgb(246, 212, 170);
+  border: 1px solid black;
+}
+
+.rotate-left {
+  position: absolute;
+  top: 0%;
+  left: 34%;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: rgb(246, 212, 170);
+  border: 1px solid black;
 }
 
 .player-turn {
