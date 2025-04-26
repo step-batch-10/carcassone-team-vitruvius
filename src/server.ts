@@ -8,7 +8,13 @@ const roomIDGenerator = (): string => Date.now().toString().slice(-6);
 
 const createMeepleColorGenerator = () => {
   return () => {
-    const meeplesColor = ["red", "green", "yellow", "blue", "black"];
+    const meeplesColor = [
+      "hunyadi-yellow",
+      "sea-green",
+      "carolina-blue",
+      "charcoal",
+      "lapis-lazuli",
+    ];
     let count = 0;
     return (): string => {
       const meeple = meeplesColor[count];
