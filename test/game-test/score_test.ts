@@ -8,6 +8,7 @@ import {
   monasteryTiles2,
   monasteryTiles3,
   roadTile4,
+  roadTile5,
   roadTiles,
   roadTiles1,
   roadTiles2,
@@ -210,5 +211,37 @@ describe("Testing for scoring Roads", () => {
     assertEquals(game.getAllPlayers()[0].noOfMeeples, 7);
     assertEquals(game.getAllPlayers()[1].points, 0);
     assertEquals(game.getAllPlayers()[1].noOfMeeples, 7);
+  });
+
+  it("should update score of two players when placed tile joins two end of road", () => {
+    const game = createAndPlaceTiles(roadTiles1, [
+      { row: 41, col: 42, location: Sides.RIGHT },
+      { row: 42, col: 43, location: Sides.TOP },
+      { row: 41, col: 43 },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 3);
+  });
+
+  it("should update score when road closed ends with city", () => {
+    const game = createAndPlaceTiles(roadTile5, [
+      { row: 42, col: 43, location: Sides.LEFT },
+      { row: 42, col: 41 },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 0);
+  });
+
+  it("should update score when road closed ends with monastery", () => {
+    const game = createAndPlaceTiles(roadTile5, [
+      { row: 42, col: 43, location: Sides.LEFT },
+      { row: 42, col: 41 },
+      { row: 42, col: 44, location: Sides.LEFT },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 2);
   });
 });

@@ -86,16 +86,6 @@ export class TileBoxManager {
     };
   }
 
-  adjOccupiedRegionArray(position: Position) {
-    const adjCellEdge = this.adjacentOccupiedRegion(position);
-    return [
-      adjCellEdge.leftEdge,
-      adjCellEdge.topEdge,
-      adjCellEdge.rightEdge,
-      adjCellEdge.bottomEdge,
-    ];
-  }
-
   adjacentPositionArray(position: Position): Position[] {
     return Object.values(this.adjacentPosition(position));
   }

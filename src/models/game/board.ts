@@ -104,7 +104,7 @@ export class Board {
     if (!cell) return;
     if (this.isTilePlaceable(tile, position)) {
       cell.tile = tile;
-      this.scoreManager.markOccupance(position);
+      this.scoreManager.markOccupance(position, new Set<string>());
     }
   }
 

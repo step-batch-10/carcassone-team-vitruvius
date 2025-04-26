@@ -76,10 +76,10 @@ export interface TileEdges {
 }
 
 export interface Moves {
-  [Sides.TOP]: (arg: Position) => void;
-  [Sides.BOTTOM]: (arg: Position) => void;
-  [Sides.LEFT]: (arg: Position) => void;
-  [Sides.RIGHT]: (arg: Position) => void;
+  [Sides.TOP]: (arg: Position, arg2: Set<string>) => void;
+  [Sides.BOTTOM]: (arg: Position, arg2: Set<string>) => void;
+  [Sides.LEFT]: (arg: Position, arg2: Set<string>) => void;
+  [Sides.RIGHT]: (arg: Position, arg2: Set<string>) => void;
 }
 
 export interface ResTiles {

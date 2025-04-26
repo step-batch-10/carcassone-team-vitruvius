@@ -214,7 +214,9 @@ describe("testing place a meeple", () => {
 
     const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
 
-    assertFalse(scoreBoard.markOccupance({ row: 0, col: 0 }));
+    assertFalse(
+      scoreBoard.markOccupance({ row: 0, col: 0 }, new Set<string>()),
+    );
   });
 
   it("when there is no tile placed then the occupance should not mark", () => {
@@ -453,15 +455,15 @@ describe("testing markOccupance", () => {
 
     assertEquals(
       game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
-      1,
+      2,
     );
     assertEquals(
       game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
-      1,
+      2,
     );
     assertEquals(
       game.getBoard()[42][43].occupiedRegion.right.occupiedBy.size,
-      1,
+      2,
     );
   });
 });

@@ -1,6 +1,6 @@
-import { TileBoxManager } from "./tiles.ts";
 import { Center, Feature, Moves, Position, Sides, TileBox } from "../models.ts";
 import Player from "../room/player.ts";
+import { TileBoxManager } from "./tiles.ts";
 
 export class ScoreManager {
   private board;
@@ -77,41 +77,46 @@ export class ScoreManager {
       ].occupiedBy.union(occupiedEdges[index].occupiedBy);
     });
   }
-  private moveTo = (edge: Sides) => (position: Position) => {
-    const newPos = this.tileBoxes.adjacentPosition(position)[edge];
-    if (this.tileBoxes.getTile(newPos)) {
-      this.markOccupance(newPos);
-    }
-  };
-
-  private moveReccursively(currentTile: TileBox, tilePosition: Position) {
-    const cellOccu = currentTile.occupiedRegion;
-    const adjEdges = this.tileBoxes.adjOccupiedRegionArray(tilePosition);
-    this.edges.forEach((edge, index) => {
+  private moveTo =
+    (edge: Sides) => (position: Position, traversedPositions: Set<string>) => {
+      const newPos = this.tileBoxes.adjacentPosition(position)[edge];
       if (
-        cellOccu[edge].occupiedBy.size > 0 &&
-        adjEdges[index]?.occupiedBy.size === 0
+        this.tileBoxes.getTile(newPos) &&
+        !this.isTraversed(traversedPositions, newPos)
       ) {
-        this.moves()[edge](tilePosition);
+        traversedPositions.add(`${newPos.row}-${newPos.col}`);
+        this.markOccupance(newPos, traversedPositions);
+      }
+    };
+
+  private moveReccursively(
+    currentTile: TileBox,
+    tilePosition: Position,
+    traversedPositions: Set<string>,
+  ) {
+    const cellOccu = currentTile.occupiedRegion;
+    this.edges.forEach((edge) => {
+      if (cellOccu[edge].occupiedBy.size > 0) {
+        this.moves()[edge](tilePosition, traversedPositions);
       }
     });
   }
 
-  markOccupance(tilePosition: Position) {
+  markOccupance(tilePosition: Position, traversedPositions: Set<string>) {
     const { col, row } = tilePosition;
     const currentTile = this.board[row][col];
 
     this.markOccupiedRegion(currentTile, tilePosition);
     this.markFeature(currentTile);
     this.markCenterOccupance(currentTile);
-    this.moveReccursively(currentTile, tilePosition);
+    this.moveReccursively(currentTile, tilePosition, traversedPositions);
   }
 
   placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
     const cell = this.board[position.row][position.col];
     if (!cell.occupiedRegion[subGrid].occupiedBy.size) {
       cell.occupiedRegion[subGrid].occupiedBy.add(playerName);
-      this.markOccupance(position);
+      this.markOccupance(position, new Set<string>());
       return { isPlaced: true };
     }
     return { isPlaced: false };
@@ -298,6 +303,17 @@ export class ScoreManager {
     return endOfRoad;
   }
 
+  hasSpecialEnd(pos: Position): boolean {
+    let roads = 0;
+    this.edges.forEach((edge) => {
+      if (this.hasFeature(pos, Feature.ROAD, edge)) {
+        roads += 1;
+      }
+    });
+
+    return roads === 1;
+  }
+
   updateScoreForRoad(position: Position, players: Player[]) {
     const traversedPositions: Set<string> = new Set();
 
@@ -305,7 +321,10 @@ export class ScoreManager {
       this.something(position, traversedPositions, 0, players);
     }
 
-    if (this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE)) {
+    if (
+      this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
+      this.hasSpecialEnd(position)
+    ) {
       traversedPositions.add(`${position.row}-${position.col}`);
       this.edges.forEach((edge) => {
         if (this.hasFeature(position, Feature.ROAD, edge)) {
