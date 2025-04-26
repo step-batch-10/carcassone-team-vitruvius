@@ -4,19 +4,20 @@ import { describe, it } from "@std/testing/bdd";
 import { createDummyPlayers, createDummyTile } from "../dummy-data.ts";
 import { Feature } from "../../src/models/models.ts";
 
-describe("testing static method 'create' of board to create board", () => {
+describe("Testing for creation of Board", () => {
   it("should create an empty board of given size with first tile already present", () => {
     const board = Board.create(1, 1);
 
-    assertEquals(board.getBoard().length, 1);
     const dummyTile = createDummyTile("1", ["r", "c", "r", "f"], "r");
     dummyTile.id = "19";
     dummyTile.tileID = "44";
+
+    assertEquals(board.getBoard().length, 1);
     assertEquals(board.getBoard()[0][0].tile, dummyTile);
   });
 });
 
-describe("testing is isBoxUnlockToPlace", () => {
+describe("Testing for isBoxUnlockToPlace", () => {
   it("should return true when it have any of corresponding tile present", () => {
     const board = Board.create(5, 5);
     const isPlaceable = board.isBoxUnlockToPlace({ row: 2, col: 3 });

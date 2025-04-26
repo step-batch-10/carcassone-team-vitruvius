@@ -69,18 +69,14 @@ export const createATileBox = (): TileBox => {
 
 export const dummyTiles = () => [
   createDummyTile("2", ["r", "f", "r", "f"], "r"),
-
   createDummyTile("3", ["r", "f", "r", "f"], "r"),
-  createDummyTile("3", ["r", "f", "r", "f"], "r"),
-
-  createDummyTile("4", ["f", "f", "f", "f"], "m"),
+  createDummyTile("4", ["r", "f", "r", "f"], "r"),
+  createDummyTile("5", ["f", "f", "f", "f"], "m"),
 ];
 
 export const dummyTiles3 = () => [
   createDummyTile("2", ["r", "c", "r", "c"], "r"),
-
   createDummyTile("3", ["r", "f", "f", "r"], "r"),
-
   createDummyTile("4", ["f", "r", "r", "f"], "r"),
   createDummyTile("5", ["f", "f", "r", "r"], "r"),
 ];
@@ -116,7 +112,7 @@ export const createDummyPlayers = () => {
   ];
 };
 
-export const dummyTilesToClaimMonastery = () => {
+export const monasteryTiles = () => {
   return [
     createDummyTile("3", ["r", "c", "f", "r"], "r"),
     createDummyTile("4", ["f", "r", "f", "r"], "r"),
@@ -129,7 +125,7 @@ export const dummyTilesToClaimMonastery = () => {
   ];
 };
 
-export const dummyTilesToClaimMonastery1 = () => {
+export const monasteryTiles1 = () => {
   return [
     createDummyTile("2", ["f", "f", "f", "f"], "m"),
     createDummyTile("3", ["r", "c", "f", "r"], "r"),
@@ -142,7 +138,7 @@ export const dummyTilesToClaimMonastery1 = () => {
   ];
 };
 
-export const dummyTilesToClaimMonastery2 = () => {
+export const monasteryTiles2 = () => {
   return [
     createDummyTile("2", ["r", "f", "f", "r"], "r"),
     createDummyTile("3", ["f", "r", "f", "r"], "r"),
@@ -159,21 +155,21 @@ export const dummyTilesToClaimMonastery2 = () => {
     createDummyTile("14", ["f", "f", "f", "f"], "m"),
   ];
 };
-export const dummyTilesToClaimMonastery3 = () => {
+export const monasteryTiles3 = () => {
   return [
     createDummyTile("2", ["f", "f", "f", "f"], "m"),
     createDummyTile("3", ["f", "f", "f", "f"], "m"),
   ];
 };
 
-export const dummyTilesToClaimRoad = () => {
+export const roadTiles = () => {
   return [
     createDummyTile("2", ["r", "r", "r", "c"], "e"),
     createDummyTile("3", ["r", "r", "r", "r"], "e"),
   ];
 };
 
-export const dummyTilesToClaimRoad1 = () => {
+export const roadTiles1 = () => {
   return [
     createDummyTile("2", ["r", "r", "r", "c"], "e"),
     createDummyTile("3", ["r", "r", "r", "r"], "e"),
@@ -181,7 +177,7 @@ export const dummyTilesToClaimRoad1 = () => {
   ];
 };
 
-export const dummyTilesToClaimRoad2 = () => {
+export const roadTiles2 = () => {
   return [
     createDummyTile("3", ["r", "r", "r", "r"], "e"),
     createDummyTile("4", ["r", "c", "f", "r"], "r"),
@@ -189,9 +185,19 @@ export const dummyTilesToClaimRoad2 = () => {
   ];
 };
 
-export const dummyTilesToClaimRoad3 = () => {
+export const roadTiles3 = () => {
   return [
     createDummyTile("2", ["r", "r", "r", "c"], "e"),
     createDummyTile("3", ["r", "r", "r", "r"], "e"),
+  ];
+};
+
+export const roadTile4 = () => {
+  return [
+    createDummyTile("2", ["r", "c", "r", "r"], "e"),
+    createDummyTile("3", ["r", "f", "r", "f"], "r"),
+    createDummyTile("4", ["c", "c", "r", "r"], "c"),
+    createDummyTile("5", ["r", "r", "f", "f"], "r"),
+    createDummyTile("6", ["r", "c", "r", "r"], "e"),
   ];
 };

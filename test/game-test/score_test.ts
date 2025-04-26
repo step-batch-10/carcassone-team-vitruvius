@@ -3,18 +3,19 @@ import {
   createDummyPlayers,
   createPlayer,
   dummyTiles,
-  dummyTilesToClaimMonastery,
-  dummyTilesToClaimMonastery1,
-  dummyTilesToClaimMonastery2,
-  dummyTilesToClaimMonastery3,
-  dummyTilesToClaimRoad,
-  dummyTilesToClaimRoad1,
-  dummyTilesToClaimRoad2,
-  dummyTilesToClaimRoad3,
+  monasteryTiles,
+  monasteryTiles1,
+  monasteryTiles2,
+  monasteryTiles3,
+  roadTile4,
+  roadTiles,
+  roadTiles1,
+  roadTiles2,
+  roadTiles3,
 } from "../dummy-data.ts";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert/equals";
-import { Center, Position, Sides } from "../../src/models/models.ts";
+import { Center, Position, Sides, Tile } from "../../src/models/models.ts";
 
 type Move = Position & { location?: Sides | Center };
 
@@ -26,25 +27,27 @@ const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
   });
 };
 
+const createAndPlaceTiles = (generateTiles: () => Tile[], places: Move[]) => {
+  const players = createDummyPlayers();
+  const game = Carcassonne.initGame(players, (arr) => arr, generateTiles());
+
+  placeAndDrawTiles(game, places);
+
+  return game;
+};
+
 describe("Testing for scoring monastery", () => {
   it("should not update score when monastery not claimed", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+    const game = createAndPlaceTiles(dummyTiles, [
+      { row: 42, col: 43, location: Center.MIDDlE },
+    ]);
 
-    placeAndDrawTiles(game, [{ row: 42, col: 43, location: Center.MIDDlE }]);
-
-    assertEquals(game.getCurrentPlayer().points, 0);
+    assertEquals(game.getAllPlayers()[0].points, 0);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when placing tile is monastery(claimed) and adjacent 8 tiles are there", () => {
-    const players = [createPlayer("user1", "black", true, "121")];
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(monasteryTiles, [
       { row: 42, col: 43 },
       { row: 43, col: 43 },
       { row: 44, col: 43 },
@@ -55,18 +58,12 @@ describe("Testing for scoring monastery", () => {
       { row: 43, col: 42, location: Center.MIDDlE },
     ]);
 
-    assertEquals(game.getCurrentPlayer().points, 9);
+    assertEquals(game.getAllPlayers()[0].points, 9);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when the tile placed completes the monastery", () => {
-    const players = [createPlayer("user1", "black", true, "121")];
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery1(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(monasteryTiles1, [
       { row: 43, col: 42, location: Center.MIDDlE },
       { row: 42, col: 43 },
       { row: 43, col: 43 },
@@ -77,18 +74,12 @@ describe("Testing for scoring monastery", () => {
       { row: 42, col: 41 },
     ]);
 
-    assertEquals(game.getCurrentPlayer().points, 9);
+    assertEquals(game.getAllPlayers()[0].points, 9);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when the tile placed completes two monasteries claimed by different players", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery2(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(monasteryTiles2, [
       { row: 42, col: 43 },
       { row: 43, col: 43 },
       { row: 43, col: 42, location: Center.MIDDlE },
@@ -104,19 +95,13 @@ describe("Testing for scoring monastery", () => {
       { row: 44, col: 41, location: Center.MIDDlE },
     ]);
 
-    const playerScores = game.getAllPlayers();
-
-    assertEquals(playerScores[0].points, 9);
-    assertEquals(playerScores[1].points, 9);
+    assertEquals(game.getAllPlayers()[0].points, 9);
+    assertEquals(game.getAllPlayers()[1].points, 9);
   });
 
   it("should update score when the tile placed completes two monasteries claimed by single player", () => {
     const players = [createPlayer("Aman", "black", false, "121")];
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery2(),
-    );
+    const game = Carcassonne.initGame(players, (arr) => arr, monasteryTiles2());
 
     placeAndDrawTiles(game, [
       { row: 42, col: 43 },
@@ -139,11 +124,7 @@ describe("Testing for scoring monastery", () => {
 
   it("should remove meeple from the tile and increase the meeple count", () => {
     const players = [createPlayer("user1", "black", true, "121")];
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery1(),
-    );
+    const game = Carcassonne.initGame(players, (arr) => arr, monasteryTiles1());
 
     placeAndDrawTiles(game, [
       { row: 43, col: 42, location: Center.MIDDlE },
@@ -164,14 +145,7 @@ describe("Testing for scoring monastery", () => {
   });
 
   it("should remove meeple from the tile and increase the meeple count when two monasteries are placed adjacent to each other claimed by different people", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimMonastery3(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(monasteryTiles3, [
       { row: 43, col: 42, location: Center.MIDDlE },
       { row: 43, col: 43, location: Center.MIDDlE },
     ]);
@@ -183,65 +157,58 @@ describe("Testing for scoring monastery", () => {
 
 describe("Testing for scoring Roads", () => {
   it("should not update score when road not completed", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimRoad(),
-    );
+    const game = createAndPlaceTiles(roadTiles, [
+      { row: 42, col: 43, location: Center.MIDDlE },
+    ]);
 
-    placeAndDrawTiles(game, [{ row: 42, col: 43, location: Center.MIDDlE }]);
-
-    assertEquals(game.getCurrentPlayer().points, 0);
+    assertEquals(game.getAllPlayers()[0].points, 0);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when placed tile joins two end of road", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimRoad1(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(roadTiles1, [
       { row: 41, col: 42, location: Sides.RIGHT },
       { row: 42, col: 43 },
       { row: 41, col: 43 },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when placed tile is end of road", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimRoad2(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(roadTiles2, [
       { row: 42, col: 43, location: Sides.TOP },
       { row: 41, col: 43 },
       { row: 41, col: 42 },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 
   it("should update score when placed tile completes single pair of roads", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTilesToClaimRoad3(),
-    );
-
-    placeAndDrawTiles(game, [
+    const game = createAndPlaceTiles(roadTiles3, [
       { row: 41, col: 42, location: Sides.RIGHT },
       { row: 41, col: 43 },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 2);
+    assertEquals(game.getAllPlayers()[1].points, 0);
+  });
+
+  it("should update score when there is a tile containing center as city and connecting roads", () => {
+    const game = createAndPlaceTiles(roadTile4, [
+      { row: 42, col: 41, location: Sides.LEFT },
+      { row: 42, col: 40 },
+      { row: 42, col: 39 },
+      { row: 43, col: 39 },
+      { row: 43, col: 38 },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 5);
+    assertEquals(game.getAllPlayers()[0].noOfMeeples, 7);
+    assertEquals(game.getAllPlayers()[1].points, 0);
+    assertEquals(game.getAllPlayers()[1].noOfMeeples, 7);
   });
 });

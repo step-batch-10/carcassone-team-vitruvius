@@ -1,5 +1,5 @@
 import { TileBoxManager } from "../../src/models/game/tiles.ts";
-import { createATileBox, dummyTiles5 } from "./../dummy-data.ts";
+import { createATileBox, dummyTiles5, roadTile4 } from "./../dummy-data.ts";
 import {
   createDummyPlayers,
   dummyTiles,
@@ -262,6 +262,36 @@ describe("testing markOccupance", () => {
     assertEquals(
       game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
       1,
+    );
+  });
+
+  it("should mark the occurence to tile when it is place to connected feature which is claimed", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, (arr) => arr, roadTile4());
+
+    game.drawATile();
+    game.placeATile({ row: 42, col: 41 });
+    game.placeAMeeple(Sides.LEFT);
+    game.drawATile();
+    game.placeATile({ row: 42, col: 40 });
+    game.drawATile();
+    game.placeATile({ row: 42, col: 39 });
+
+    assertEquals(
+      game.getBoard()[42][39].occupiedRegion.bottom.occupiedBy.size,
+      1,
+    );
+    assertEquals(
+      game.getBoard()[42][39].occupiedRegion.left.occupiedBy.size,
+      0,
+    );
+    assertEquals(
+      game.getBoard()[42][39].occupiedRegion.right.occupiedBy.size,
+      1,
+    );
+    assertEquals(
+      game.getBoard()[42][39].occupiedRegion.middle.occupiedBy.size,
+      0,
     );
   });
 

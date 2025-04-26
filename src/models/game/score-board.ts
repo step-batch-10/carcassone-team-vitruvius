@@ -32,13 +32,23 @@ export class ScoreManager {
         );
       }
     });
-    this.edges.forEach((edge: Sides) => {
+    this.edges.forEach((edge) => {
       if (middleOccupance.feature === occupances[edge].feature) {
         occupances[edge].occupiedBy = middleOccupance.occupiedBy.union(
           occupances[edge].occupiedBy,
         );
       }
     });
+
+    if (middleOccupance.feature === Feature.CITY) {
+      let tempPlayers = new Set<string>();
+      this.edges.forEach((edge) => {
+        if (occupances[edge].feature === Feature.ROAD) {
+          tempPlayers = tempPlayers.union(occupances[edge].occupiedBy);
+          occupances[edge].occupiedBy = tempPlayers;
+        }
+      });
+    }
   }
 
   private markFeature(cell: TileBox) {
@@ -229,7 +239,13 @@ export class ScoreManager {
     };
     return opposite[edge];
   }
-
+  removeAllMeeples(traversedPositions: Set<string>, players: Player[]) {
+    traversedPositions.values().forEach((position) => {
+      const [row, col] = position.split("-").map(Number);
+      const convertedPosition = { row, col };
+      this.removeMeeple(convertedPosition, players);
+    });
+  }
   private something(
     position: Position,
     traversedPositions: Set<string>,
@@ -237,35 +253,17 @@ export class ScoreManager {
     players: Player[],
     lastEdge: Sides = Sides.LEFT,
   ): number {
-    if (endOfRoad >= 2) {
+    if (endOfRoad === 2) {
       lastEdge = this.getOppositeEdge(lastEdge);
+
       const playerNames = this.tileBoxes.getCell(position)
         ?.occupiedRegion[lastEdge].occupiedBy;
       this.updateScoreToPlayers(playerNames, players, traversedPositions.size);
+      this.removeAllMeeples(traversedPositions, players);
 
       return endOfRoad;
     }
-
     if (this.isTraversed(traversedPositions, position)) return endOfRoad;
-
-    if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
-      this.edges.forEach((edge) => {
-        if (this.hasFeature(position, Feature.ROAD, edge)) {
-          traversedPositions.add(`${position.row}-${position.col}`);
-          lastEdge = edge;
-
-          endOfRoad = this.something(
-            this.tileBoxes.adjacentPosition(position)[edge],
-            traversedPositions,
-            endOfRoad,
-            players,
-            lastEdge,
-          );
-        }
-      });
-
-      return endOfRoad;
-    }
 
     if (this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE)) {
       traversedPositions.add(`${position.row}-${position.col}`);
@@ -277,6 +275,26 @@ export class ScoreManager {
         lastEdge,
       );
     }
+    if (
+      this.hasFeature(position, Feature.ROAD, Center.MIDDlE) ||
+      this.hasFeature(position, Feature.CITY, Center.MIDDlE)
+    ) {
+      this.edges.forEach((edge) => {
+        if (this.hasFeature(position, Feature.ROAD, edge)) {
+          traversedPositions.add(`${position.row}-${position.col}`);
+          lastEdge = edge;
+          if (endOfRoad >= 2) return endOfRoad;
+          endOfRoad = this.something(
+            this.tileBoxes.adjacentPosition(position)[edge],
+            traversedPositions,
+            endOfRoad,
+            players,
+            lastEdge,
+          );
+        }
+      });
+    }
+
     return endOfRoad;
   }
 
