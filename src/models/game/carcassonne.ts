@@ -176,7 +176,9 @@ export class Carcassonne {
 
   placeAMeeple(subGrid: Sides | Center) {
     const player = this.getCurrentPlayer();
-    if (!this.tilePlacedAt) return { isPlaced: false };
+    if (!this.tilePlacedAt || player.noOfMeeples < 1) {
+      return { isPlaced: false };
+    }
     const status = this.board.placeMeeple(
       this.tilePlacedAt,
       player.username,

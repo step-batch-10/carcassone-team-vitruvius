@@ -6,8 +6,10 @@ import { Poller } from "./multiplayer.js";
 
 const placeTile = (cell) => {
   const img = cell.querySelector("img");
-  const btn = cell.querySelector("button");
-  cell.removeChild(btn);
+  const buttons = cell.querySelectorAll("button");
+
+  Array.from({ length: buttons.length }, (_, i) => buttons[i].remove());
+
   img.classList.remove("ghost-img");
   img.classList.add("tile");
   cell.style.opacity = "1";
