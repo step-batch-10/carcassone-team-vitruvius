@@ -1,7 +1,7 @@
 import { Board } from "../../src/models/game/board.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { createDummyPlayers, createDummyTile } from "../dummy-data.ts";
+import { createDummyTile } from "../dummy-data.ts";
 import { Feature } from "../../src/models/models.ts";
 
 describe("Testing for creation of Board", () => {
@@ -142,14 +142,5 @@ describe("testing isTilePlacable", () => {
     const tilePlaced = board.isTilePlaceable(null, { row: 1, col: 1 });
 
     assertEquals(tilePlaced, false);
-  });
-});
-
-describe("score", () => {
-  it("should return invalid position when no position given", () => {
-    const board = Board.create(5, 5);
-    assertEquals(board.score(undefined, createDummyPlayers()), {
-      desc: "invalid position",
-    });
   });
 });

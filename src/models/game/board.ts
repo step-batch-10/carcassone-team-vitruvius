@@ -1,17 +1,14 @@
-import { createTileBox, firstTileBox, TileBoxManager } from "./tiles.ts";
 import {
-  Center,
   Edge,
   Position,
   ResTiles,
-  Sides,
   Tile,
   TileBox,
   TileEdges,
   Transpose,
 } from "../models.ts";
 import { ScoreManager } from "./score-board.ts";
-import Player from "../room/player.ts";
+import { createTileBox, firstTileBox, TileBoxManager } from "./tiles.ts";
 
 export class Board {
   private board: TileBox[][];
@@ -22,7 +19,7 @@ export class Board {
   constructor(tileBoxes: TileBox[][]) {
     this.board = tileBoxes;
     this.tileBoxes = new TileBoxManager(this.board);
-    this.scoreManager = new ScoreManager(this.board, this.tileBoxes);
+    this.scoreManager = new ScoreManager(this.board, this.tileBoxes, []);
     this.edges = ["left", "top", "right", "bottom"];
   }
 
@@ -108,17 +105,8 @@ export class Board {
     }
   }
 
-  placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
-    return this.scoreManager.placeMeeple(position, playerName, subGrid);
-  }
-
   isBoxUnlockToPlace(position: Position) {
     const resTile = this.tileBoxes.adjacentTile(position);
     return !this.allNeighboursEmpty(resTile) && !this.getTile(position);
-  }
-
-  score(position: Position | undefined, players: Player[]) {
-    if (!position) return { desc: "invalid position" };
-    this.scoreManager.score(position, players);
   }
 }

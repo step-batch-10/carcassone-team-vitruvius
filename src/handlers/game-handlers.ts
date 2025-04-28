@@ -42,7 +42,7 @@ const handleTilePlacement = async (ctx: Context) => {
   const position: Position = await ctx.req.json();
   const desc = game.placeATile(position);
 
-  if (desc) return ctx.json(desc, 400);
+  if (!desc.isPlaced) return ctx.json(desc, 400);
 
   return ctx.json(null, 201);
 };

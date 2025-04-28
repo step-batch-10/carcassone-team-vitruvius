@@ -1,5 +1,5 @@
 import { createDummyPlayers, dummyTiles } from "../dummy-data.ts";
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { createTestApp } from "./handle-place-meeple_test.ts";
 
@@ -60,7 +60,7 @@ describe("handleTilePlacement", () => {
 
     assertEquals(response.status, 400);
 
-    assertEquals(await response.json(), { desc: "invalid tile to place" });
+    assertFalse((await response.json()).isPlaced);
     const boardRes = await app.request("game/board", {
       method: "GET",
       headers: {

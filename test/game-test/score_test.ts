@@ -10,6 +10,7 @@ import {
   roadTile4,
   roadTile5,
   roadTile6,
+  roadTile7,
   roadTiles,
   roadTiles1,
   roadTiles2,
@@ -257,4 +258,26 @@ describe("Testing for scoring Roads", () => {
 
     assertEquals(game.getAllPlayers()[0].points, 3);
   });
+
+  it("should not update score twice when it's already calculated", () => {
+    const game = createAndPlaceTiles(roadTile6, [
+      { row: 42, col: 41, location: Sides.RIGHT },
+      { row: 42, col: 43, location: Sides.RIGHT },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
+  });
+});
+
+it("should update the score", () => {
+  const game = createAndPlaceTiles(roadTile7, [
+    { row: 42, col: 41 },
+    { row: 42, col: 43, location: Center.MIDDlE },
+    { row: 42, col: 44 },
+    { row: 43, col: 44 },
+    { row: 43, col: 45 },
+    { row: 42, col: 45 },
+  ]);
+
+  assertEquals(game.getAllPlayers()[0].points, 7);
 });

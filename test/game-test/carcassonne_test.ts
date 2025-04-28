@@ -87,14 +87,12 @@ describe("Testing place a tile", () => {
 
   it("should place the tile when placed at correct postion", () => {
     game.drawATile();
-    assertEquals(game.placeATile({ row: 42, col: 43 }), undefined); // change return value to true
+    assert(game.placeATile({ row: 42, col: 43 }).isPlaced);
   });
 
   it("should not place the tile when placed at invalid postion", () => {
     game.drawATile();
-    assertEquals(game.placeATile({ row: 43, col: 43 }), {
-      desc: "invalid tile to place",
-    });
+    assertFalse(game.placeATile({ row: 43, col: 43 }).isPlaced);
   });
 });
 
@@ -204,7 +202,7 @@ describe("Testing place a meeple", () => {
   });
 
   it("when there is no tile placed then the occupance should not mark", () => {
-    const scoreBoard = new ScoreManager([[]], new TileBoxManager([[]]));
+    const scoreBoard = new ScoreManager([[]], new TileBoxManager([[]]), []);
 
     assertFalse(
       scoreBoard.hasFeature({ row: 0, col: 0 }, Feature.CITY, Sides.BOTTOM),

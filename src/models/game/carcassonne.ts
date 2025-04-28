@@ -1,4 +1,4 @@
-import { TileStacker } from "./tiles.ts";
+import { TileBoxManager, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import {
@@ -12,6 +12,7 @@ import {
 
 import _ from "lodash";
 import { generateTiles } from "./tile-generator.ts";
+import { ScoreManager } from "./score-board.ts";
 
 export class Carcassonne {
   private readonly board: Board;
@@ -21,6 +22,8 @@ export class Carcassonne {
   private currentTile: Tile | null;
   private unlockedPositions: Position[];
   private tilePlacedAt: Position | null;
+  private tileBoxes;
+  private scoreBoard;
 
   constructor(
     players: Player[],
@@ -35,30 +38,31 @@ export class Carcassonne {
     this.tileManager = tileManager;
     this.unlockedPositions = unlockedPosition;
     this.tilePlacedAt = null;
+    this.tileBoxes = new TileBoxManager(board.getBoard());
+    this.scoreBoard = new ScoreManager(
+      board.getBoard(),
+      this.tileBoxes,
+      players,
+    );
   }
 
   static getAllUnlockedPosition(board: Board): Position[] {
-    const unlockedPosition = [];
-    for (let row = 0; row < 84; row++) {
-      for (let col = 0; col < 84; col++) {
-        if (board.isBoxUnlockToPlace({ row, col })) {
-          unlockedPosition.push({ row, col });
+    const unlockedPosition: Position[] = [];
+
+    board.getBoard().forEach((row, rowNo) =>
+      row.forEach((_, colNo) => {
+        if (board.isBoxUnlockToPlace({ row: rowNo, col: colNo })) {
+          unlockedPosition.push({ row: rowNo, col: colNo });
         }
-      }
-    }
+      })
+    );
 
     return unlockedPosition;
   }
 
-  private placablePositions(): Position[] {
-    if (!this.currentTile) {
-      return [];
-    }
-
-    return this.unlockedPositions.filter(
-      (position: Position) =>
-        this.board.isTilePlaceable(this.currentTile, position) &&
-        !this.board.getTile(position),
+  private placablePositions() {
+    return this.unlockedPositions.filter((position) =>
+      this.board.isTilePlaceable(this.currentTile, position)
     );
   }
 
@@ -81,18 +85,14 @@ export class Carcassonne {
     return new Carcassonne(players, tileManager, board, unlockedPositions);
   }
 
-  rotateTile(tile: Tile): Tile {
+  rotateTile(tile: Tile) {
     tile.orientation = (tile.orientation + CardinalDegrees.ninety) % 360;
-    const tempEdge = tile.tileEdges.pop();
-
-    if (tempEdge) {
-      tile.tileEdges.unshift(tempEdge);
-    }
+    tile.tileEdges.unshift(tile.tileEdges.pop()!);
 
     return tile;
   }
 
-  private isTilePlacableAtUnlockedPos(tile: Tile) {
+  private canTileBePlaced(tile: Tile) {
     return this.unlockedPositions.some((position) =>
       this.board.isTilePlaceable(tile, position)
     );
@@ -102,7 +102,7 @@ export class Carcassonne {
     const rotated = tile;
     rotated.tileEdges = [...tile.tileEdges];
     for (let i = 0; i < 4; i++) {
-      if (this.isTilePlacableAtUnlockedPos(rotated)) {
+      if (this.canTileBePlaced(rotated)) {
         return true;
       }
 
@@ -113,9 +113,7 @@ export class Carcassonne {
   }
 
   rotateCurrentTile() {
-    if (this.currentTile) {
-      return this.rotateTile(this.currentTile);
-    }
+    return this.rotateTile(this.currentTile!);
   }
 
   drawATile(): Tile | null {
@@ -156,29 +154,21 @@ export class Carcassonne {
   }
 
   placeATile(position: Position) {
-    if (
-      this.currentTile &&
-      this.board.isTilePlaceable(this.currentTile, position)
-    ) {
+    if (this.board.isTilePlaceable(this.currentTile, position)) {
       this.tilePlacedAt = position;
-      this.board.placeTile(this.currentTile, position);
-      this.updateScore();
+      this.board.placeTile(this.currentTile!, position);
+      this.scoreBoard.score(this.tilePlacedAt);
       this.currentTile = null;
-      return;
+      return { isPlaced: true };
     }
-
-    return { desc: "invalid tile to place" };
+    return { isPlaced: false };
   }
 
-  private updateMeeple(
-    subGrid: Sides | Center,
-    player: Player,
-    position: Position,
-  ) {
-    const cell = this.getBoard()[position.row][position.col];
-    cell.meeple.region = subGrid;
-    cell.meeple.color = player.meepleColor;
-    cell.meeple.playerName = player.username;
+  private updateMeeple(subGrid: Sides | Center, player: Player, pos: Position) {
+    const meeple = this.tileBoxes.getCell(pos)!.meeple;
+    meeple.region = subGrid;
+    meeple.color = player.meepleColor;
+    meeple.playerName = player.username;
   }
 
   placeAMeeple(subGrid: Sides | Center) {
@@ -186,23 +176,19 @@ export class Carcassonne {
     if (!this.tilePlacedAt || player.noOfMeeples < 1) {
       return { isPlaced: false };
     }
-    const status = this.board.placeMeeple(
+    const status = this.scoreBoard.placeMeeple(
       this.tilePlacedAt,
       player.username,
       subGrid,
     );
     if (status.isPlaced) {
       this.updateMeeple(subGrid, player, this.tilePlacedAt);
-      this.updateScore();
+      this.scoreBoard.score(this.tilePlacedAt);
       player.noOfMeeples -= 1;
       this.changePlayerTurn();
     }
 
     return status;
-  }
-
-  updateScore() {
-    if (this.tilePlacedAt) this.board.score(this.tilePlacedAt, this.players);
   }
 
   state() {

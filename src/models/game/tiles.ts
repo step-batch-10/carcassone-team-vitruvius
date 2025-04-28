@@ -1,4 +1,5 @@
 import {
+  Center,
   Feature,
   OccupanceSubGrid,
   Position,
@@ -43,6 +44,10 @@ export class TileBoxManager {
     return edges;
   }
 
+  getOccupiedBy(position: Position, edge: Sides | Center) {
+    return this.getCell(position)!.occupiedRegion[edge].occupiedBy;
+  }
+
   getCell(position: Position) {
     const { row, col } = position;
     if (row < 0 || col < 0 || row >= this.maxRow || col >= this.maxCol) {
@@ -54,6 +59,10 @@ export class TileBoxManager {
 
   getTile(position: Position) {
     return this.getCell(position)?.tile;
+  }
+
+  isScored(position: Position, edge: Sides) {
+    return this.getCell(position)!.occupiedRegion[edge].isScored;
   }
 
   adjacentCells(position: Position) {
@@ -91,11 +100,18 @@ export class TileBoxManager {
     return Object.values(this.adjacentPosition(position));
   }
 
+  private hasOccupied(pos: Position, edge: Sides) {
+    return this.getOccupiedBy(pos, edge).size > 0;
+  }
+
   notScoredEdges(traverse: Set<string>, pos: Position, edges: Sides[]) {
     const adj = this.adjacentPosition(pos);
 
     for (const edge of edges) {
-      if (traverse.has(JSON.stringify(adj[edge]))) {
+      if (
+        traverse.has(JSON.stringify(adj[edge])) &&
+        this.hasOccupied(pos, edge)
+      ) {
         return { except: edges.filter((tempEdge) => tempEdge !== edge), edge };
       }
     }
@@ -105,7 +121,7 @@ export class TileBoxManager {
   getLastEdge(traverse: Set<string>, edges: Sides[]) {
     for (const t of traverse.values()) {
       if (
-        this.getCell(JSON.parse(t))?.occupiedRegion.middle.feature !==
+        this.getCell(JSON.parse(t))!.occupiedRegion.middle.feature !==
           Feature.ROAD
       ) {
         return {
@@ -118,10 +134,6 @@ export class TileBoxManager {
     return { lastEdge: Sides.LEFT, position: { row: 42, col: 42 } };
   }
 }
-
-// export const shuffler = (tiles: Tile[]): Tile[] => {
-//   return tiles.sort(() => Math.random() - 0.5);
-// };
 
 export class TileStacker {
   private readonly tilesStack;

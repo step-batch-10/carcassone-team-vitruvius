@@ -14,11 +14,17 @@ export class ScoreManager {
   private board;
   private edges;
   private readonly tileBoxes;
+  private players;
 
-  constructor(board: TileBox[][], tileBoxes: TileBoxManager) {
+  constructor(
+    board: TileBox[][],
+    tileBoxes: TileBoxManager,
+    players: Player[],
+  ) {
     this.board = board;
     this.tileBoxes = tileBoxes;
     this.edges = [Sides.LEFT, Sides.TOP, Sides.RIGHT, Sides.BOTTOM];
+    this.players = players;
   }
 
   private moves(): Moves {
@@ -128,14 +134,23 @@ export class ScoreManager {
     this.traverseAdjacentTiles(currentTile, position, traversedPositions);
   }
 
+  private canClaim(position: Position, subGrid: Sides | Center) {
+    return !(
+      this.tileBoxes.getOccupiedBy(position, subGrid).size ||
+      this.hasFeature(position, Feature.FIELD, subGrid)
+    );
+  }
+
   placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
-    const cell = this.board[position.row][position.col];
-    if (!cell.occupiedRegion[subGrid].occupiedBy.size) {
-      cell.occupiedRegion[subGrid].occupiedBy.add(playerName);
+    let isPlaced = false;
+
+    if (this.canClaim(position, subGrid)) {
+      this.tileBoxes.getOccupiedBy(position, subGrid).add(playerName);
       this.markOccupance(position, new Set<string>());
-      return { isPlaced: true };
+      isPlaced = true;
     }
-    return { isPlaced: false };
+
+    return { isPlaced };
   }
 
   hasAdjacent9Tiles(position: Position): boolean {
@@ -183,20 +198,14 @@ export class ScoreManager {
     }
   }
 
-  private findPlayer(players: Player[], playerName: string | null) {
-    return players.find((player) => player.username === playerName);
+  private findPlayer(playerName: string | null) {
+    return this.players.find((player) => player.username === playerName);
   }
 
-  updateScoreToPlayers(
-    playerNames: Set<string> | undefined,
-    players: Player[],
-    score: number,
-  ) {
+  updateScoreToPlayers(playerNames: Set<string> | undefined, score: number) {
     playerNames?.values().forEach((playerName) => {
-      const player = this.findPlayer(players, playerName);
-      if (player) {
-        player.points += score;
-      }
+      const player = this.findPlayer(playerName);
+      player!.points += score;
     });
   }
 
@@ -223,10 +232,10 @@ export class ScoreManager {
     return this.tileBoxes.getCell(position)?.occupiedRegion.middle.isScored;
   }
 
-  private removeMeeple(position: Position, players: Player[]) {
+  private removeMeeple(position: Position) {
     const cell = this.tileBoxes.getCell(position);
     if (cell) {
-      const player = this.findPlayer(players, cell.meeple.playerName);
+      const player = this.findPlayer(cell.meeple.playerName);
       if (player) player.noOfMeeples += 1;
 
       cell.meeple.playerName = null;
@@ -235,24 +244,16 @@ export class ScoreManager {
     }
   }
 
-  updateScoreForMonastry(
-    position: Position,
-    players: Player[],
-    traverse: Set<string>,
-  ) {
+  updateScoreForMonastry(position: Position, traverse: Set<string>) {
     traverse.add(JSON.stringify(position));
 
     if (
       this.canScoreFeature(position, Feature.MONASTERY, Center.MIDDlE) &&
       this.hasAdjacent9Tiles(position)
     ) {
-      this.updateScoreToPlayers(
-        this.getClaimedBy(position, Center.MIDDlE),
-        players,
-        9,
-      );
+      this.updateScoreToPlayers(this.getClaimedBy(position, Center.MIDDlE), 9);
       this.markScored(position, Feature.MONASTERY, []);
-      this.removeMeeple(position, players);
+      this.removeMeeple(position);
     }
 
     this.tileBoxes.adjacentPositionArray(position).forEach((adjPos) => {
@@ -261,7 +262,7 @@ export class ScoreManager {
         !this.isScored(adjPos) &&
         !this.isTraversed(traverse, adjPos)
       ) {
-        this.updateScoreForMonastry(adjPos, players, traverse);
+        this.updateScoreForMonastry(adjPos, traverse);
       }
     });
   }
@@ -270,60 +271,46 @@ export class ScoreManager {
     return traversedPositions.has(JSON.stringify(position));
   }
 
-  removeAllMeeples(traversedPositions: Set<string>, players: Player[]) {
+  removeAllMeeples(traversedPositions: Set<string>) {
     traversedPositions.values().forEach((position) => {
-      this.removeMeeple(JSON.parse(position), players);
+      this.removeMeeple(JSON.parse(position));
     });
   }
 
   private traverseRoadAndScore(
     position: Position,
-    traversedPositions: Set<string>,
+    traversed: Set<string>,
     endOfRoad: number,
-    players: Player[],
     lastEdge: Sides = Sides.LEFT,
   ): number {
     if (endOfRoad === 2) {
       const { position, lastEdge } = this.tileBoxes.getLastEdge(
-        traversedPositions,
+        traversed,
         this.edges,
       );
 
-      const playerNames =
-        this.tileBoxes.getCell(position)!.occupiedRegion[lastEdge].occupiedBy;
+      const playerNames = this.tileBoxes.getOccupiedBy(position, lastEdge);
       if (playerNames.size === 0) return endOfRoad;
 
-      this.updateScoreToPlayers(playerNames, players, traversedPositions.size);
-      this.removeAllMeeples(traversedPositions, players);
-      traversedPositions.forEach((pos) => {
-        const objPos = JSON.parse(pos);
-        if (this.hasFeature(objPos, Feature.ROAD_END, Center.MIDDlE)) {
-          this.markScored(
-            objPos,
-            Feature.ROAD,
-            this.tileBoxes.notScoredEdges(
-              traversedPositions,
-              objPos,
-              this.edges,
-            ).except,
-          );
-        } else this.markScored(objPos, Feature.ROAD, []);
-      });
+      this.updateScoreToPlayers(playerNames, traversed.size);
+      this.removeAllMeeples(traversed);
+      this.markScoredForRoad(traversed);
 
       return endOfRoad;
     }
-    if (this.isTraversed(traversedPositions, position)) return endOfRoad;
+
+    if (this.isTraversed(traversed, position)) return endOfRoad;
 
     if (
       this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
       this.hasSpecialEnd(position)
     ) {
-      traversedPositions.add(JSON.stringify(position));
+      traversed.add(JSON.stringify(position));
+
       return this.traverseRoadAndScore(
         position,
-        traversedPositions,
+        traversed,
         endOfRoad + 1,
-        players,
         lastEdge,
       );
     }
@@ -332,24 +319,51 @@ export class ScoreManager {
       this.hasFeature(position, Feature.ROAD, Center.MIDDlE) ||
       this.hasFeature(position, Feature.CITY, Center.MIDDlE)
     ) {
-      this.edges.forEach((edge) => {
-        if (this.hasFeature(position, Feature.ROAD, edge)) {
-          traversedPositions.add(JSON.stringify(position));
-          lastEdge = edge;
-
-          if (endOfRoad >= 2) return endOfRoad;
-          endOfRoad = this.traverseRoadAndScore(
-            this.tileBoxes.adjacentPosition(position)[edge],
-            traversedPositions,
-            endOfRoad,
-            players,
-            lastEdge,
-          );
-        }
-      });
+      ({ lastEdge, endOfRoad } = this.roadOrCityInMiddle(
+        position,
+        traversed,
+        lastEdge,
+        endOfRoad,
+      ));
     }
 
     return endOfRoad;
+  }
+
+  private roadOrCityInMiddle(
+    position: Position,
+    traversed: Set<string>,
+    lastEdge: Sides,
+    endOfRoad: number,
+  ) {
+    this.edges.forEach((edge) => {
+      if (this.hasFeature(position, Feature.ROAD, edge)) {
+        traversed.add(JSON.stringify(position));
+        lastEdge = edge;
+
+        if (endOfRoad >= 2) return endOfRoad;
+        const adjPos = this.tileBoxes.adjacentPosition(position)[edge];
+        endOfRoad = this.traverseRoadAndScore(
+          adjPos,
+          traversed,
+          endOfRoad,
+          lastEdge,
+        );
+      }
+    });
+    return { lastEdge, endOfRoad };
+  }
+
+  private markScoredForRoad(traversed: Set<string>) {
+    traversed.forEach((pos) => {
+      const objPos = JSON.parse(pos);
+      const notScored = this.tileBoxes.notScoredEdges.bind(this.tileBoxes);
+      const except = notScored(traversed, objPos, this.edges).except;
+
+      if (this.hasFeature(objPos, Feature.ROAD_END, Center.MIDDlE)) {
+        this.markScored(objPos, Feature.ROAD, except);
+      } else this.markScored(objPos, Feature.ROAD, []);
+    });
   }
 
   private hasSpecialEnd(pos: Position) {
@@ -363,39 +377,36 @@ export class ScoreManager {
     return roads === 1;
   }
 
-  updateScoreForRoad(position: Position, players: Player[]) {
-    const traversedPositions: Set<string> = new Set();
+  updateScoreForRoad(position: Position) {
+    const traversed: Set<string> = new Set();
 
     if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
-      this.traverseRoadAndScore(position, traversedPositions, 0, players);
+      this.traverseRoadAndScore(position, traversed, 0);
     }
 
     if (
       this.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
       this.hasSpecialEnd(position)
     ) {
-      traversedPositions.add(JSON.stringify(position));
-
-      this.edges.forEach((edge) => {
-        if (
-          this.hasFeature(position, Feature.ROAD, edge) &&
-          !this.tileBoxes.getCell(position)?.occupiedRegion[edge].isScored
-        ) {
-          const newPosition = this.tileBoxes.adjacentPosition(position)[edge];
-          this.traverseRoadAndScore(
-            newPosition,
-            traversedPositions,
-            1,
-            players,
-            edge,
-          );
-        }
-      });
+      traversed.add(JSON.stringify(position));
+      this.roadEnding(position, traversed);
     }
   }
 
-  score(position: Position, players: Player[]) {
-    this.updateScoreForMonastry(position, players, new Set<string>());
-    this.updateScoreForRoad(position, players);
+  private roadEnding(pos: Position, traversed: Set<string>) {
+    this.edges.forEach((edge) => {
+      if (
+        this.hasFeature(pos, Feature.ROAD, edge) &&
+        !this.tileBoxes.isScored(pos, edge)
+      ) {
+        const newPosition = this.tileBoxes.adjacentPosition(pos)[edge];
+        this.traverseRoadAndScore(newPosition, traversed, 1, edge);
+      }
+    });
+  }
+
+  score(position: Position) {
+    this.updateScoreForMonastry(position, new Set<string>());
+    this.updateScoreForRoad(position);
   }
 }
