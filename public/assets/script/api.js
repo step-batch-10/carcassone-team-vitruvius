@@ -90,6 +90,12 @@ const API = {
 
     return await response.json();
   },
+
+  claimables: async () => {
+    const response = await fetch("/game/claimables");
+
+    return await response.json();
+  },
 };
 
 export default API;

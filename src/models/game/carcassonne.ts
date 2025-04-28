@@ -1,7 +1,14 @@
 import { shuffler, TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
-import { CardinalDegrees, Center, Position, Sides, Tile } from "../models.ts";
+import {
+  CardinalDegrees,
+  Center,
+  Position,
+  Sides,
+  Tile,
+  TileBox,
+} from "../models.ts";
 
 import _ from "lodash";
 import { generateTiles } from "./tile-generator.ts";
@@ -205,5 +212,26 @@ export class Carcassonne {
       currentTile: this.currentTile,
       players: this.getAllPlayers(),
     };
+  }
+
+  getClaimables() {
+    if (this.tilePlacedAt) {
+      const { row, col } = this.tilePlacedAt;
+      const tileBox: TileBox = this.board.getBoard()[row][col];
+      const unclaimables = new Set(["field", "roadEnd"]);
+      const regions = Object.entries(tileBox.occupiedRegion);
+
+      return regions.reduce((claimables: Sides[], [side, obj]) => {
+        if (
+          !obj.feature ||
+          unclaimables.has(obj.feature) ||
+          obj.occupiedBy.size > 0
+        ) {
+          return claimables;
+        }
+        claimables.push(side as Sides);
+        return claimables;
+      }, []);
+    }
   }
 }

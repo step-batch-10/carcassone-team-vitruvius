@@ -119,6 +119,13 @@ const serveAllPlayers = (ctx: Context) => {
 
   return ctx.json(game.getAllPlayers(), 200);
 };
+
+const serveClaimables = (ctx: Context) => {
+  const game: Carcassonne = ctx.get("game");
+
+  return ctx.json(game.getClaimables(), 200);
+};
+
 export {
   drawATile,
   getCurrentPlayer,
@@ -129,6 +136,7 @@ export {
   handleSkip,
   handleTilePlacement,
   serveAllPlayers,
+  serveClaimables,
   serveCurrentTile,
   serveGameBoard,
   serveGameState,

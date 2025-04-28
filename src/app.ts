@@ -18,6 +18,7 @@ import {
   handleSkip,
   handleTilePlacement,
   serveAllPlayers,
+  serveClaimables,
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
@@ -73,6 +74,7 @@ const createGameApp = () => {
   gameApp.patch("/skip-claim", handleSkip);
   gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
   gameApp.get("/players", serveAllPlayers);
+  gameApp.get("/claimables", serveClaimables);
   return gameApp;
 };
 

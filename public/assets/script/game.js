@@ -44,15 +44,15 @@ const handlePlaceMeeple = (side) => {
     if (res.status === 201) {
       await showPlacedMeeple(event);
       removeMeepleListeners(event, placeMeeple);
-      showAllPlayerStatus();
+      // showAllPlayerStatus();
     }
   };
 
   return placeMeeple;
 };
 
-const createSubGrid = () => {
-  const sides = ["left", "top", "right", "bottom", "middle"];
+const createSubGrid = async () => {
+  const sides = await API.claimables();
 
   return sides.map((side) => {
     const element = document.createElement("div");
@@ -78,8 +78,8 @@ const handleSkip = (cell) => {
   };
 };
 
-const addMeepleOptions = (cell) => {
-  const subGrid = createSubGrid();
+const addMeepleOptions = async (cell) => {
+  const subGrid = await createSubGrid();
   const skipButton = document.createElement("button");
 
   skipButton.classList.add("skip");
