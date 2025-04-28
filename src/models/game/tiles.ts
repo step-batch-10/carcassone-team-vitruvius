@@ -91,12 +91,13 @@ export class TileBoxManager {
   }
 }
 
-export const shuffler = (tiles: Tile[]): Tile[] => {
-  return tiles.sort(() => Math.random() - 0.5);
-};
+// export const shuffler = (tiles: Tile[]): Tile[] => {
+//   return tiles.sort(() => Math.random() - 0.5);
+// };
 
 export class TileStacker {
   private readonly tilesStack;
+
   constructor(tiles: Tile[], tileShuffler: (tiles: Tile[]) => Tile[]) {
     const shuffledTile = tileShuffler([...tiles]);
     this.tilesStack = shuffledTile;

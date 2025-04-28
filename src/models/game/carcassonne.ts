@@ -1,4 +1,4 @@
-import { shuffler, TileStacker } from "./tiles.ts";
+import { TileStacker } from "./tiles.ts";
 import { Board } from "./board.ts";
 import Player from "../room/player.ts";
 import {
@@ -71,7 +71,7 @@ export class Carcassonne {
 
   static initGame(
     players: Player[],
-    tileShuffler = shuffler,
+    tileShuffler = (tiles: Tile[]) => tiles.sort(() => Math.random() - 0.5),
     tilesArr = generateTiles(),
   ) {
     const tileManager = new TileStacker(tilesArr, tileShuffler);

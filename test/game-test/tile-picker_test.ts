@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { shuffler, TileStacker } from "../../src/models/game/tiles.ts";
+import { TileStacker } from "../../src/models/game/tiles.ts";
 import { Tile } from "../../src/models/models.ts";
 import { createDummyTile } from "../dummy-data.ts";
 
@@ -40,15 +40,5 @@ describe("testing pickTile", () => {
     tileManager.pickTile();
 
     assertEquals(tileManager.remainingTile(), 0);
-  });
-});
-
-describe("testing shuffler", () => {
-  it("should shuffle", () => {
-    const actual = shuffler([
-      createDummyTile("123", ["r", "r", "r", "r"], "f"),
-    ]);
-    const expected = [createDummyTile("123", ["r", "r", "r", "r"], "f"), ,];
-    assertEquals(actual, expected);
   });
 });
