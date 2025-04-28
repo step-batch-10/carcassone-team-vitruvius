@@ -96,6 +96,11 @@ const API = {
 
     return await response.json();
   },
+
+  remainingTiles: async () => {
+    const response = await fetch("/game/remaining-tiles");
+    return await response.json();
+  },
 };
 
 export default API;

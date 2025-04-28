@@ -22,6 +22,7 @@ import {
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
+  serveRemainingTiles,
   serveValidPositions,
 } from "./handlers/game-handlers.ts";
 import { Context } from "hono";
@@ -75,6 +76,7 @@ const createGameApp = () => {
   gameApp.get("/tile/placeable-positions", handlePlaceablePositions);
   gameApp.get("/players", serveAllPlayers);
   gameApp.get("/claimables", serveClaimables);
+  gameApp.get("/remaining-tiles", serveRemainingTiles);
   return gameApp;
 };
 

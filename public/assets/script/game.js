@@ -234,6 +234,17 @@ const createShowPlayerTableHandler = (APIs, self) => {
   };
 };
 
+const showRemainingTiles = (interval) => {
+  const remainingTiles = document.querySelector(".remaining-tiles");
+  const textLabel = remainingTiles.querySelector("p");
+
+  setInterval(async () => {
+    const numberOfTilesLeft = await API.remainingTiles();
+    textLabel.textContent = `Remaining Tiles: ${numberOfTilesLeft + 1}`;
+    remainingTiles.style.display = "flex";
+  }, interval);
+};
+
 const main = async () => {
   const grid = setupGrid(84);
   const board = new Board(grid);
@@ -255,6 +266,7 @@ const main = async () => {
   addScrollFeatures();
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
+  showRemainingTiles(3000);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);

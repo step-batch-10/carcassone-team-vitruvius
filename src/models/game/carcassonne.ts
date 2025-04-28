@@ -234,4 +234,8 @@ export class Carcassonne {
       }, []);
     }
   }
+
+  getRemainingTiles() {
+    return this.tileManager.remainingTile();
+  }
 }

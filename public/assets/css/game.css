@@ -286,3 +286,18 @@ div > .tile {
   justify-content: space-between;
   gap: 14px;
 }
+
+.remaining-tiles {
+  padding: 8px 16px;
+  border-radius: 8px;
+  z-index: 1;
+  background: bisque;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.706);
+  position: fixed;
+  top: 70px;
+  right: 20px;
+}

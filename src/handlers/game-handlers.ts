@@ -126,6 +126,11 @@ const serveClaimables = (ctx: Context) => {
   return ctx.json(game.getClaimables(), 200);
 };
 
+const serveRemainingTiles = (ctx: Context) => {
+  const game: Carcassonne = ctx.get("game");
+  return ctx.json(game.getRemainingTiles(), 200);
+};
+
 export {
   drawATile,
   getCurrentPlayer,
@@ -140,5 +145,6 @@ export {
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
+  serveRemainingTiles,
   serveValidPositions,
 };
