@@ -47,6 +47,21 @@ const startGameCountdown = () => {
   }, 1000);
 };
 
+const createCopyBtn = () => {
+  const roomDetails = document.querySelectorAll(".room-details-container")[0];
+
+  const img = document.createElement("img");
+  img.setAttribute("src", "/assets/images/symbols/copy.png");
+
+  const copyBtn = document.createElement("button");
+  copyBtn.appendChild(img);
+  copyBtn.setAttribute("id", "copy-button");
+  roomDetails.appendChild(copyBtn);
+
+  copyBtn.addEventListener("click", handleCopy);
+  document.addEventListener("copy", handleCopy);
+};
+
 const startRoom = () => {
   const intervalID = setInterval(async () => {
     const roomIDDisplay = document.querySelector("#room-id");
@@ -64,16 +79,46 @@ const startRoom = () => {
   }, 1000);
 };
 
-const main = () => {
-  startRoom();
+const handleCopy = async (_event) => {
+  const { roomID } = await API.roomInfo();
 
-  const leave = document.querySelector("#leave-button");
+  try {
+    navigator.clipboard.writeText(roomID);
+    const copyBtn = document.querySelector("#copy-button");
+    copyBtn.textContent = "Copied";
 
+    const img = document.createElement("img");
+    img.setAttribute("src", "/assets/images/symbols/copy.png");
+
+    setTimeout(() => {
+      copyBtn.textContent = "";
+      copyBtn.appendChild(img);
+    }, 1000);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const createLeaveBtn = () => {
+  const gameDetails = document.querySelector("#game-details");
+  const leave = document.createElement("button");
+
+  leave.textContent = "LEAVE";
   leave.addEventListener("click", async (_event) => {
     await API.leaveRoom();
 
     globalThis.location = "/game-options";
   });
+
+  gameDetails.appendChild(leave);
+};
+
+const main = () => {
+  startRoom();
+  setTimeout(() => {
+    createCopyBtn();
+    createLeaveBtn();
+  }, 1000);
 };
 
 globalThis.onload = main;

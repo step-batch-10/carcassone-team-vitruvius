@@ -72,3 +72,26 @@ button:hover {
   flex-direction: column;
   margin-bottom: 10%;
 }
+
+.room-details-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 4%;
+
+  & > button {
+    height: 100%;
+  }
+}
+
+#copy-button {
+  /* width: 40px; */
+  /* height: 50px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    width: 30px;
+    height: 40px;
+  }
+}

@@ -70,10 +70,32 @@ const focusPrevious = (input, inputs, index) => {
   };
 };
 
+const pasteRoomID = async (event) => {
+  event.preventDefault();
+  const inputs = document.querySelectorAll("input");
+
+  try {
+    const clipText = await navigator.clipboard.readText();
+    if (clipText.length !== 6) throw { desc: "invalid length" };
+
+    inputs.forEach((input, index) => {
+      input.value = clipText[index];
+    });
+    const join = document.querySelector("#join-button");
+
+    join.focus();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const main = () => {
   const form = document.getElementById("roomJoiningForm");
   const inputs = document.querySelectorAll("input");
   const join = document.querySelector("#join-button");
+  const pasteBtn = document.querySelector("#paste-button");
+  pasteBtn.addEventListener("click", pasteRoomID);
+  document.addEventListener("paste", pasteRoomID);
 
   inputs.forEach((input, index) => {
     input.addEventListener("input", focusNext(input, inputs, index));

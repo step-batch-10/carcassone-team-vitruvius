@@ -87,3 +87,15 @@ input::-webkit-inner-spin-button {
   border-radius: 8px;
   bottom: 34%;
 }
+
+#paste-button {
+  width: 48px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    height: 40px;
+    width: 40px;
+  }
+}
