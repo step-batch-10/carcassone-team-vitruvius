@@ -1,5 +1,9 @@
+import { assert, assertEquals, assertFalse } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
+import { Carcassonne } from "../../src/models/game/carcassonne.ts";
+import { ScoreManager } from "../../src/models/game/score-board.ts";
 import { TileBoxManager } from "../../src/models/game/tiles.ts";
-import { createATileBox, dummyTiles5, roadTile4 } from "./../dummy-data.ts";
+import { Center, Feature, Sides, Tile } from "../../src/models/models.ts";
 import {
   createDummyPlayers,
   dummyTiles,
@@ -7,101 +11,105 @@ import {
   dummyTiles3,
   dummyTiles4,
 } from "../dummy-data.ts";
-import { assert, assertEquals, assertFalse } from "@std/assert";
-import { describe, it } from "@std/testing/bdd";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { Center, Feature, Sides, Tile } from "../../src/models/models.ts";
-import { ScoreManager } from "../../src/models/game/score-board.ts";
+import {
+  createATileBox,
+  createDummyTile,
+  dummyTiles5,
+  roadTile4,
+} from "./../dummy-data.ts";
+import { createAndPlaceTiles } from "./score_test.ts";
 
-describe("testing getCurrentPlayer", () => {
-  it("should return currentPlayer", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players);
-    assertEquals(game.getCurrentPlayer(), players[0]);
+describe("Testing getCurrentPlayer", () => {
+  it("should return the current player", () => {
+    const game = createAndPlaceTiles(dummyTiles, []);
+
+    assertEquals(game.getCurrentPlayer(), createDummyPlayers()[0]);
     game.changePlayerTurn();
-    assertEquals(game.getCurrentPlayer(), players[1]);
+    assertEquals(game.getCurrentPlayer(), createDummyPlayers()[1]);
   });
 });
 
-describe("testing get Board", () => {
-  it("should return the board", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players);
+describe("Testing get Board", () => {
+  it("should return the board of empty tiles and length 84", () => {
+    const game = Carcassonne.initGame(createDummyPlayers());
     assertEquals(game.getBoard().length, 84);
+    assertEquals(game.getBoard()[0].length, 84);
   });
 });
 
-describe("testing draw a tile", () => {
-  it("should give a first tile when top is valid tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
-    assertEquals(game.drawATile(), {
-      hasShield: false,
-      id: "2",
-      orientation: 0,
-      tileCenter: Feature.ROAD,
-      tileEdges: [Feature.ROAD, Feature.FIELD, Feature.ROAD, Feature.FIELD],
-      tileID: "0",
-    });
+const shuffler = (arr: Tile[]) => arr;
+const players = createDummyPlayers();
+
+describe("Testing draw a tile", () => {
+  it("should give the first tile when top has a valid tile", () => {
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    assertEquals(
+      game.drawATile(),
+      createDummyTile("2", ["r", "f", "r", "f"], "r"),
+    );
   });
 
-  it("should give second Tile when top is invalid tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles2());
-    assertEquals(game.drawATile(), {
-      hasShield: false,
-      id: "2",
-      orientation: 0,
-      tileCenter: Feature.CITY,
-      tileEdges: [Feature.CITY, Feature.CITY, Feature.CITY, Feature.CITY],
-      tileID: "0",
-    });
+  it("should give the second tile when top has an invalid tile", () => {
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles2());
+    assertEquals(
+      game.drawATile(),
+      createDummyTile("2", ["c", "c", "c", "c"], "c"),
+    );
   });
 });
 
-describe("testing rotateCurrentTile", () => {
+describe("Testing rotateCurrentTile", () => {
+  const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+
   it("should rotate the current tile by 90 degree", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
     game.drawATile();
     game.rotateCurrentTile();
 
     assertEquals(game.getCurrentTile()?.orientation, 90);
   });
-});
 
-describe("place a tile", () => {
-  it("should place the tile when placing at correct postion", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+  it("should rotate the current tile by 180 degree", () => {
     game.drawATile();
-    const result = game.placeATile({ row: 42, col: 43 });
+    game.rotateCurrentTile();
+    game.rotateCurrentTile();
 
-    assertEquals(result, undefined);
+    assertEquals(game.getCurrentTile()?.orientation, 180);
   });
 
-  it("should not place the tile when placing at invalid postion", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+  it("should rotate the current tile by 360 degree", () => {
     game.drawATile();
-    const result = game.placeATile({ row: 43, col: 42 });
+    game.rotateCurrentTile(); // can pass times to rotate as a param.
+    game.rotateCurrentTile();
+    game.rotateCurrentTile();
+    game.rotateCurrentTile();
 
-    assertEquals(result, { desc: "invalid tile to place" });
+    assertEquals(game.getCurrentTile()?.orientation, 0);
   });
 });
 
-describe("testing placablePositions", () => {
+describe("Testing place a tile", () => {
+  const game = Carcassonne.initGame(players, shuffler, dummyTiles3());
+
+  it("should place the tile when placed at correct postion", () => {
+    game.drawATile();
+    assertEquals(game.placeATile({ row: 42, col: 43 }), undefined); // change return value to true
+  });
+
+  it("should not place the tile when placed at invalid postion", () => {
+    game.drawATile();
+    assertEquals(game.placeATile({ row: 43, col: 43 }), {
+      desc: "invalid tile to place",
+    });
+  });
+});
+
+describe("Testing placablePositions", () => {
   it("should return object having unlockedPosition and placablePositions", () => {
-    const players = createDummyPlayers();
-    const game: Carcassonne = Carcassonne.initGame(
-      players,
-      (arr) => arr,
-      dummyTiles(),
-    );
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
     game.drawATile();
-    const placeablePositions = game.validPositions();
 
-    assertEquals(placeablePositions, {
+    // can change this?
+    assertEquals(game.validPositions(), {
       unlockedPositions: [
         {
           col: 42,
@@ -138,15 +146,9 @@ describe("testing placablePositions", () => {
   });
 
   it("should return object having unlockedPosition and with no placeablePositions when no tile drawn", () => {
-    const players = createDummyPlayers();
-    const game: Carcassonne = Carcassonne.initGame(
-      players,
-      (arr: Tile[]): Tile[] => arr,
-      dummyTiles(),
-    );
-    const placeablePositions = game.validPositions();
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
 
-    assertEquals(placeablePositions, {
+    assertEquals(game.validPositions(), {
       unlockedPositions: [
         {
           col: 42,
@@ -170,48 +172,38 @@ describe("testing placablePositions", () => {
   });
 });
 
-describe("testing place a meeple", () => {
+describe("Testing place a meeple", () => {
   it("should place a meeple when it is not occupied by any player and their meeple count should reduce", () => {
-    const players = createDummyPlayers();
-
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
-
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles()); //how to use everywhere?
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
-    const status = game.placeAMeeple(Sides.LEFT);
 
+    assert(game.placeAMeeple(Sides.LEFT).isPlaced);
     assertEquals(players[0].noOfMeeples, 6);
-    assert(status.isPlaced);
   });
 
-  it(" should not place tile when try to place without placing any tile", () => {
-    const players = createDummyPlayers();
-
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
-
+  it("should not place meeple when trying to claim without drawing any tile", () => {
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
     game.placeATile({ row: 42, col: 42 });
-    const status = game.placeAMeeple(Sides.LEFT);
 
-    assertFalse(status.isPlaced);
+    assertFalse(game.placeAMeeple(Sides.LEFT).isPlaced);
+    assertEquals(players[1].noOfMeeples, 7);
   });
 
-  it("should not place when it is already occupied by any player and their meeple count should not reduce", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+  it("should not place when it is already occupied by another player and their meeple count remain unchanged", () => {
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
 
     game.drawATile();
     game.placeATile({ row: 42, col: 43 });
     game.placeAMeeple(Sides.RIGHT);
     game.placeATile({ row: 42, col: 44 });
-    const status = game.placeAMeeple(Sides.LEFT);
 
+    assertFalse(game.placeAMeeple(Sides.LEFT).isPlaced);
     assertEquals(players[1].noOfMeeples, 7);
-    assertFalse(status.isPlaced);
   });
 
   it("when there is no tile placed then the occupance should not mark", () => {
     const tiles = [[createATileBox()]];
-
     const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
 
     assertFalse(
@@ -220,9 +212,7 @@ describe("testing place a meeple", () => {
   });
 
   it("when there is no tile placed then the occupance should not mark", () => {
-    const tiles = [[]];
-
-    const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
+    const scoreBoard = new ScoreManager([[]], new TileBoxManager([[]]));
 
     assertFalse(
       scoreBoard.hasFeature({ row: 0, col: 0 }, Feature.CITY, Sides.BOTTOM),
@@ -230,18 +220,12 @@ describe("testing place a meeple", () => {
   });
 
   it("should  claim the monastry", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
-
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.drawATile();
-    game.placeATile({ row: 42, col: 44 });
-    game.drawATile();
-    game.placeATile({ row: 42, col: 45 });
-    game.drawATile();
-    game.placeATile({ row: 41, col: 45 });
-    game.placeAMeeple(Center.MIDDlE);
+    const game = createAndPlaceTiles(dummyTiles, [
+      { row: 42, col: 43 },
+      { row: 42, col: 44 },
+      { row: 42, col: 45 },
+      { row: 41, col: 45, location: Center.MIDDlE },
+    ]);
 
     assertEquals(
       game.getBoard()[41][45].occupiedRegion.middle.occupiedBy.size,
@@ -250,220 +234,113 @@ describe("testing place a meeple", () => {
   });
 });
 
-describe("testing markOccupance", () => {
+describe("Testing markOccupance", () => {
+  const gridSize = (
+    game: Carcassonne,
+    [row, col]: number[],
+    subgrid: "left" | "right" | "top" | "bottom" | "middle",
+  ) => {
+    return game.getBoard()[row][col].occupiedRegion[subgrid].occupiedBy.size;
+  };
+
   it("should mark the occurence to tile when it is place to connected feature which is claimed", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+    const game = createAndPlaceTiles(dummyTiles, [
+      { row: 42, col: 43, location: Sides.RIGHT },
+      { row: 42, col: 44 },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.placeAMeeple(Sides.RIGHT);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 44 });
-
-    assertEquals(
-      game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 44], "left"), 1);
   });
 
   it("should mark the occurence to tile when it is place to connected feature which is claimed", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, roadTile4());
+    const game = createAndPlaceTiles(roadTile4, [
+      { row: 42, col: 41, location: Sides.LEFT },
+      { row: 42, col: 40 },
+      { row: 42, col: 39 },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 41 });
-    game.placeAMeeple(Sides.LEFT);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 40 });
-    game.drawATile();
-    game.placeATile({ row: 42, col: 39 });
-
-    assertEquals(
-      game.getBoard()[42][39].occupiedRegion.bottom.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][39].occupiedRegion.left.occupiedBy.size,
-      0,
-    );
-    assertEquals(
-      game.getBoard()[42][39].occupiedRegion.right.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][39].occupiedRegion.middle.occupiedBy.size,
-      0,
-    );
+    assertEquals(gridSize(game, [42, 39], "bottom"), 1);
+    assertEquals(gridSize(game, [42, 39], "left"), 0);
+    assertEquals(gridSize(game, [42, 39], "right"), 1);
+    assertEquals(gridSize(game, [42, 39], "middle"), 0);
   });
 
   it("should mark the occupance when the tile are of same feature", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles());
+    const game = createAndPlaceTiles(dummyTiles, [
+      { row: 42, col: 43, location: Sides.RIGHT },
+      { row: 42, col: 44 },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.placeAMeeple(Sides.RIGHT);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 44 });
-
-    assertEquals(
-      game.getBoard()[42][44].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][44].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][44].occupiedRegion.right.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 44], "left"), 1);
+    assertEquals(gridSize(game, [42, 44], "middle"), 1);
+    assertEquals(gridSize(game, [42, 44], "right"), 1);
   });
 
   it("should mark the adjacent left connecting tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+    const game = createAndPlaceTiles(dummyTiles3, [
+      { row: 42, col: 43, location: Sides.RIGHT },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.placeAMeeple(Sides.RIGHT);
-
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.right.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 42], "left"), 1);
+    assertEquals(gridSize(game, [42, 42], "middle"), 1);
+    assertEquals(gridSize(game, [42, 42], "right"), 1);
   });
 
   it("should mark the adjacent right connecting tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+    const game = createAndPlaceTiles(dummyTiles3, [
+      { row: 42, col: 41, location: Sides.RIGHT },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 41 });
-    game.placeAMeeple(Sides.RIGHT);
-
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][42].occupiedRegion.right.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 42], "left"), 1);
+    assertEquals(gridSize(game, [42, 42], "middle"), 1);
+    assertEquals(gridSize(game, [42, 42], "right"), 1);
   });
 
   it("should mark the adjacent top connecting tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles4());
+    const game = createAndPlaceTiles(dummyTiles4, [
+      { row: 42, col: 43 },
+      { row: 43, col: 43, location: Sides.TOP },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 43 });
-    game.placeAMeeple(Sides.TOP);
-
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.bottom.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 43], "left"), 1);
+    assertEquals(gridSize(game, [42, 43], "middle"), 1);
+    assertEquals(gridSize(game, [42, 43], "bottom"), 1);
   });
 
   it("should mark the adjacent bottom connecting tile", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles5());
+    const game = createAndPlaceTiles(dummyTiles5, [
+      { row: 42, col: 43 },
+      { row: 41, col: 43, location: Sides.TOP },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.drawATile();
-    game.placeATile({ row: 41, col: 43 });
-    game.placeAMeeple(Sides.TOP);
-
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(game.getBoard()[42][43].occupiedRegion.top.occupiedBy.size, 1);
+    assertEquals(gridSize(game, [42, 43], "left"), 1);
+    assertEquals(gridSize(game, [42, 43], "middle"), 1);
+    assertEquals(gridSize(game, [42, 43], "top"), 1);
   });
 
-  it("should mark the all the connecting tile occupances", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+  it("should mark all the connecting tile occupances", () => {
+    const game = createAndPlaceTiles(dummyTiles3, [
+      { row: 42, col: 43 },
+      { row: 43, col: 42 },
+      { row: 43, col: 41, location: Sides.TOP },
+      { row: 42, col: 41 },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 42 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 41 });
-    game.placeAMeeple(Sides.TOP);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 41 });
-
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
-      1,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.right.occupiedBy.size,
-      1,
-    );
+    assertEquals(gridSize(game, [42, 43], "left"), 1);
+    assertEquals(gridSize(game, [42, 43], "middle"), 1);
+    assertEquals(gridSize(game, [42, 43], "right"), 1);
   });
 
-  it("should mark the all the connecting tile occupance of all players claiming", () => {
-    const players = createDummyPlayers();
-    const game = Carcassonne.initGame(players, (arr) => arr, dummyTiles3());
+  it("should mark all the connecting tile occupances with all players claiming", () => {
+    const game = createAndPlaceTiles(dummyTiles3, [
+      { row: 42, col: 43, location: Sides.LEFT },
+      { row: 43, col: 42 },
+      { row: 43, col: 41, location: Sides.TOP },
+      { row: 42, col: 41 },
+    ]);
 
-    game.drawATile();
-    game.placeATile({ row: 42, col: 43 });
-    game.placeAMeeple(Sides.LEFT);
-    game.drawATile();
-    game.placeATile({ row: 43, col: 42 });
-    game.drawATile();
-    game.placeATile({ row: 43, col: 41 });
-    game.placeAMeeple(Sides.TOP);
-    game.drawATile();
-    game.placeATile({ row: 42, col: 41 });
-
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.left.occupiedBy.size,
-      2,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.middle.occupiedBy.size,
-      2,
-    );
-    assertEquals(
-      game.getBoard()[42][43].occupiedRegion.right.occupiedBy.size,
-      2,
-    );
+    assertEquals(gridSize(game, [42, 43], "left"), 2);
+    assertEquals(gridSize(game, [42, 43], "middle"), 2);
+    assertEquals(gridSize(game, [42, 43], "right"), 2);
   });
 });

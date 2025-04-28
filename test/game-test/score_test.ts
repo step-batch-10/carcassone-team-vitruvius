@@ -28,7 +28,10 @@ const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
   });
 };
 
-const createAndPlaceTiles = (generateTiles: () => Tile[], places: Move[]) => {
+export const createAndPlaceTiles = (
+  generateTiles: () => Tile[],
+  places: Move[],
+) => {
   const players = createDummyPlayers();
   const game = Carcassonne.initGame(players, (arr) => arr, generateTiles());
 
