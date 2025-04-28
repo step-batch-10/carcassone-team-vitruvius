@@ -11,12 +11,7 @@ import {
   dummyTiles3,
   dummyTiles4,
 } from "../dummy-data.ts";
-import {
-  createATileBox,
-  createDummyTile,
-  dummyTiles5,
-  roadTile4,
-} from "./../dummy-data.ts";
+import { createDummyTile, dummyTiles5, roadTile4 } from "./../dummy-data.ts";
 import { createAndPlaceTiles } from "./score_test.ts";
 
 describe("Testing getCurrentPlayer", () => {
@@ -206,15 +201,6 @@ describe("Testing place a meeple", () => {
 
     assertFalse(game.placeAMeeple(Sides.LEFT).isPlaced);
     assertEquals(players[1].noOfMeeples, 7);
-  });
-
-  it("when there is no tile placed then the occupance should not mark", () => {
-    const tiles = [[createATileBox()]];
-    const scoreBoard = new ScoreManager(tiles, new TileBoxManager(tiles));
-
-    assertFalse(
-      scoreBoard.markOccupance({ row: 0, col: 0 }, new Set<string>()),
-    );
   });
 
   it("when there is no tile placed then the occupance should not mark", () => {

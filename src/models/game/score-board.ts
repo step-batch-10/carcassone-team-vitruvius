@@ -62,9 +62,8 @@ export class ScoreManager {
   }
 
   private markFeature(cell: TileBox) {
-    if (!cell.tile) return;
-    const tileEdge = cell.tile.tileEdges;
-    const tileCenter = cell.tile.tileCenter;
+    const tileEdge = cell.tile!.tileEdges;
+    const tileCenter = cell.tile!.tileCenter;
     const tileOccu = cell.occupiedRegion;
 
     this.edges.forEach((edge, index) => {
@@ -90,8 +89,7 @@ export class ScoreManager {
 
     this.edges.forEach((edge, index) => {
       const grid = occupied[index];
-      if (!grid) return;
-      tile.occupiedRegion[edge].occupiedBy = this.getSubgrid(tile, edge, grid);
+      tile.occupiedRegion[edge].occupiedBy = this.getSubgrid(tile, edge, grid!);
     });
   }
 
@@ -107,7 +105,7 @@ export class ScoreManager {
       }
     };
 
-  private moveReccursively(
+  private traverseAdjacentTiles(
     currentTile: TileBox,
     tilePosition: Position,
     traversedPositions: Set<string>,
@@ -127,7 +125,7 @@ export class ScoreManager {
     this.markOccupiedRegion(currentTile, position);
     this.markFeature(currentTile);
     this.markCenterOccupance(currentTile);
-    this.moveReccursively(currentTile, position, traversedPositions);
+    this.traverseAdjacentTiles(currentTile, position, traversedPositions);
   }
 
   placeMeeple(position: Position, playerName: string, subGrid: Sides | Center) {
@@ -278,7 +276,7 @@ export class ScoreManager {
     });
   }
 
-  private something(
+  private traverseRoadAndScore(
     position: Position,
     traversedPositions: Set<string>,
     endOfRoad: number,
@@ -321,7 +319,7 @@ export class ScoreManager {
       this.hasSpecialEnd(position)
     ) {
       traversedPositions.add(JSON.stringify(position));
-      return this.something(
+      return this.traverseRoadAndScore(
         position,
         traversedPositions,
         endOfRoad + 1,
@@ -340,7 +338,7 @@ export class ScoreManager {
           lastEdge = edge;
 
           if (endOfRoad >= 2) return endOfRoad;
-          endOfRoad = this.something(
+          endOfRoad = this.traverseRoadAndScore(
             this.tileBoxes.adjacentPosition(position)[edge],
             traversedPositions,
             endOfRoad,
@@ -369,7 +367,7 @@ export class ScoreManager {
     const traversedPositions: Set<string> = new Set();
 
     if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
-      this.something(position, traversedPositions, 0, players);
+      this.traverseRoadAndScore(position, traversedPositions, 0, players);
     }
 
     if (
@@ -377,13 +375,20 @@ export class ScoreManager {
       this.hasSpecialEnd(position)
     ) {
       traversedPositions.add(JSON.stringify(position));
+
       this.edges.forEach((edge) => {
         if (
           this.hasFeature(position, Feature.ROAD, edge) &&
           !this.tileBoxes.getCell(position)?.occupiedRegion[edge].isScored
         ) {
           const newPosition = this.tileBoxes.adjacentPosition(position)[edge];
-          this.something(newPosition, traversedPositions, 1, players, edge);
+          this.traverseRoadAndScore(
+            newPosition,
+            traversedPositions,
+            1,
+            players,
+            edge,
+          );
         }
       });
     }
