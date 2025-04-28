@@ -84,6 +84,7 @@ const serveGameState = (ctx: Context) => {
   const game: Carcassonne = ctx.get("game");
   const appContext = parseAppContexts(ctx, "users", "sessions");
   const { users, sessions } = appContext;
+  console.log(users, sessions);
 
   const user = getUserOfSessionId(ctx, sessions, users);
   const username = String(user?.username);

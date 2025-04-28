@@ -3,39 +3,15 @@ import {
   createDummyTile,
   dummyTiles,
 } from "../dummy-data.ts";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createApp from "../../src/app.ts";
-import {
-  AppContext,
-  CardinalDegrees,
-  Tile,
-  User,
-} from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room/room-manager.ts";
-import { silentLogger } from "./silent-logger.ts";
+import { CardinalDegrees, Tile } from "../../src/models/models.ts";
+import { createTestApp } from "./handle-place-meeple_test.ts";
 
 describe("testing the handleRotateTile", () => {
   it("should return an object containing an rotatedTile if roomID is valid ", async () => {
-    const sessions = new Map<string, string>();
-    const users = new Map<string, User>();
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-    const games = new Map<string, Carcassonne>();
-    const game = Carcassonne.initGame(
-      createDummyPlayers(),
-      (arr) => arr,
-      dummyTiles(),
-    );
-
+    const { app, game } = createTestApp(createDummyPlayers(), dummyTiles());
     game.drawATile();
-    games.set("1", game);
-
-    const context: AppContext = { sessions, users, roomManager, games };
-    const app = createApp(context, silentLogger);
 
     const rotatedTileRes = await app.request("game/tile/rotate", {
       method: "PATCH",
@@ -53,29 +29,13 @@ describe("testing the handleRotateTile", () => {
   });
 
   it("should return an object containing desc key with value 'invalid game id' if roomID is invalid ", async () => {
-    const sessions = new Map<string, string>();
-    const users = new Map<string, User>();
-    const roomManager = new RoomManager(
-      () => "10",
-      () => () => "red",
-    );
-    const games = new Map<string, Carcassonne>();
-    const game = Carcassonne.initGame(
-      createDummyPlayers(),
-      (arr) => arr,
-      dummyTiles(),
-    );
-
+    const { app, game } = createTestApp(createDummyPlayers(), []);
     game.drawATile();
-    games.set("2", game);
-
-    const context: AppContext = { sessions, users, roomManager, games };
-    const app = createApp(context, silentLogger);
 
     const rotatedTileRes = await app.request("game/tile/rotate", {
       method: "PATCH",
       headers: {
-        cookie: "room-id=1",
+        cookie: "room-id=0",
       },
     });
 

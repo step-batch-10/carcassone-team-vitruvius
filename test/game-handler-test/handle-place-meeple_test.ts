@@ -2,10 +2,11 @@ import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
+import { AppContext, Tile, User } from "../../src/models/models.ts";
 import RoomManager from "../../src/models/room/room-manager.ts";
 import { silentLogger } from "./silent-logger.ts";
 import { assertSpyCallArgs, stub } from "@std/testing/mock";
+import Player from "../../src/models/room/player.ts";
 
 describe("handlePlaceMeeple", () => {
   it("should respond with ok for successful meeple placement", async () => {
@@ -48,16 +49,22 @@ describe("handlePlaceMeeple", () => {
   });
 });
 
-const createTestApp = () => {
+export const createTestApp = (
+  players: Player[] = [],
+  tiles: Tile[] = [],
+  roomID: string = "1",
+) => {
   const sessions = new Map<string, string>();
   const users = new Map<string, User>();
+  sessions.set("sId", "uId");
+  users.set("uId", { username: "user1", roomID });
   const roomManager = new RoomManager(
     () => "1",
     () => () => "red",
   );
   const games = new Map<string, Carcassonne>();
-  const game = Carcassonne.initGame([], (arr) => arr, []);
-  games.set("1", game);
+  const game = Carcassonne.initGame(players, (arr) => arr, tiles);
+  games.set(roomID, game);
 
   const context: AppContext = { sessions, users, roomManager, games };
   const app = createApp(context, silentLogger);
