@@ -2,6 +2,7 @@ import {
   Feature,
   OccupanceSubGrid,
   Position,
+  Sides,
   Tile,
   TileBox,
   TileEdges,
@@ -88,6 +89,33 @@ export class TileBoxManager {
 
   adjacentPositionArray(position: Position): Position[] {
     return Object.values(this.adjacentPosition(position));
+  }
+
+  notScoredEdges(traverse: Set<string>, pos: Position, edges: Sides[]) {
+    const adj = this.adjacentPosition(pos);
+
+    for (const edge of edges) {
+      if (traverse.has(JSON.stringify(adj[edge]))) {
+        return { except: edges.filter((tempEdge) => tempEdge !== edge), edge };
+      }
+    }
+    return { edge: Sides.LEFT, except: [] };
+  }
+
+  getLastEdge(traverse: Set<string>, edges: Sides[]) {
+    for (const t of traverse.values()) {
+      if (
+        this.getCell(JSON.parse(t))?.occupiedRegion.middle.feature !==
+          Feature.ROAD
+      ) {
+        return {
+          lastEdge: this.notScoredEdges(traverse, JSON.parse(t), edges).edge,
+          position: JSON.parse(t),
+        };
+      }
+    }
+
+    return { lastEdge: Sides.LEFT, position: { row: 42, col: 42 } };
   }
 }
 

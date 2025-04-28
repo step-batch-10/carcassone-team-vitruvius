@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertFalse } from "@std/assert";
-import { describe, it } from "@std/testing/bdd";
+import { beforeEach, describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
 import { ScoreManager } from "../../src/models/game/score-board.ts";
 import { TileBoxManager } from "../../src/models/game/tiles.ts";
@@ -104,12 +104,18 @@ describe("Testing place a tile", () => {
 });
 
 describe("Testing placablePositions", () => {
+  let game: Carcassonne | undefined = undefined;
+
+  beforeEach(() => {
+    game = Carcassonne.initGame(players, shuffler, dummyTiles());
+  });
+
   it("should return object having unlockedPosition and placablePositions", () => {
-    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
-    game.drawATile();
+    // const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    game!.drawATile();
 
     // can change this?
-    assertEquals(game.validPositions(), {
+    assertEquals(game!.validPositions(), {
       unlockedPositions: [
         {
           col: 42,
@@ -216,6 +222,21 @@ describe("Testing place a meeple", () => {
 
     assertFalse(
       scoreBoard.hasFeature({ row: 0, col: 0 }, Feature.CITY, Sides.BOTTOM),
+    );
+  });
+
+  it("when there is no except tiles then it should return the empty exception", () => {
+    const tileBoxes = new TileBoxManager([[]]);
+
+    assertEquals(
+      tileBoxes.notScoredEdges(new Set<string>(), { row: 0, col: 0 }, [])
+        .except,
+      [],
+    );
+
+    assertEquals(
+      tileBoxes.getLastEdge(new Set<string>(), []).lastEdge,
+      Sides.LEFT,
     );
   });
 

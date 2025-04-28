@@ -9,6 +9,7 @@ import {
   monasteryTiles3,
   roadTile4,
   roadTile5,
+  roadTile6,
   roadTiles,
   roadTiles1,
   roadTiles2,
@@ -23,7 +24,7 @@ type Move = Position & { location?: Sides | Center };
 const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
   moves.forEach((move) => {
     game.drawATile();
-    game.placeATile(move);
+    game.placeATile({ row: move.row, col: move.col });
     if (move.location) game.placeAMeeple(move.location);
   });
 };
@@ -246,5 +247,14 @@ describe("Testing for scoring Roads", () => {
 
     assertEquals(game.getAllPlayers()[0].points, 3);
     assertEquals(game.getAllPlayers()[1].points, 2);
+  });
+
+  it("should not update score twice when it's already calculated", () => {
+    const game = createAndPlaceTiles(roadTile6, [
+      { row: 42, col: 41, location: Sides.RIGHT },
+      { row: 42, col: 43, location: Sides.RIGHT },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
   });
 });
