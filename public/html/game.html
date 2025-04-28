@@ -8,6 +8,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/assets/css/game.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"
+    ></script>
     <script type="module" src="/assets/script/game.js"></script>
   </head>
 
@@ -65,11 +68,15 @@
 
       <template id="player-template">
         <tr id="player">
-          <td><p id="player-name"></p></td>
-          <td><img class="meeple" src="" alt="meeple" /></td>
-          <td><p id="meeple-count"></p></td>
-          <td><img src="/assets/images/symbols/score.png" alt="meeple" /></td>
-          <td><p id="score"></p></td>
+          <td class="player-name"></td>
+          <td class="meeple-color">
+            <img class="meeple" src="" alt="meeple" />
+          </td>
+          <td class="meeple-count"></td>
+          <td class="score-symbol">
+            <img src="/assets/images/symbols/score.png" alt="meeple" />
+          </td>
+          <td class="score"></td>
         </tr>
       </template>
       <table id="players-status">

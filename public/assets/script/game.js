@@ -147,44 +147,13 @@ const showCurrentPlayer = (interval) => {
   }, interval);
 };
 
-const selectNodes = (selectors, parentNode) =>
-  selectors.map((selector) => parentNode.querySelector(selector));
-
-const createPlayerElement = (player) => {
-  const { username, meepleColor, noOfMeeples, points } = player;
-
-  const template = document.querySelector("#player-template");
-  const playerStatusClone = template.content.cloneNode(true);
-  const selectors = ["#player-name", ".meeple", "#meeple-count", "#score"];
-
-  const [playerNameNode, meepleImage, meepleCount, score] = selectNodes(
-    selectors,
-    playerStatusClone,
-  );
-
-  playerNameNode.textContent = username;
-  meepleImage.setAttribute("src", `assets/images/${meepleColor}-meeple.png`);
-  meepleCount.textContent = noOfMeeples;
-  score.textContent = points;
-
-  return playerStatusClone;
-};
-
-const setUpStatusBox = async () => {
+const setUpStatusBox = (gameState) => {
   const statusBox = document.querySelector("#players-status");
-  const self = await API.self();
-  const APIs = [async () => [await API.self()], API.allPlayers];
 
-  statusBox.addEventListener("click", createShowPlayerTableHandler(APIs, self));
-};
-
-const showCurrentPlayerStatus = async () => {
-  const player = await API.self();
-  const playerStatusNode = createPlayerElement(player);
-  const playersStatus = document.querySelector("#players-status");
-  const statusBody = playersStatus.querySelector("tbody");
-
-  statusBody.replaceChildren(playerStatusNode);
+  statusBox.addEventListener("click", async () => {
+    gameState.toggleShowPlayersTable();
+    await gameState.showPlayerStatus(gameState);
+  });
 };
 
 const loadGame = async (gameState) => {
@@ -211,29 +180,6 @@ const pollTurn = (gameStatePoller, gameState) => {
   };
 };
 
-const toggleShowPlayersTable = async (currentAPI, self) => {
-  const playersTable = document.querySelector("#players-status");
-  const statusBody = playersTable.querySelector("tbody");
-  const players = await currentAPI();
-  const selfNode = createPlayerElement(self);
-  const otherPlayers = players.filter(
-    ({ username }) => self.username !== username,
-  );
-  const otherPlayerNodes = otherPlayers.map(createPlayerElement);
-
-  statusBody.replaceChildren(...otherPlayerNodes, selfNode);
-};
-
-const createShowPlayerTableHandler = (APIs, self) => {
-  let index = 0;
-
-  return (_event) => {
-    const currentAPI = APIs.at(index);
-    toggleShowPlayersTable(currentAPI, self);
-    index = (index + 1) % APIs.length;
-  };
-};
-
 const showRemainingTiles = (interval) => {
   const remainingTiles = document.querySelector(".remaining-tiles");
   const textLabel = remainingTiles.querySelector("p");
@@ -250,12 +196,12 @@ const main = async () => {
   const board = new Board(grid);
   board.registerCellEvents(createCellEvents(board));
 
+  const APIs = [async () => [await API.self()], API.allPlayers];
   const newGameState = await API.gameState();
-  const gameState = new GameState(newGameState, board);
+  const gameState = new GameState(newGameState, board, APIs);
 
   await gameState.renderGameState();
-  setUpStatusBox();
-  showCurrentPlayerStatus();
+  setUpStatusBox(gameState);
 
   const gameStatePoller = new Poller(() => loadGame(gameState), 1000);
   gameStatePoller.startPolling();
