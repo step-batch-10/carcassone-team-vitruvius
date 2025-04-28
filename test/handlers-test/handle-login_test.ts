@@ -1,26 +1,13 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room/room-manager.ts";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { silentLogger } from "../game-handler-test/silent-logger.ts";
+import { createTestApp } from "./handle-get-room_test.ts";
 
 describe("handleLogin", () => {
   it("should return a redirection response", async () => {
-    const sessions = new Map<string, string>();
-    const users = new Map<string, User>();
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("username", "Alice");
 
-    const app = createApp(context, silentLogger);
+    const { app } = createTestApp();
     const request: Request = new Request("http:localhost/login", {
       method: "POST",
       body: formData,

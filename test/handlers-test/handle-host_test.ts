@@ -1,32 +1,17 @@
 import { assert, assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room/room-manager.ts";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { silentLogger } from "../game-handler-test/silent-logger.ts";
+import { createTestApp } from "./handle-get-room_test.ts";
 
 describe("handleHost", () => {
   it("should redirect to lobby page and create room for host", async () => {
-    const sessions = new Map<string, string>();
-    const users = new Map<string, User>();
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
+    const { app, roomManager } = createTestApp();
     const formData = new FormData();
     formData.set("username", "Alice");
 
-    const app = createApp(context, silentLogger);
-    const loginRequest = new Request("http://localhost/login", {
+    const loginResponse = await app.request("/login", {
       method: "POST",
       body: formData,
     });
-
-    const loginResponse = await app.request(loginRequest);
 
     const setCookies = loginResponse.headers.get("set-cookie") ?? "session-id=";
 
@@ -34,14 +19,12 @@ describe("handleHost", () => {
       setCookies.split(";").map((cookie) => cookie.split("=")),
     );
 
-    const hostRequest = new Request("http://localhost/host", {
+    const response = await app.request("/host", {
       method: "POST",
       headers: {
         cookie: `session-id=${sessionId}`,
       },
     });
-
-    const response = await app.request(hostRequest);
     const cookies = "room-id=1; Path=/";
 
     assertEquals(response.status, 303);

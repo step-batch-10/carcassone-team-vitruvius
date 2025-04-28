@@ -1,32 +1,12 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import createApp from "../../src/app.ts";
-import { AppContext, User } from "../../src/models/models.ts";
-import RoomManager from "../../src/models/room/room-manager.ts";
-import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { silentLogger } from "../game-handler-test/silent-logger.ts";
+import { createTestApp } from "./handle-get-room_test.ts";
 
 describe("handleJoin", () => {
   it("should join room if roomID is valid", async () => {
-    const sessions = new Map<string, string>();
-    sessions.set("123", "123");
-    const users = new Map<string, User>();
-
-    users.set("123", { username: "user1", roomID: null });
-
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-
-    roomManager.createRoom("hostUser", 3);
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
+    const { app } = createTestApp();
     const formData = new FormData();
     formData.set("roomID", "1");
-
-    const app = createApp(context, silentLogger);
 
     const response = await app.request("/joinRoom", {
       method: "post",
@@ -42,25 +22,10 @@ describe("handleJoin", () => {
   });
 
   it("should return not join room if roomID is valid", async () => {
-    const sessions = new Map<string, string>();
-    sessions.set("123", "123");
-    const users = new Map<string, User>();
-
-    users.set("123", { username: "user1", roomID: null });
-
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-
-    roomManager.createRoom("hostUser", 3);
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("roomID", "2");
 
-    const app = createApp(context, silentLogger);
+    const { app } = createTestApp();
 
     const response = await app.request("/joinRoom", {
       method: "post",
@@ -73,60 +38,33 @@ describe("handleJoin", () => {
   });
 
   it("should insert game in games when last player joins game", async () => {
-    const sessions = new Map<string, string>();
-    sessions.set("123", "123");
-    const users = new Map<string, User>();
-
-    users.set("123", { username: "user1", roomID: null });
-
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-
-    roomManager.createRoom("hostUser", 2);
-
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createApp(context, silentLogger);
+    const { app, games } = createTestApp();
     await app.request("/joinRoom", {
       method: "post",
       body: formData,
-      headers: new Headers({ cookie: "session-id=123" }),
+      headers: new Headers({ cookie: "session-id=sId" }),
+    });
+    await app.request("/joinRoom", {
+      method: "post",
+      body: formData,
+      headers: new Headers({ cookie: "session-id=sId" }),
     });
 
     assertEquals(games.size, 1);
   });
 
   it("should not insert game in games when player is not last player", async () => {
-    const sessions = new Map<string, string>();
-    sessions.set("123", "123");
-    const users = new Map<string, User>();
-
-    users.set("123", { username: "user1", roomID: null });
-
-    const roomManager = new RoomManager(
-      () => "1",
-      () => () => "red",
-    );
-
-    roomManager.createRoom("hostUser", 3);
-
-    const games = new Map<string, Carcassonne>();
-
-    const context: AppContext = { sessions, users, roomManager, games };
     const formData = new FormData();
     formData.set("roomID", "1");
 
-    const app = createApp(context, silentLogger);
+    const { app, games } = createTestApp();
     await app.request("/joinRoom", {
       method: "post",
       body: formData,
-      headers: new Headers({ cookie: "session-id=123" }),
+      headers: new Headers({ cookie: "session-id=sId" }),
     });
 
     assertEquals(games.size, 0);
