@@ -4,10 +4,12 @@ import Cell from "./cell.js";
 class Board {
   #parentNode;
   #ghostEffectEvents;
+  #cellEvents;
 
   constructor(parentNode) {
     this.#parentNode = parentNode;
     this.#ghostEffectEvents = {};
+    this.#cellEvents = {};
   }
 
   static #getHighlightedCells() {
@@ -63,6 +65,10 @@ class Board {
     Cell.removeGhostFromCells();
   }
 
+  registerCellEvents(cellEvents) {
+    this.#cellEvents = { ...this.#cellEvents, ...cellEvents };
+  }
+
   addGhostEffect() {
     this.#ghostEffectEvents = {
       mouseenter: Board.handleGhostTile,
@@ -84,10 +90,10 @@ class Board {
     });
   }
 
-  build(tiles, events = {}) {
+  build(tiles) {
     const cellNodes = tiles.flatMap((row, rowIndex) =>
       row.map((cell, cellIndex) =>
-        Cell.createCell(cell, [rowIndex, cellIndex], events)
+        Cell.createCell(cell, [rowIndex, cellIndex], this.#cellEvents)
       )
     );
 

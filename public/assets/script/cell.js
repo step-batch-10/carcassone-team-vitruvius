@@ -12,7 +12,8 @@ const createTileImg = (tile) => {
   return img;
 };
 
-const capitalize = (text) => text.at(0).toUpperCase().concat(text.slice(1));
+const capitalize = (text) =>
+  text.at(0).toUpperCase().concat(text.slice(1).toLowerCase());
 
 const Cell = {
   ghostsCells: [],
@@ -160,7 +161,7 @@ const Cell = {
     }
   },
 
-  addEvents: (node, events) => {
+  addEvents: (node, events = {}) => {
     Object.entries(events).forEach(([eventName, handler]) =>
       node.addEventListener(eventName, handler)
     );

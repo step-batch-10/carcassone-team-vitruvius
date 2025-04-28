@@ -2,13 +2,12 @@ import Board from "./board.js";
 import API from "./api.js";
 import Cell from "./cell.js";
 import addScrollFeatures from "./scroll.js";
-import { Poller } from "./multiplayer.js";
+import Poller from "./poller.js";
+import GameState from "./game-state.js";
 
 const placeTile = (cell) => {
   const img = cell.querySelector("img");
-  const buttons = cell.querySelectorAll("button");
-
-  Array.from({ length: buttons.length }, (_, i) => buttons[i].remove());
+  cell.querySelectorAll("button").forEach((button) => button.remove());
 
   img.classList.remove("ghost-img");
   img.classList.add("tile");
@@ -44,7 +43,6 @@ const handlePlaceMeeple = (side) => {
     if (res.status === 201) {
       await showPlacedMeeple(event);
       removeMeepleListeners(event, placeMeeple);
-      // showAllPlayerStatus();
     }
   };
 
@@ -128,27 +126,6 @@ const setupGrid = (gridSize) => {
   return grid;
 };
 
-const drawTileIfNotDrawn = async (currentTile) => {
-  if (!currentTile) {
-    await API.drawATile();
-  }
-};
-
-const updateGameState = async (gameState) => {
-  const { board: tiles, currentPlayer, self, currentTile } = gameState;
-
-  const grid = setupGrid(84);
-  const board = new Board(grid);
-  board.build(tiles, createCellEvents(board));
-
-  // make it as a function
-  if (self.username === currentPlayer.username) {
-    await drawTileIfNotDrawn(currentTile);
-    board.addGhostEffect();
-    Board.highlightPlaceableCells();
-  }
-};
-
 const getOriginCoordinates = () => ({
   top: (document.body.scrollHeight - globalThis.innerHeight) / 2,
   left: (document.body.scrollWidth - globalThis.innerWidth) / 2,
@@ -210,21 +187,21 @@ const showCurrentPlayerStatus = async () => {
   statusBody.replaceChildren(playerStatusNode);
 };
 
-const loadGame = async () => {
-  const gameState = await API.gameState();
+const loadGame = async (gameState) => {
+  const newGameState = await API.gameState();
 
-  await updateGameState(gameState);
+  await gameState.updateGameState(newGameState);
 };
 
-const pollTurn = (gameStatePoller) => {
+const pollTurn = (gameStatePoller, gameState) => {
   return async () => {
     const currentPlayer = await API.currentPlayer();
-    const self = await API.self();
+    const self = gameState.self;
 
     const isPlayerTurn = self.username === currentPlayer;
 
     if (isPlayerTurn && gameStatePoller.isPolling()) {
-      loadGame();
+      loadGame(gameState);
       gameStatePoller.stopPolling();
     }
 
@@ -258,14 +235,21 @@ const createShowPlayerTableHandler = (APIs, self) => {
 };
 
 const main = async () => {
-  await loadGame();
+  const grid = setupGrid(84);
+  const board = new Board(grid);
+  board.registerCellEvents(createCellEvents(board));
+
+  const newGameState = await API.gameState();
+  const gameState = new GameState(newGameState, board);
+
+  await gameState.renderGameState();
   setUpStatusBox();
   showCurrentPlayerStatus();
 
-  const gameStatePoller = new Poller(loadGame, 1000);
+  const gameStatePoller = new Poller(() => loadGame(gameState), 1000);
   gameStatePoller.startPolling();
 
-  const turnPoller = new Poller(pollTurn(gameStatePoller), 1000);
+  const turnPoller = new Poller(pollTurn(gameStatePoller, gameState), 1000);
   turnPoller.startPolling();
 
   addScrollFeatures();

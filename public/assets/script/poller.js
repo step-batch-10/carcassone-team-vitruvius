@@ -1,4 +1,4 @@
-export class Poller {
+class Poller {
   #pollFn;
   #interval;
   #intervalId;
@@ -22,3 +22,5 @@ export class Poller {
     return Boolean(this.#intervalId);
   }
 }
+
+export default Poller;
