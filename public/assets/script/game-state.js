@@ -1,8 +1,6 @@
 import Board from "./board.js";
 import API from "./api.js";
-
-const areObjectsEqual = (first, second) =>
-  JSON.stringify(first) === JSON.stringify(second);
+import _ from "lodash";
 
 const drawTileIfNotDrawn = async (currentTile) => {
   if (!currentTile) {
@@ -30,14 +28,17 @@ class GameState {
     this.#board.build(tiles);
     if (this.#self.username === currentPlayer.username) {
       await drawTileIfNotDrawn(this.#currentTile);
+
       this.#board.addGhostEffect();
       Board.highlightPlaceableCells();
     }
   }
 
   updateGameState(newGameState) {
-    if (!areObjectsEqual(this.#gameState, newGameState)) {
+    if (!_.isEqual(this.#gameState, newGameState)) {
       this.#gameState = newGameState;
+      this.#currentTile = this.#gameState.currentTile;
+      this.#self = this.#gameState.self;
 
       this.renderGameState();
     }
