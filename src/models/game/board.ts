@@ -96,13 +96,15 @@ export class Board {
     return this.tileBoxes.getTile(position);
   }
 
-  placeTile(tile: Tile, position: Position): void {
+  placeTile(tile: Tile, position: Position) {
     const cell = this.tileBoxes.getCell(position);
-    if (!cell) return;
     if (this.isTilePlaceable(tile, position)) {
-      cell.tile = tile;
+      cell!.tile = tile;
       this.scoreManager.markOccupance(position, new Set<string>());
+      return true;
     }
+
+    return false;
   }
 
   isBoxUnlockToPlace(position: Position) {

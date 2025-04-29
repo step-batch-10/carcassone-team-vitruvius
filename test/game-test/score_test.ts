@@ -11,6 +11,7 @@ import {
   roadTile5,
   roadTile6,
   roadTile7,
+  roadTile8,
   roadTiles,
   roadTiles1,
   roadTiles2,
@@ -280,4 +281,14 @@ it("should update the score", () => {
   ]);
 
   assertEquals(game.getAllPlayers()[0].points, 7);
+});
+
+it("should update the score for city in the center and road connecting", () => {
+  const game = createAndPlaceTiles(roadTile8, [
+    { row: 42, col: 43 },
+    { row: 43, col: 42 },
+    { row: 43, col: 43, location: Sides.LEFT },
+  ]);
+
+  assertEquals(game.getAllPlayers()[0].points, 3);
 });

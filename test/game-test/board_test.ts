@@ -1,14 +1,13 @@
-import { Board } from "../../src/models/game/board.ts";
-import { assertEquals } from "@std/assert";
+import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
+import { Board } from "../../src/models/game/board.ts";
 import { createDummyTile } from "../dummy-data.ts";
-import { Feature } from "../../src/models/models.ts";
 
 describe("Testing for creation of Board", () => {
   it("should create an empty board of given size with first tile already present", () => {
     const board = Board.create(1, 1);
 
-    const dummyTile = createDummyTile("1", ["r", "c", "r", "f"], "r");
+    const dummyTile = createDummyTile("19", ["r", "c", "r", "f"], "r");
     dummyTile.id = "19";
     dummyTile.tileID = "44";
 
@@ -18,64 +17,39 @@ describe("Testing for creation of Board", () => {
 });
 
 describe("Testing for isBoxUnlockToPlace", () => {
-  it("should return true when it have any of corresponding tile present", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: 2, col: 3 });
-
-    assertEquals(isPlaceable, true);
+  it("should return true when corresponding tiles are present", () => {
+    assert(Board.create(5, 5).isBoxUnlockToPlace({ row: 2, col: 3 }));
   });
 
-  it("should return false when it have no corresponding tile present", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: 1 });
-
-    assertEquals(isPlaceable, false);
+  it("should return false no corresponding tile are present", () => {
+    assertFalse(Board.create(5, 5).isBoxUnlockToPlace({ row: 1, col: 1 }));
   });
 
-  it("should return false when it is out of the board", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: -1, col: 1 });
-
-    assertEquals(isPlaceable, false);
+  it("should return false when row is out of the board", () => {
+    assertFalse(Board.create(5, 5).isBoxUnlockToPlace({ row: -1, col: 1 }));
   });
 
-  it("should return false when it is out of the board", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: -1 });
+  it("should return false when column is out of the board", () => {
+    assertFalse(Board.create(5, 5).isBoxUnlockToPlace({ row: 1, col: -1 }));
+  });
 
-    assertEquals(isPlaceable, false);
+  it("should return false when column is out of the board", () => {
+    assertFalse(Board.create(5, 5).isBoxUnlockToPlace({ row: 5, col: 1 }));
   });
 
   it("should return false when it is out of the board", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: 5, col: 1 });
-
-    assertEquals(isPlaceable, false);
-  });
-
-  it("should return false when it is out of the board", () => {
-    const board = Board.create(5, 5);
-    const isPlaceable = board.isBoxUnlockToPlace({ row: 1, col: 5 });
-
-    assertEquals(isPlaceable, false);
+    assertFalse(Board.create(5, 5).isBoxUnlockToPlace({ row: 1, col: 5 }));
   });
 });
 
-describe("testing putTile method of Board", () => {
-  describe("valid positions", () => {
-    it("should put the tile when it is valid place", () => {
+describe("Testing putTile", () => {
+  describe("for Valid Positions", () => {
+    it("should put the tile when it is in valid place", () => {
       const board = Board.create(5, 5);
       const tile = createDummyTile("2", ["r", "c", "r", "f"], "r");
       board.placeTile(tile, { row: 2, col: 3 });
 
-      assertEquals(board.getTile({ row: 2, col: 3 }), {
-        hasShield: false,
-        id: "2",
-        orientation: 0,
-        tileCenter: Feature.ROAD,
-        tileEdges: [Feature.ROAD, Feature.CITY, Feature.ROAD, Feature.FIELD],
-        tileID: "0",
-      });
+      assertEquals(board.getTile({ row: 2, col: 3 }), tile);
     });
   });
 
@@ -125,22 +99,18 @@ describe("testing putTile method of Board", () => {
   });
 });
 
-describe("testing placing of tile", () => {
+describe("Testing placing of tile", () => {
   it("should return when the tile being placed outside the board", () => {
     const board = Board.create(5, 5);
     const tile = createDummyTile("2", ["m", "r", "f", "r"], "r");
     board.placeTile(tile, { row: 6, col: 6 });
 
-    assertEquals(board.getTile({ row: 6, col: 6 }), undefined);
+    assertFalse(board.getTile({ row: 6, col: 6 }));
   });
 });
 
-describe("testing isTilePlacable", () => {
+describe("Testing isTilePlacable", () => {
   it("should return false if there is no tile", () => {
-    const board = Board.create(5, 5);
-
-    const tilePlaced = board.isTilePlaceable(null, { row: 1, col: 1 });
-
-    assertEquals(tilePlaced, false);
+    assertFalse(Board.create(5, 5).isTilePlaceable(null, { row: 1, col: 1 }));
   });
 });

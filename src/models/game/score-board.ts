@@ -380,7 +380,10 @@ export class ScoreManager {
   updateScoreForRoad(position: Position) {
     const traversed: Set<string> = new Set();
 
-    if (this.hasFeature(position, Feature.ROAD, Center.MIDDlE)) {
+    if (
+      this.hasFeature(position, Feature.ROAD, Center.MIDDlE) ||
+      this.hasFeature(position, Feature.CITY, Center.MIDDlE)
+    ) {
       this.traverseRoadAndScore(position, traversed, 0);
     }
 
