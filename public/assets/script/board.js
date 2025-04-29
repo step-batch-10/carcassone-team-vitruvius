@@ -123,7 +123,7 @@ class Board {
           cell,
           [rowIndex, cellIndex],
           this.#cellEvents,
-          this.#mapOrientation
+          this.#mapOrientation,
         )
       )
     );
