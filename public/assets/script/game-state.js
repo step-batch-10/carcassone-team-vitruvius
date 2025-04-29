@@ -13,6 +13,8 @@ class GameState {
   #gameState;
   #APIs;
   #currentAPIIndex;
+  #gameStatePoller;
+  #turnPoller;
 
   constructor(gameState, board, APIs) {
     this.#gameState = gameState;
@@ -23,6 +25,11 @@ class GameState {
     this.#currentPlayer = gameState.currentPlayer;
     this.#APIs = APIs;
     this.#currentAPIIndex = 0;
+  }
+
+  registerPollers(gameStatePoller, turnPoller) {
+    this.#gameStatePoller = gameStatePoller;
+    this.#turnPoller = turnPoller;
   }
 
   async drawTileIfNotDrawn() {
@@ -111,11 +118,70 @@ class GameState {
     return this.#self;
   }
 
+  createBtn() {
+    const template = document.querySelector("#score-board");
+    const playerScoreBoard = template.content.cloneNode(true);
+    const btnContainer = playerScoreBoard.querySelector(".btn-container");
+
+    return btnContainer;
+  }
+
+  createRow(selectors) {
+    return (player) => {
+      const template = document.querySelector("#score-board");
+      const playerScoreBoard = template.content.cloneNode(true);
+      const [playerStat, username, meepleImg, points] = selectNodes(
+        selectors,
+        playerScoreBoard,
+      );
+
+      username.textContent = player.username;
+      meepleImg.setAttribute(
+        "src",
+        `/assets/images/${player.meepleColor}-meeple.png`,
+      );
+      points.textContent = player.points;
+
+      return playerStat;
+    };
+  }
+
+  createScoreBoard(allPlayers) {
+    const selectors = [".player-stat", "#username", "#meeple", "#points"];
+
+    return allPlayers.map(this.createRow(selectors));
+  }
+
+  async showScoreBoard() {
+    const allPlayers = await API.allPlayers();
+    const displayDiv = document.querySelector(".score-board-container");
+    displayDiv.classList.remove("hidden");
+    displayDiv.classList.add("visible");
+    const sortedPlayers = _.orderBy(allPlayers, "points", "desc");
+    const winner = document.createElement("div");
+    winner.classList.add("winner");
+    winner.textContent = `${allPlayers[0].username} is the winner`;
+    const scoreBoard = this.createScoreBoard(sortedPlayers);
+    const buttons = this.createBtn();
+    displayDiv.append(winner, ...scoreBoard, buttons);
+    document.body.appendChild(displayDiv);
+  }
+
   async showRemainingTiles() {
     const remainingTiles = document.querySelector(".remaining-tiles");
     const textLabel = remainingTiles.querySelector("p");
 
     const numberOfTilesLeft = await API.remainingTiles();
+    const currentTile = await API.currentTile();
+
+    if (numberOfTilesLeft <= 0 && !currentTile) {
+      this.#gameStatePoller.stopPolling();
+      this.#turnPoller.stopPolling();
+
+      await this.showScoreBoard();
+      remainingTiles.classList.add("hidden");
+      return;
+    }
     textLabel.textContent = `Remaining Tiles: ${numberOfTilesLeft}`;
     remainingTiles.classList.remove("hidden");
     remainingTiles.classList.add("visible");

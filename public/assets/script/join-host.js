@@ -13,7 +13,6 @@ const closeRuleBook = () => {
 
 const addEventListnerToCloseBtn = (rulesDiv) => {
   const btn = rulesDiv.querySelector("#close-btn");
-  console.log("btn");
 
   btn.addEventListener("click", closeRuleBook);
 };

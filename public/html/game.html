@@ -51,6 +51,21 @@
           alt="arrow-left"
         />
       </div>
+      <div class="score-board-container hidden"></div>
+      <template id="score-board">
+        <div class="player-stat">
+          <p id="username"></p>
+          <img id="meeple" />
+          <img id="score" src="/assets/images/symbols/score.png" alt="meeple" />
+          <p id="points"></p>
+        </div>
+        <div class="btn-container">
+          <button type="button" id="playagain-btn" class="exit-options">
+            Play Again
+          </button>
+          <button type="button" id="quit-btn" class="exit-options">Quit</button>
+        </div>
+      </template>
     </main>
     <footer>
       <div id="options" class="footer">
@@ -70,7 +85,7 @@
           alt="rotate-map"
           id="world-rotate"
         />
-        <img src="/assets/images/symbols/toggle.png" alt="toggle" id="toggle">
+        <img src="/assets/images/symbols/toggle.png" alt="toggle" id="toggle" />
       </div>
 
       <template id="player-template">

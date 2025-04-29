@@ -341,6 +341,7 @@ const main = async () => {
   const turnPoller = new Poller(pollTurn(gameStatePoller, gameState), 1000);
   turnPoller.startPolling();
 
+  gameState.registerPollers(gameStatePoller, turnPoller);
   addScrollFeatures();
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
