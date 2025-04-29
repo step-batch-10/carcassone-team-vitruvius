@@ -5,17 +5,15 @@ class Board {
   #parentNode;
   #ghostEffectEvents;
   #cellEvents;
-  #lastTilePosition;
+  #cells;
+  #mapOrientation;
 
   constructor(parentNode) {
     this.#parentNode = parentNode;
     this.#ghostEffectEvents = {};
     this.#cellEvents = {};
-    this.#lastTilePosition = null;
-  }
-
-  registerLastTilePosition(lastTilePosition) {
-    this.#lastTilePosition = lastTilePosition;
+    this.#cells = null;
+    this.#mapOrientation = 0;
   }
 
   static #getHighlightedCells() {
@@ -55,14 +53,14 @@ class Board {
     );
   }
 
-  static async handleGhostTile(event) {
+  static async handleGhostTile(event, mapOrientation) {
     event.stopPropagation();
 
     const currentTile = await API.currentTile();
     const cellElement = event.target;
 
     if (currentTile) {
-      Cell.insertGhostTile(currentTile, cellElement);
+      Cell.insertGhostTile(currentTile, cellElement, mapOrientation);
     }
   }
 
@@ -77,7 +75,7 @@ class Board {
 
   addGhostEffect() {
     this.#ghostEffectEvents = {
-      mouseenter: Board.handleGhostTile,
+      mouseenter: (event) => Board.handleGhostTile(event, this.#mapOrientation),
       mouseleave: Board.removeGhostTile,
     };
 
@@ -96,14 +94,43 @@ class Board {
     });
   }
 
-  build(tiles) {
-    const cellNodes = tiles.flatMap((row, rowIndex) =>
+  rotateMap() {
+    this.#mapOrientation = (this.#mapOrientation + 90) % 360;
+  }
+
+  rotated(grid) {
+    const rotations = (this.#mapOrientation / 90) % 4;
+
+    let rotatedGrid = grid;
+
+    for (let i = 0; i < rotations; i++) {
+      rotatedGrid = rotatedGrid[0].map((_, colIndex) =>
+        rotatedGrid.map((row) => row[colIndex]).reverse()
+      );
+    }
+
+    return rotatedGrid;
+  }
+
+  registerCells(cells) {
+    this.#cells = cells;
+  }
+
+  build() {
+    const cellNodes = this.#cells.map((row, rowIndex) =>
       row.map((cell, cellIndex) =>
-        Cell.createCell(cell, [rowIndex, cellIndex], this.#cellEvents)
+        Cell.createCell(
+          cell,
+          [rowIndex, cellIndex],
+          this.#cellEvents,
+          this.#mapOrientation,
+        )
       )
     );
 
-    this.#parentNode.replaceChildren(...cellNodes);
+    const rotatedNodes = this.rotated(cellNodes);
+
+    this.#parentNode.replaceChildren(...rotatedNodes.flat());
   }
 
   static scrollToCellElementOf(lastPlacedTilePosition) {
@@ -116,6 +143,10 @@ class Board {
       block: "center",
       inline: "center",
     });
+  }
+
+  getMapOrientation() {
+    return this.#mapOrientation;
   }
 }
 

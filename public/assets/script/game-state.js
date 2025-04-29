@@ -1,12 +1,6 @@
 import Board from "./board.js";
 import API from "./api.js";
 
-const drawTileIfNotDrawn = async (currentTile) => {
-  if (!currentTile) {
-    await API.drawATile();
-  }
-};
-
 const selectNodes = (selectors, parentNode) =>
   selectors.map((selector) => parentNode.querySelector(selector));
 
@@ -29,6 +23,12 @@ class GameState {
     this.#currentPlayer = gameState.currentPlayer;
     this.#APIs = APIs;
     this.#currentAPIIndex = 0;
+  }
+
+  async drawTileIfNotDrawn() {
+    if (!this.#currentTile) {
+      this.#currentTile = await API.drawATile();
+    }
   }
 
   toggleShowPlayersTable() {
@@ -82,11 +82,12 @@ class GameState {
   async renderGameState() {
     const currentPlayer = this.#currentPlayer;
 
-    this.#board.build(this.#cells);
+    this.#board.registerCells(this.#cells);
+    this.#board.build();
     this.showPlayerStatus();
 
     if (this.#self.username === currentPlayer.username) {
-      await drawTileIfNotDrawn(this.#currentTile);
+      await this.drawTileIfNotDrawn(this.#currentTile);
 
       this.#board.addGhostEffect();
       Board.highlightPlaceableCells();

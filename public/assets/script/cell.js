@@ -1,12 +1,20 @@
 import API from "./api.js";
 import Board from "./board.js";
 
-const createTileImg = (tile) => {
+const rotateMeepleSide = (side, mapOrientation) => {
+  const sideClasses = ["left", "top", "right", "bottom"];
+
+  return sideClasses[
+    (sideClasses.indexOf(side) + ((mapOrientation / 90) % 4)) % 4
+  ];
+};
+
+const createTileImg = (tile, mapOrientation) => {
   const imgPath = Cell.extractTileImagePath(tile);
   const img = document.createElement("img");
 
   img.setAttribute("src", imgPath);
-  img.style.transform = `rotateZ(${tile.orientation}deg)`;
+  img.style.transform = `rotateZ(${tile.orientation + mapOrientation}deg)`;
   img.classList.add("tile");
 
   return img;
@@ -48,8 +56,9 @@ const Cell = {
     }
   },
 
-  createGhostImage: (path, orientation) => {
+  createGhostImage: (path, imgOrientation, mapOrientation) => {
     const imgElement = document.createElement("img");
+    const orientation = (imgOrientation + mapOrientation) % 360;
 
     imgElement.setAttribute("src", path);
     imgElement.style.transform = `rotateZ(${orientation}deg)`;
@@ -58,12 +67,16 @@ const Cell = {
     return imgElement;
   },
 
-  insertGhostTile: (tile, cellElement) => {
+  insertGhostTile: (tile, cellElement, mapOrientation) => {
     if (tile) {
       cellElement.innerHTML = "";
 
       const imgPath = Cell.extractTileImagePath(tile);
-      const ghostImage = Cell.createGhostImage(imgPath, tile.orientation);
+      const ghostImage = Cell.createGhostImage(
+        imgPath,
+        tile.orientation,
+        mapOrientation,
+      );
 
       cellElement.appendChild(ghostImage);
       Cell.addRotateButton(cellElement, "right");
@@ -117,13 +130,17 @@ const Cell = {
     subGrid.appendChild(meeple);
   },
 
-  addMeepleToCell: (meeple, cellElement) => {
+  addMeepleToCell: (meeple, cellElement, mapOrientation) => {
     const { color, region } = meeple;
 
     if (!color) return;
 
     const sides = ["left", "top", "right", "bottom", "middle"];
-    const subGrids = sides.map((side) => Cell.createSubGrid(side));
+
+    const subGrids = sides.map((side) => {
+      const sideClass = rotateMeepleSide(side, mapOrientation);
+      return Cell.createSubGrid(sideClass);
+    });
 
     const occupiedSubGrid = subGrids.at(sides.indexOf(region));
     Cell.placeMeepleOnSubGrid(occupiedSubGrid, color);
@@ -151,13 +168,13 @@ const Cell = {
     cellElement.appendChild(rotateButton);
   },
 
-  insertTile: (cell, cellElement) => {
+  insertTile: (cell, cellElement, mapOrientation) => {
     const { tile, meeple } = cell;
 
     if (tile) {
-      const tileImg = createTileImg(tile);
+      const tileImg = createTileImg(tile, mapOrientation);
       cellElement.appendChild(tileImg);
-      Cell.addMeepleToCell(meeple, cellElement);
+      Cell.addMeepleToCell(meeple, cellElement, mapOrientation);
     }
   },
 
@@ -173,12 +190,12 @@ const Cell = {
     cellElement.classList.add(className);
   },
 
-  createCell: (cellInfo, [row, col], events = {}) => {
+  createCell: (cellInfo, [row, col], events = {}, mapOrientation) => {
     const cellElement = document.createElement("div");
 
     cellElement.id = Cell.makeCellId(row, col);
     Cell.addEvents(cellElement, events);
-    Cell.insertTile(cellInfo, cellElement);
+    Cell.insertTile(cellInfo, cellElement, mapOrientation);
     Cell.addClassesToCell(cellInfo, cellElement);
 
     return cellElement;

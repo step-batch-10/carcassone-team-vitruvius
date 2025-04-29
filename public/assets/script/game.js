@@ -27,12 +27,15 @@ const showPlacedMeeple = async (event) => {
 
 const removeMeepleListeners = (event, listener) => {
   const placed = event.target;
+  const placedSubgrid = event.target.parentNode.cloneNode(true);
+  const cell = placed.parentNode.parentNode;
   const subgrids = document.querySelectorAll(".subgrid");
+
   subgrids.forEach((subgrid) => subgrid.remove());
   const skipBtn = document.querySelectorAll(".skip")[0];
   skipBtn.remove();
 
-  placed.parentNode.appendChild(placed);
+  cell.appendChild(placedSubgrid);
   placed.removeEventListener("click", listener);
 };
 
@@ -49,7 +52,15 @@ const handlePlaceMeeple = (side) => {
   return placeMeeple;
 };
 
-const createSubGrid = async () => {
+const rotateMeepleSide = (side, mapOrientation) => {
+  const sideClasses = ["left", "top", "right", "bottom"];
+
+  return sideClasses[
+    (sideClasses.indexOf(side) + ((mapOrientation / 90) % 4)) % 4
+  ];
+};
+
+const createSubGrid = async (mapOrientation) => {
   const sides = await API.claimables();
 
   return sides.map((side) => {
@@ -60,8 +71,12 @@ const createSubGrid = async () => {
     ghostMeeple.classList.add("ghost");
     element.appendChild(ghostMeeple);
 
+    const sideClass = side !== "middle"
+      ? rotateMeepleSide(side, mapOrientation)
+      : side;
+
     element.classList.add("sub-grid");
-    element.classList.add(side);
+    element.classList.add(sideClass);
     element.addEventListener("click", handlePlaceMeeple(side));
 
     return element;
@@ -76,8 +91,8 @@ const handleSkip = (cell) => {
   };
 };
 
-const addMeepleOptions = async (cell) => {
-  const subGrid = await createSubGrid();
+const addMeepleOptions = async (cell, mapOrientation) => {
+  const subGrid = await createSubGrid(mapOrientation);
   const skipButton = document.createElement("button");
 
   skipButton.classList.add("skip");
@@ -101,11 +116,10 @@ const handleTilePlacement = async (event, board, events) => {
 
   board.removeGhostEffect();
   Board.removePlaceableCellsHighlight();
-  board.registerLastTilePosition(position);
   placeTile(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
-  addMeepleOptions(cell);
+  addMeepleOptions(cell, board.getMapOrientation());
 };
 
 const createCellEvents = (board) => {
@@ -214,9 +228,19 @@ const setUpLastPlayerTileOption = () => {
   });
 };
 
-const setUpOrientationOptions = () => {
+const setUpWorldRotateOption = (board, gameState) => {
+  const worldRotateOption = document.querySelector("#world-rotate");
+
+  worldRotateOption.addEventListener("click", async () => {
+    board.rotateMap();
+    await gameState.renderGameState();
+  });
+};
+
+const setUpOrientationOptions = (board, gameState) => {
   setUPLastPlacedTileOption();
   setUpLastPlayerTileOption();
+  setUpWorldRotateOption(board, gameState);
 };
 
 const main = async () => {
@@ -241,7 +265,7 @@ const main = async () => {
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
   showRemainingTiles(3000);
-  setUpOrientationOptions();
+  setUpOrientationOptions(board, gameState);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
