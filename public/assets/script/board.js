@@ -143,8 +143,6 @@ class Board {
       block: "center",
       inline: "center",
     });
-
-    setTimeout(() => (lastPlacedTile.style.border = "3px solid black"), 2000);
   }
 
   getMapOrientation() {
