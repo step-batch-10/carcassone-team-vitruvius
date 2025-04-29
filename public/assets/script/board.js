@@ -123,7 +123,7 @@ class Board {
           cell,
           [rowIndex, cellIndex],
           this.#cellEvents,
-          this.#mapOrientation,
+          this.#mapOrientation
         )
       )
     );
@@ -133,8 +133,8 @@ class Board {
     this.#parentNode.replaceChildren(...rotatedNodes.flat());
   }
 
-  static scrollToCellElementOf(lastPlacedTilePosition) {
-    const { row, col } = lastPlacedTilePosition;
+  static scrollToCellElementOf(cellPosition) {
+    const { row, col } = cellPosition;
     const cellId = Cell.makeCellId(row, col);
     const lastPlacedTile = document.getElementById(cellId);
 

@@ -243,11 +243,72 @@ const setUpToggleGrid = () => {
   });
 };
 
+const isTileExist = (cell) => cell.tile;
+
+const maxOfRow = (board) => {
+  return board.reduce((minOfRow, row, index) => {
+    return row.some(isTileExist) ? index : minOfRow;
+  }, -1);
+};
+
+const minOfRow = (board) => {
+  for (const index in board) {
+    if (board[index].some(isTileExist)) {
+      return Number(index);
+    }
+  }
+
+  return -1;
+};
+
+const minOfCol = (board) => {
+  for (const row of board) {
+    for (const index in row) {
+      if (row[index].tile !== null) {
+        return Number(index);
+      }
+    }
+  }
+
+  return -1;
+};
+
+const maxOfCol = (board) => {
+  let maxOfCol = -1;
+
+  for (const row of board) {
+    for (const index in row) {
+      if (row[index].tile !== null) {
+        maxOfCol = Number(index);
+      }
+    }
+  }
+
+  return maxOfCol;
+};
+
+const findMiddleCellPosition = (board) => {
+  const row = Math.floor((minOfRow(board) + maxOfRow(board)) / 2);
+  const col = Math.floor((minOfCol(board) + maxOfCol(board)) / 2);
+
+  return row === -1 || col === -1 ? null : { row, col };
+};
+
+const setUpScrollToMiddleOption = (board) => {
+  const middleCellPositionOption = document.querySelector("#center");
+  middleCellPositionOption.addEventListener("click", () => {
+    const middleCellPosition = findMiddleCellPosition(board);
+
+    if (middleCellPosition) Board.scrollToCellElementOf(middleCellPosition);
+  });
+};
+
 const setUpOrientationOptions = (board, gameState) => {
   setUPLastPlacedTileOption();
   setUpLastPlayerTileOption();
   setUpToggleGrid();
   setUpWorldRotateOption(board, gameState);
+  setUpScrollToMiddleOption(gameState.getBoard());
 };
 
 const main = async () => {
@@ -272,6 +333,7 @@ const main = async () => {
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
   setUpOrientationOptions(board, gameState);
+  showRemainingTiles(3000);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
