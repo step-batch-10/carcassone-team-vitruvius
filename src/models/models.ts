@@ -28,14 +28,13 @@ export enum EdgesOccu {
   BOTTOM = "bottomEdge",
 }
 
-type Edges = [Feature, Feature, Feature, Feature];
-
 export enum CardinalDegrees {
   zero = 0,
   ninety = 90,
   oneEighty = 180,
   twoSeventy = 270,
 }
+
 export type Position = { row: number; col: number };
 
 export interface OccupanceSubGrid {
@@ -156,10 +155,10 @@ export type resPositions = (arg0: Position) => {
 
 export interface RespectivePosition {
   (position: Position): {
-    left: { row: number; col: number };
-    right: { row: number; col: number };
-    top: { row: number; col: number };
-    bottom: { row: number; col: number };
+    left: Position;
+    right: Position;
+    top: Position;
+    bottom: Position;
   };
   (arg0: Position): {
     left: Position;
