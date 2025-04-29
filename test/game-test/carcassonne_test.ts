@@ -99,6 +99,10 @@ describe("Testing place a tile", () => {
 describe("Testing placablePositions", () => {
   let game: Carcassonne | undefined = undefined;
 
+  const getObject = (row: number, col: number) => {
+    return { row, col };
+  };
+
   beforeEach(() => {
     game = Carcassonne.initGame(players, shuffler, dummyTiles());
   });
@@ -106,39 +110,17 @@ describe("Testing placablePositions", () => {
   it("should return object having unlockedPosition and placablePositions", () => {
     game!.drawATile();
 
-    // can change this?
     assertEquals(game!.validPositions(), {
       unlockedPositions: [
-        {
-          col: 42,
-          row: 41,
-        },
-        {
-          col: 41,
-          row: 42,
-        },
-        {
-          col: 43,
-          row: 42,
-        },
-        {
-          col: 42,
-          row: 43,
-        },
+        getObject(41, 42),
+        getObject(42, 41),
+        getObject(42, 43),
+        getObject(43, 42),
       ],
       placablePositions: [
-        {
-          col: 41,
-          row: 42,
-        },
-        {
-          col: 43,
-          row: 42,
-        },
-        {
-          col: 42,
-          row: 43,
-        },
+        getObject(42, 41),
+        getObject(42, 43),
+        getObject(43, 42),
       ],
     });
   });
@@ -146,22 +128,10 @@ describe("Testing placablePositions", () => {
   it("should return object having unlockedPosition and with no placeablePositions when no tile drawn", () => {
     assertEquals(game!.validPositions(), {
       unlockedPositions: [
-        {
-          col: 42,
-          row: 41,
-        },
-        {
-          col: 41,
-          row: 42,
-        },
-        {
-          col: 43,
-          row: 42,
-        },
-        {
-          col: 42,
-          row: 43,
-        },
+        getObject(41, 42),
+        getObject(42, 41),
+        getObject(42, 43),
+        getObject(43, 42),
       ],
       placablePositions: [],
     });
