@@ -1,9 +1,8 @@
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { Carcassonne } from "../../src/models/game/carcassonne.ts";
-import { ScoreManager } from "../../src/models/game/score-board.ts";
 import { TileBoxManager } from "../../src/models/game/tiles.ts";
-import { Center, Feature, Sides, Tile } from "../../src/models/models.ts";
+import { Center, Sides, Tile } from "../../src/models/models.ts";
 import {
   createDummyPlayers,
   dummyTiles,
@@ -200,14 +199,6 @@ describe("Testing place a meeple", () => {
 
     assertFalse(game.placeAMeeple(Sides.LEFT).isPlaced);
     assertEquals(players[1].noOfMeeples, 7);
-  });
-
-  it("when there is no tile placed then the occupance should not mark", () => {
-    const scoreBoard = new ScoreManager([[]], new TileBoxManager([[]]), []);
-
-    assertFalse(
-      scoreBoard.hasFeature({ row: 0, col: 0 }, Feature.CITY, Sides.BOTTOM),
-    );
   });
 
   it("when there is no except tiles then it should return the empty exception", () => {

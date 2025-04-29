@@ -57,7 +57,7 @@ export interface TileBox {
   meeple: {
     color: null | string;
     playerName: null | string;
-    region: null | string;
+    region: null | Sides | Center;
   };
 
   occupiedRegion: {

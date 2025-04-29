@@ -48,6 +48,10 @@ export class TileBoxManager {
     return this.getCell(position)!.occupiedRegion[edge].occupiedBy;
   }
 
+  isClaimed(position: Position) {
+    return this.getCell(position)!.occupiedRegion.middle.occupiedBy.size > 0;
+  }
+
   getCell(position: Position) {
     const { row, col } = position;
     if (row < 0 || col < 0 || row >= this.maxRow || col >= this.maxCol) {
@@ -61,7 +65,7 @@ export class TileBoxManager {
     return this.getCell(position)?.tile;
   }
 
-  isScored(position: Position, edge: Sides) {
+  isScored(position: Position, edge: Sides | Center) {
     return this.getCell(position)!.occupiedRegion[edge].isScored;
   }
 
@@ -133,6 +137,18 @@ export class TileBoxManager {
 
     return { lastEdge: Sides.LEFT, position: { row: 42, col: 42 } };
   }
+
+  hasFeature(position: Position, feature: Feature, subGrid: Sides | Center) {
+    return this.getCell(position)!.occupiedRegion[subGrid].feature === feature;
+  }
+
+  isOccupied(position: Position, edge: Sides | Center) {
+    return this.getOccupiedBy(position, edge).size > 0;
+  }
+
+  // isScored(position: Position) {
+  //   return this.getCell(position)?.occupiedRegion.middle.isScored;
+  // }
 }
 
 export class TileStacker {

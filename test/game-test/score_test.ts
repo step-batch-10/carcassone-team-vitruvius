@@ -268,27 +268,38 @@ describe("Testing for scoring Roads", () => {
 
     assertEquals(game.getAllPlayers()[0].points, 3);
   });
-});
 
-it("should update the score", () => {
-  const game = createAndPlaceTiles(roadTile7, [
-    { row: 42, col: 41 },
-    { row: 42, col: 43, location: Center.MIDDlE },
-    { row: 42, col: 44 },
-    { row: 43, col: 44 },
-    { row: 43, col: 45 },
-    { row: 42, col: 45 },
-  ]);
+  it("should update the score", () => {
+    const game = createAndPlaceTiles(roadTile7, [
+      { row: 42, col: 41 },
+      { row: 42, col: 43, location: Center.MIDDlE },
+      { row: 42, col: 44 },
+      { row: 43, col: 44 },
+      { row: 43, col: 45 },
+      { row: 42, col: 45 },
+    ]);
 
-  assertEquals(game.getAllPlayers()[0].points, 7);
-});
+    assertEquals(game.getAllPlayers()[0].points, 7);
+  });
 
-it("should update the score for city in the center and road connecting", () => {
-  const game = createAndPlaceTiles(roadTile8, [
-    { row: 42, col: 43 },
-    { row: 43, col: 42 },
-    { row: 43, col: 43, location: Sides.LEFT },
-  ]);
+  it("should update the score for city in the center and road connecting", () => {
+    const game = createAndPlaceTiles(roadTile8, [
+      { row: 42, col: 43 },
+      { row: 43, col: 42 },
+      { row: 43, col: 43, location: Sides.LEFT },
+    ]);
 
-  assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[0].points, 3);
+  });
+
+  it("should not remove the meeple of tile which isn't scored", () => {
+    const game = createAndPlaceTiles(roadTile8, [
+      { row: 42, col: 41, location: Sides.RIGHT },
+      { row: 42, col: 43, location: Sides.RIGHT },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[1].points, 0);
+    assertEquals(game.getBoard()[42][41].meeple.region, null);
+  });
 });
