@@ -230,9 +230,23 @@ const setUpWorldRotateOption = (board, gameState) => {
   });
 };
 
+const setUpToggleGrid = () => {
+  const toggleBtn = document.querySelector("#toggle");
+
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("show-grid-border");
+    if (document.body.classList.contains("show-grid-border")) {
+      toggleBtn.src = "/assets/images/symbols/toggle-off.png";
+    } else {
+      toggleBtn.src = "/assets/images/symbols/toggle.png";
+    }
+  });
+};
+
 const setUpOrientationOptions = (board, gameState) => {
   setUPLastPlacedTileOption();
   setUpLastPlayerTileOption();
+  setUpToggleGrid();
   setUpWorldRotateOption(board, gameState);
 };
 

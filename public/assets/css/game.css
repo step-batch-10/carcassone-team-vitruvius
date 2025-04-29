@@ -12,7 +12,7 @@ body {
   justify-content: center;
   font-size: 1.2rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  /* background-color: rgba(0, 0, 0, 0.796); */
+  background-color: rgba(239, 224, 125, 0.233);
 }
 
 .tileMoves {
@@ -28,7 +28,7 @@ body {
   align-items: center;
   justify-content: space-evenly;
   position: fixed;
-  width: 360px;
+  width: 400px;
   height: 80px;
 
   & > img {
@@ -108,7 +108,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.706);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.62);
   position: fixed;
   top: 20px;
   right: 20px;
@@ -149,6 +149,11 @@ body {
   padding: 10px 20px;
   border-radius: 8px;
 }
+
+.show-grid-border .grid div {
+  border: 1px dashed rgba(125, 123, 123, 0.689);
+}
+
 .grid div > .sub-grid {
   width: 32%;
   height: 32%;
@@ -223,7 +228,6 @@ div > .tile {
 .meeple {
   width: 60px;
   height: 60px;
-  /* aspect-ratio: 1; */
 }
 
 .grid {
@@ -233,7 +237,6 @@ div > .tile {
 }
 
 .grid div {
-  border: 1px dashed rgb(125, 123, 123);
   box-sizing: border-box;
   position: relative;
   aspect-ratio: 1 / 1;
@@ -279,8 +282,8 @@ div > .tile {
 }
 
 td > img {
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
 }
 
 .remaining-tiles {
