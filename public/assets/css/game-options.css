@@ -103,6 +103,7 @@ button:hover {
 #rules-container {
   width: 100%;
   height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
   position: absolute;
   display: flex;
   justify-content: center;
@@ -110,7 +111,7 @@ button:hover {
 }
 
 .bg-blur {
-  backdrop-filter: blur(32px);
+  backdrop-filter: blur(20px);
   z-index: 1;
 }
 
@@ -144,6 +145,12 @@ button:hover {
 }
 
 #close-btn {
+  background-color: rgb(227, 32, 32);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  color: aliceblue;
   position: absolute;
   right: 2%;
 }
