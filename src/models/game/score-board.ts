@@ -239,7 +239,7 @@ class Score {
       const notScored = this.tiles.notScoredEdges.bind(this.tiles);
       const except = notScored(traversed, objPos, this.edges).except;
 
-      if (this.tiles.hasFeature(objPos, Feature.ROAD_END, Center.MIDDlE)) {
+      if (this.tiles.hasFeature(objPos, Feature.ROAD_END, Center.MIDDLE)) {
         this.markScored(objPos, Feature.ROAD, except);
       } else this.markScored(objPos, Feature.ROAD, []);
     });
@@ -297,7 +297,7 @@ class Score {
     if (this.isTraversed(traversed, position)) return endOfRoad;
 
     if (
-      this.tiles.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
+      this.tiles.hasFeature(position, Feature.ROAD_END, Center.MIDDLE) ||
       this.hasSpecialEnd(position)
     ) {
       traversed.add(JSON.stringify(position));
@@ -311,8 +311,8 @@ class Score {
     }
 
     if (
-      this.tiles.hasFeature(position, Feature.ROAD, Center.MIDDlE) ||
-      this.tiles.hasFeature(position, Feature.CITY, Center.MIDDlE)
+      this.tiles.hasFeature(position, Feature.ROAD, Center.MIDDLE) ||
+      this.tiles.hasFeature(position, Feature.CITY, Center.MIDDLE)
     ) {
       ({ lastEdge, endOfRoad } = this.roadOrCityInMiddle(
         position,
@@ -329,14 +329,14 @@ class Score {
     const traversed: Set<string> = new Set();
 
     if (
-      this.tiles.hasFeature(position, Feature.ROAD, Center.MIDDlE) ||
-      this.tiles.hasFeature(position, Feature.CITY, Center.MIDDlE)
+      this.tiles.hasFeature(position, Feature.ROAD, Center.MIDDLE) ||
+      this.tiles.hasFeature(position, Feature.CITY, Center.MIDDLE)
     ) {
       this.traverseRoadAndScore(position, traversed, 0);
     }
 
     if (
-      this.tiles.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
+      this.tiles.hasFeature(position, Feature.ROAD_END, Center.MIDDLE) ||
       this.hasSpecialEnd(position)
     ) {
       this.roadEnding(position);
@@ -378,7 +378,7 @@ class Score {
       this.markScoredForFeature(cell, edge, feature);
     });
 
-    this.markScoredForFeature(cell, Center.MIDDlE, feature);
+    this.markScoredForFeature(cell, Center.MIDDLE, feature);
 
     except.forEach((edge) => {
       cell!.occupiedRegion[edge].isScored = false;
@@ -393,11 +393,11 @@ class Score {
     traverse.add(JSON.stringify(position));
 
     if (
-      this.canScoreFeature(position, Feature.MONASTERY, Center.MIDDlE) &&
+      this.canScoreFeature(position, Feature.MONASTERY, Center.MIDDLE) &&
       this.hasAdjacent9Tiles(position)
     ) {
       this.updateScoreToPlayers(
-        this.tiles.getOccupiedBy(position, Center.MIDDlE),
+        this.tiles.getOccupiedBy(position, Center.MIDDLE),
         9,
       );
       this.markScored(position, Feature.MONASTERY, []);
@@ -406,8 +406,8 @@ class Score {
 
     this.tiles.adjacentPositionArray(position).forEach((adjPos) => {
       if (
-        this.tiles.hasFeature(adjPos, Feature.MONASTERY, Center.MIDDlE) &&
-        !this.tiles.isScored(adjPos, Center.MIDDlE) &&
+        this.tiles.hasFeature(adjPos, Feature.MONASTERY, Center.MIDDLE) &&
+        !this.tiles.isScored(adjPos, Center.MIDDLE) &&
         !this.isTraversed(traverse, adjPos)
       ) {
         this.updateScoreForMonastry(adjPos, traverse);

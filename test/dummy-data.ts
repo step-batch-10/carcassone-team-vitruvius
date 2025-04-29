@@ -81,11 +81,6 @@ export const dummyTiles3 = () => [
   createDummyTile("5", ["f", "f", "r", "r"], "r"),
 ];
 
-export const dummyTiles6 = () => [
-  createDummyTile("2", ["c", "r", "r", "c"], "c"),
-  createDummyTile("3", ["f", "r", "f", "r"], "r"),
-];
-
 export const dummyTiles4 = () => [
   createDummyTile("2", ["r", "c", "f", "r"], "r"),
   createDummyTile("3", ["f", "r", "f", "r"], "r"),

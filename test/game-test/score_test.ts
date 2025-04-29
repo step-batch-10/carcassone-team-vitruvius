@@ -25,12 +25,14 @@ import { Center, Position, Sides, Tile } from "../../src/models/models.ts";
 
 type Move = Position & { location?: Sides | Center };
 
-const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
+export const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
   moves.forEach((move) => {
     game.drawATile();
     game.placeATile({ row: move.row, col: move.col });
     if (move.location) game.placeAMeeple(move.location);
   });
+
+  return game;
 };
 
 export const createAndPlaceTiles = (
@@ -48,7 +50,7 @@ export const createAndPlaceTiles = (
 describe("Testing for scoring monastery", () => {
   it("should not update score when monastery not claimed", () => {
     const game = createAndPlaceTiles(dummyTiles, [
-      { row: 42, col: 43, location: Center.MIDDlE },
+      { row: 42, col: 43, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 0);
@@ -64,7 +66,7 @@ describe("Testing for scoring monastery", () => {
       { row: 44, col: 41 },
       { row: 43, col: 41 },
       { row: 42, col: 41 },
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 9);
@@ -73,7 +75,7 @@ describe("Testing for scoring monastery", () => {
 
   it("should update score when the tile placed completes the monastery", () => {
     const game = createAndPlaceTiles(monasteryTiles1, [
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
       { row: 42, col: 43 },
       { row: 43, col: 43 },
       { row: 44, col: 43 },
@@ -91,7 +93,7 @@ describe("Testing for scoring monastery", () => {
     const game = createAndPlaceTiles(monasteryTiles2, [
       { row: 42, col: 43 },
       { row: 43, col: 43 },
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
       { row: 44, col: 43 },
       { row: 44, col: 42 },
       { row: 45, col: 42 },
@@ -101,7 +103,7 @@ describe("Testing for scoring monastery", () => {
       { row: 43, col: 40 },
       { row: 43, col: 41 },
       { row: 42, col: 41 },
-      { row: 44, col: 41, location: Center.MIDDlE },
+      { row: 44, col: 41, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 9);
@@ -115,7 +117,7 @@ describe("Testing for scoring monastery", () => {
     placeAndDrawTiles(game, [
       { row: 42, col: 43 },
       { row: 43, col: 43 },
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
       { row: 44, col: 43 },
       { row: 44, col: 42 },
       { row: 45, col: 42 },
@@ -125,7 +127,7 @@ describe("Testing for scoring monastery", () => {
       { row: 43, col: 40 },
       { row: 43, col: 41 },
       { row: 42, col: 41 },
-      { row: 44, col: 41, location: Center.MIDDlE },
+      { row: 44, col: 41, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getCurrentPlayer().points, 18);
@@ -136,7 +138,7 @@ describe("Testing for scoring monastery", () => {
     const game = Carcassonne.initGame(players, (arr) => arr, monasteryTiles1());
 
     placeAndDrawTiles(game, [
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
       { row: 42, col: 43 },
       { row: 43, col: 43 },
       { row: 44, col: 43 },
@@ -155,8 +157,8 @@ describe("Testing for scoring monastery", () => {
 
   it("should remove meeple from the tile and increase the meeple count when two monasteries are placed adjacent to each other claimed by different people", () => {
     const game = createAndPlaceTiles(monasteryTiles3, [
-      { row: 43, col: 42, location: Center.MIDDlE },
-      { row: 43, col: 43, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
+      { row: 43, col: 43, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getAllPlayers()[0].noOfMeeples, 6);
@@ -167,7 +169,7 @@ describe("Testing for scoring monastery", () => {
 describe("Testing for scoring Roads", () => {
   it("should not update score when road not completed", () => {
     const game = createAndPlaceTiles(roadTiles, [
-      { row: 42, col: 43, location: Center.MIDDlE },
+      { row: 42, col: 43, location: Center.MIDDLE },
     ]);
 
     assertEquals(game.getAllPlayers()[0].points, 0);
@@ -274,7 +276,7 @@ describe("Testing for scoring Roads", () => {
   it("should update the score", () => {
     const game = createAndPlaceTiles(roadTile7, [
       { row: 42, col: 41 },
-      { row: 42, col: 43, location: Center.MIDDlE },
+      { row: 42, col: 43, location: Center.MIDDLE },
       { row: 42, col: 44 },
       { row: 43, col: 44 },
       { row: 43, col: 45 },
@@ -311,7 +313,7 @@ describe("Testing for scoring Roads", () => {
 describe("Testing for End Game scenarios", () => {
   it("should return the score for incomplete monastery", () => {
     const game = createAndPlaceTiles(endGameTile1, [
-      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 43, col: 42, location: Center.MIDDLE },
       { row: 42, col: 43 },
       { row: 43, col: 43 },
       { row: 44, col: 43 },
