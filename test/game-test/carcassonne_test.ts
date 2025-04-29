@@ -13,6 +13,7 @@ import {
 } from "../dummy-data.ts";
 import { createDummyTile, dummyTiles5, roadTile4 } from "./../dummy-data.ts";
 import { createAndPlaceTiles } from "./score_test.ts";
+import { stub } from "@std/testing/mock";
 
 describe("Testing getCurrentPlayer", () => {
   it("should return the current player", () => {
@@ -347,5 +348,48 @@ describe("Testing markOccupance", () => {
     assertEquals(gridSize(game, [42, 43], "left"), 2);
     assertEquals(gridSize(game, [42, 43], "middle"), 2);
     assertEquals(gridSize(game, [42, 43], "right"), 2);
+  });
+});
+
+describe("lastPlacedTilePositionOf", () => {
+  it("should return null if player didn't place any tile yet", () => {
+    const game = Carcassonne.initGame(createDummyPlayers());
+
+    const lastPlacedPosition = game.lastPlacedTilePositionOf("user1");
+
+    assertEquals(lastPlacedPosition, null);
+  });
+
+  it("should return player's last placed tile position", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players);
+
+    const player1 = players[0];
+    stub(player1.movesStack, "peek", () => ({ row: 0, col: 0 }));
+
+    const lastPlacedPosition = game.lastPlacedTilePositionOf("user1");
+
+    assertEquals(lastPlacedPosition, { row: 0, col: 0 });
+  });
+});
+
+describe("lastPlayerTilePosition", () => {
+  it("should return first tile position if first player didn't place tile yet", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players);
+
+    assertEquals(game.getLastPlacedTilePosition(), { row: 42, col: 42 });
+  });
+
+  it("should return last player's placed tile position", () => {
+    const players = createDummyPlayers();
+    const tiles = dummyTiles();
+    const game = Carcassonne.initGame(players, (arr) => arr, tiles);
+    game.drawATile();
+    const placablePositions = game.validPositions().placablePositions;
+    const position = placablePositions[0];
+    game.placeATile(position);
+
+    assertEquals(game.getLastPlacedTilePosition(), position);
   });
 });

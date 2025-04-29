@@ -25,7 +25,7 @@ export const createTestApp = () => {
   const context: AppContext = { sessions, users, roomManager, games };
   const app = createApp(context, silentLogger);
 
-  return { app, roomManager, games };
+  return { app, roomManager, games, sessions };
 };
 
 describe("handleGetRoom", () => {

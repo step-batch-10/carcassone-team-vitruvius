@@ -1,3 +1,4 @@
+import MovesStack from "../game/moves-stack.ts";
 import { PlayerJson } from "../models.ts";
 class Player {
   readonly username: string;
@@ -6,6 +7,7 @@ class Player {
   points: number;
   readonly meepleColor: string;
   readonly isHost: boolean;
+  readonly movesStack: MovesStack;
 
   constructor(
     username: string,
@@ -19,6 +21,7 @@ class Player {
     this.meepleColor = meepleColor;
     this.isHost = isHost;
     this.roomID = roomID;
+    this.movesStack = new MovesStack();
   }
 
   json(): PlayerJson {

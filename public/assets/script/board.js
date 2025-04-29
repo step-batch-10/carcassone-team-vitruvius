@@ -5,11 +5,17 @@ class Board {
   #parentNode;
   #ghostEffectEvents;
   #cellEvents;
+  #lastTilePosition;
 
   constructor(parentNode) {
     this.#parentNode = parentNode;
     this.#ghostEffectEvents = {};
     this.#cellEvents = {};
+    this.#lastTilePosition = null;
+  }
+
+  registerLastTilePosition(lastTilePosition) {
+    this.#lastTilePosition = lastTilePosition;
   }
 
   static #getHighlightedCells() {
@@ -98,6 +104,18 @@ class Board {
     );
 
     this.#parentNode.replaceChildren(...cellNodes);
+  }
+
+  static scrollToCellElementOf(lastPlacedTilePosition) {
+    const { row, col } = lastPlacedTilePosition;
+    const cellId = Cell.makeCellId(row, col);
+    const lastPlacedTile = document.getElementById(cellId);
+
+    lastPlacedTile.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
   }
 }
 

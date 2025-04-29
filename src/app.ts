@@ -22,6 +22,8 @@ import {
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
+  serveLastPlacedTilePosition,
+  serveLastPlayerTilePosition,
   serveRemainingTiles,
   serveValidPositions,
 } from "./handlers/game-handlers.ts";
@@ -77,6 +79,8 @@ const createGameApp = () => {
   gameApp.get("/players", serveAllPlayers);
   gameApp.get("/claimables", serveClaimables);
   gameApp.get("/remaining-tiles", serveRemainingTiles);
+  gameApp.get("/last-placed-tile-pos", serveLastPlacedTilePosition);
+  gameApp.get("/last-player-tile-pos", serveLastPlayerTilePosition);
   return gameApp;
 };
 

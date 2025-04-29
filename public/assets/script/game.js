@@ -101,6 +101,7 @@ const handleTilePlacement = async (event, board, events) => {
 
   board.removeGhostEffect();
   Board.removePlaceableCellsHighlight();
+  board.registerLastTilePosition(position);
   placeTile(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
@@ -191,6 +192,33 @@ const showRemainingTiles = (interval) => {
   }, interval);
 };
 
+const setUPLastPlacedTileOption = () => {
+  const lastPlacedTileOption = document.querySelector("#last-placed-tile");
+
+  lastPlacedTileOption.addEventListener("click", async () => {
+    const lastPlacedTilePosition = await API.lastPlacedTilePosition();
+
+    if (lastPlacedTilePosition) {
+      Board.scrollToCellElementOf(lastPlacedTilePosition);
+    }
+  });
+};
+
+const setUpLastPlayerTileOption = () => {
+  const lastPlayerTileOption = document.querySelector("#last-player-tile");
+
+  lastPlayerTileOption.addEventListener("click", async () => {
+    const lastPlacedPosition = await API.lastPlayerTilePosition();
+
+    Board.scrollToCellElementOf(lastPlacedPosition);
+  });
+};
+
+const setUpOrientationOptions = () => {
+  setUPLastPlacedTileOption();
+  setUpLastPlayerTileOption();
+};
+
 const main = async () => {
   const grid = setupGrid(84);
   const board = new Board(grid);
@@ -213,6 +241,7 @@ const main = async () => {
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
   showRemainingTiles(3000);
+  setUpOrientationOptions();
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);

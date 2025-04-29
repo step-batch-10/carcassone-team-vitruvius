@@ -36,7 +36,6 @@ class GameState {
   }
 
   currentAPI() {
-    console.log(this.#APIs);
     return this.#APIs[this.#currentAPIIndex];
   }
 
@@ -56,7 +55,6 @@ class GameState {
       playerStatusClone,
     );
 
-    console.log(meepleColor, meepleImage);
     playerNameNode.textContent = username;
     meepleImage.firstElementChild.setAttribute(
       "src",

@@ -99,7 +99,20 @@ const API = {
 
   remainingTiles: async () => {
     const response = await fetch("/game/remaining-tiles");
+
     return await response.json();
+  },
+
+  lastPlacedTilePosition: async () => {
+    const response = await fetch("/game/last-placed-tile-pos");
+
+    return response.json();
+  },
+
+  lastPlayerTilePosition: async () => {
+    const response = await fetch("/game/last-player-tile-pos");
+
+    return response.json();
   },
 };
 

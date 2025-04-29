@@ -24,6 +24,7 @@ export class Carcassonne {
   private tilePlacedAt: Position | null;
   private tileBoxes;
   private scoreBoard;
+  private lastPlacedTilePosition: Position;
 
   constructor(
     players: Player[],
@@ -44,6 +45,7 @@ export class Carcassonne {
       this.tileBoxes,
       players,
     );
+    this.lastPlacedTilePosition = { row: 42, col: 42 };
   }
 
   static getAllUnlockedPosition(board: Board): Position[] {
@@ -159,6 +161,9 @@ export class Carcassonne {
       this.board.placeTile(this.currentTile!, position);
       this.scoreBoard.score(this.tilePlacedAt);
       this.currentTile = null;
+      this.getCurrentPlayer().movesStack.push(position);
+      this.lastPlacedTilePosition = position;
+
       return { isPlaced: true };
     }
     return { isPlaced: false };
@@ -194,7 +199,7 @@ export class Carcassonne {
   state() {
     return {
       board: this.getBoard(),
-      currentPlayer: this.getCurrentPlayer(),
+      currentPlayer: this.getCurrentPlayer().json(),
       currentTile: this.currentTile,
       players: this.getAllPlayers(),
     };
@@ -223,5 +228,15 @@ export class Carcassonne {
 
   getRemainingTiles() {
     return this.tileManager.remainingTile();
+  }
+
+  lastPlacedTilePositionOf(username: string): Position | null {
+    const player = this.players.find((player) => player.username === username);
+
+    return player?.movesStack.peek() ?? null;
+  }
+
+  getLastPlacedTilePosition(): Position {
+    return this.lastPlacedTilePosition;
   }
 }

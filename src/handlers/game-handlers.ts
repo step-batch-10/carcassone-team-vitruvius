@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { Position, Sessions, Users } from "../models/models.ts";
+import { Position } from "../models/models.ts";
 import { Variables } from "hono/types";
 import { getCookie } from "hono/cookie";
 import { Carcassonne } from "../models/game/carcassonne.ts";
@@ -8,11 +8,8 @@ const parseAppContexts = (ctx: Context, ...keys: string[]) => {
   return Object.fromEntries(keys.map((key) => [key, ctx.get(key)]));
 };
 
-const getUserOfSessionId = (
-  ctx: Context<{ Variables: Variables }>,
-  sessions: Sessions,
-  users: Users,
-) => {
+const getUserOfSessionId = (ctx: Context<{ Variables: Variables }>) => {
+  const { sessions, users } = parseAppContexts(ctx, "sessions", "users");
   const sessionID = String(getCookie(ctx, "session-id"));
   const userID = String(sessions.get(sessionID));
 
@@ -55,11 +52,9 @@ const getCurrentPlayer = (ctx: Context) => {
 };
 
 const getSelfStatus = (ctx: Context) => {
-  const appContext = parseAppContexts(ctx, "users", "sessions");
-  const { users, sessions } = appContext;
   const game: Carcassonne = ctx.get("game");
 
-  const user = getUserOfSessionId(ctx, sessions, users);
+  const user = getUserOfSessionId(ctx);
   const username = String(user?.username);
 
   return ctx.json(game.getPlayerOf(username), 200);
@@ -82,10 +77,8 @@ const handleRotateTile = (ctx: Context) => {
 
 const serveGameState = (ctx: Context) => {
   const game: Carcassonne = ctx.get("game");
-  const appContext = parseAppContexts(ctx, "users", "sessions");
-  const { users, sessions } = appContext;
 
-  const user = getUserOfSessionId(ctx, sessions, users);
+  const user = getUserOfSessionId(ctx);
   const username = String(user?.username);
   const self = game.getPlayerOf(username);
 
@@ -111,6 +104,7 @@ const handlePlaceablePositions = (ctx: Context) => {
 const handleSkip = (ctx: Context) => {
   const game: Carcassonne = ctx.get("game");
   game.changePlayerTurn();
+
   return ctx.json(null, 200);
 };
 
@@ -128,7 +122,24 @@ const serveClaimables = (ctx: Context) => {
 
 const serveRemainingTiles = (ctx: Context) => {
   const game: Carcassonne = ctx.get("game");
+
   return ctx.json(game.getRemainingTiles(), 200);
+};
+
+const serveLastPlacedTilePosition = (ctx: Context) => {
+  const game = ctx.get("game");
+  const username = getUserOfSessionId(ctx)?.username;
+
+  const lastPlacedTilePos = game.lastPlacedTilePositionOf(username);
+  const status = lastPlacedTilePos ? 200 : 400;
+
+  return ctx.json(lastPlacedTilePos, status);
+};
+
+const serveLastPlayerTilePosition = (ctx: Context) => {
+  const game = ctx.get("game");
+
+  return ctx.json(game.getLastPlacedTilePosition(), 200);
 };
 
 export {
@@ -145,6 +156,8 @@ export {
   serveCurrentTile,
   serveGameBoard,
   serveGameState,
+  serveLastPlacedTilePosition,
+  serveLastPlayerTilePosition,
   serveRemainingTiles,
   serveValidPositions,
 };
