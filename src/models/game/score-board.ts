@@ -215,7 +215,9 @@ class Score {
     return { lastEdge, endOfRoad };
   }
 
-  private roadEnding(pos: Position, traversed: Set<string>) {
+  private roadEnding(pos: Position) {
+    const traversed = new Set<string>();
+    traversed.add(JSON.stringify(pos));
     this.edges.forEach((edge) => {
       if (
         this.tiles.hasFeature(pos, Feature.ROAD, edge) &&
@@ -333,8 +335,7 @@ class Score {
       this.tiles.hasFeature(position, Feature.ROAD_END, Center.MIDDlE) ||
       this.hasSpecialEnd(position)
     ) {
-      traversed.add(JSON.stringify(position));
-      this.roadEnding(position, traversed);
+      this.roadEnding(position);
     }
   }
 
