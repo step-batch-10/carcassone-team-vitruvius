@@ -55,6 +55,10 @@ const handlePlaceMeeple = (side) => {
 const rotateMeepleSide = (side, mapOrientation) => {
   const sideClasses = ["left", "top", "right", "bottom"];
 
+  if (side === "middle") {
+    return "middle";
+  }
+
   return sideClasses[
     (sideClasses.indexOf(side) + ((mapOrientation / 90) % 4)) % 4
   ];
@@ -71,9 +75,7 @@ const createSubGrid = async (mapOrientation) => {
     ghostMeeple.classList.add("ghost");
     element.appendChild(ghostMeeple);
 
-    const sideClass = side !== "middle"
-      ? rotateMeepleSide(side, mapOrientation)
-      : side;
+    const sideClass = rotateMeepleSide(side, mapOrientation);
 
     element.classList.add("sub-grid");
     element.classList.add(sideClass);

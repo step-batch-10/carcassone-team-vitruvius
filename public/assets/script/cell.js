@@ -4,6 +4,10 @@ import Board from "./board.js";
 const rotateMeepleSide = (side, mapOrientation) => {
   const sideClasses = ["left", "top", "right", "bottom"];
 
+  if (side === "middle") {
+    return "middle";
+  }
+
   return sideClasses[
     (sideClasses.indexOf(side) + ((mapOrientation / 90) % 4)) % 4
   ];
