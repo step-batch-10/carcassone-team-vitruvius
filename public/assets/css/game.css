@@ -11,23 +11,8 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  font-weight: bold;
-  font-family: "Medieval";
-}
-
-.grid {
-  display: grid;
-  width: 100vw;
-  height: 100vh;
-}
-
-.grid div {
-  border: 1px dotted black;
-  box-sizing: border-box;
-  position: relative;
-  aspect-ratio: 1 / 1;
-  width: 150px;
-  height: 150px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* background-color: rgba(0, 0, 0, 0.796); */
 }
 
 .tileMoves {
@@ -111,15 +96,15 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-color: rgb(246, 212, 170);
-  border: 1px solid black;
+  border: 1px solid rgba(55, 52, 52, 0.77);
 }
 
 .player-turn {
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 1;
-  background: bisque;
-  color: #333;
+  background: rgb(130, 48, 48);
+  color: aliceblue;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,13 +125,13 @@ body {
   height: 40px;
   padding: 12px;
   border-radius: 50%;
-  background-color: rgb(252, 219, 159);
+  background-color: rgb(146, 60, 60);
   border: 1px solid goldenrod;
   box-sizing: content-box;
 }
 
 #options img:hover {
-  background-color: bisque;
+  background-color: rgb(193, 74, 74);
   transform: scale(1.1);
 }
 
@@ -236,8 +221,9 @@ div > .tile {
   z-index: 0;
 }
 .meeple {
-  width: 80px;
-  aspect-ratio: 1;
+  width: 60px;
+  height: 60px;
+  /* aspect-ratio: 1; */
 }
 
 .grid {
@@ -247,7 +233,7 @@ div > .tile {
 }
 
 .grid div {
-  border: 1px dotted black;
+  border: 1px dashed rgb(125, 123, 123);
   box-sizing: border-box;
   position: relative;
   aspect-ratio: 1 / 1;
@@ -273,8 +259,8 @@ div > .tile {
   justify-content: space-around;
   width: 24%;
 
-  background: bisque;
-  color: black;
+  background: rgb(130, 48, 48);
+  color: aliceblue;
   border-radius: 15px;
   border: 2px solid goldenrod;
 }
@@ -292,12 +278,17 @@ div > .tile {
   gap: 14px;
 }
 
+td > img {
+  width: 100px;
+  height: 100px;
+}
+
 .remaining-tiles {
   padding: 8px 16px;
   border-radius: 8px;
   z-index: 1;
-  background: bisque;
-  color: #333;
+  background: rgb(130, 48, 48);
+  color: aliceblue;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,6 +298,5 @@ div > .tile {
   right: 20px;
 }
 .player-name {
-  width: 100%;
   margin: auto;
 }
