@@ -261,43 +261,55 @@ const minOfRow = (board) => {
   return -1;
 };
 
+const min = (minNumber, number) => (minNumber < number ? minNumber : number);
+const max = (maxNumber, number) => (maxNumber > number ? maxNumber : number);
+
 const minOfCol = (board) => {
+  const positions = [];
+
   for (const row of board) {
     for (const index in row) {
-      if (row[index].tile !== null) {
-        return Number(index);
-      }
+      if (row[index].tile !== null) positions.push(Number(index));
     }
   }
 
-  return -1;
+  return positions.reduce(min);
 };
 
 const maxOfCol = (board) => {
-  let maxOfCol = -1;
+  const positions = [];
 
   for (const row of board) {
     for (const index in row) {
-      if (row[index].tile !== null) {
-        maxOfCol = Number(index);
-      }
+      if (row[index].tile !== null) positions.push(Number(index));
     }
   }
 
-  return maxOfCol;
+  return positions.reduce(max, -1);
+};
+
+const debug = function (arg) {
+  console.log(arg);
+  return arg;
 };
 
 const findMiddleCellPosition = (board) => {
-  const row = Math.floor((minOfRow(board) + maxOfRow(board)) / 2);
-  const col = Math.floor((minOfCol(board) + maxOfCol(board)) / 2);
+  // const minOfRow = findMinOfRow(board);
+  // const maxOfRow = findMaxOfRow(board);
+  // const minOfCol = findMinOfCol(board);
+  // const maxOfCol = findMaxOfCol(board);
+
+  const row = Math.floor((debug(minOfRow(board)) + debug(maxOfRow(board))) / 2);
+  const col = Math.floor((debug(minOfCol(board)) + debug(maxOfCol(board))) / 2);
 
   return row === -1 || col === -1 ? null : { row, col };
 };
 
-const setUpScrollToMiddleOption = (board) => {
+const setUpScrollToMiddleOption = (gameState) => {
   const middleCellPositionOption = document.querySelector("#center");
+
   middleCellPositionOption.addEventListener("click", () => {
-    const middleCellPosition = findMiddleCellPosition(board);
+    const middleCellPosition = findMiddleCellPosition(gameState.getBoard());
 
     if (middleCellPosition) Board.scrollToCellElementOf(middleCellPosition);
   });
@@ -308,7 +320,7 @@ const setUpOrientationOptions = (board, gameState) => {
   setUpLastPlayerTileOption();
   setUpToggleGrid();
   setUpWorldRotateOption(board, gameState);
-  setUpScrollToMiddleOption(gameState.getBoard());
+  setUpScrollToMiddleOption(gameState);
 };
 
 const main = async () => {
@@ -333,7 +345,6 @@ const main = async () => {
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
   setUpOrientationOptions(board, gameState);
-  showRemainingTiles(3000);
 };
 
 globalThis.addEventListener("DOMContentLoaded", main);
