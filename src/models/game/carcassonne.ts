@@ -164,6 +164,10 @@ export class Carcassonne {
       this.getCurrentPlayer().movesStack.push(position);
       this.lastPlacedTilePosition = position;
 
+      if (this.tileManager.remainingTile() === 0) {
+        this.scoreAfterGameEnds();
+      }
+
       return { isPlaced: true };
     }
     return { isPlaced: false };
@@ -239,5 +243,9 @@ export class Carcassonne {
 
   getLastPlacedTilePosition(): Position {
     return this.lastPlacedTilePosition;
+  }
+
+  scoreAfterGameEnds() {
+    return this.scoreBoard.endGame();
   }
 }

@@ -145,10 +145,6 @@ export class TileBoxManager {
   isOccupied(position: Position, edge: Sides | Center) {
     return this.getOccupiedBy(position, edge).size > 0;
   }
-
-  // isScored(position: Position) {
-  //   return this.getCell(position)?.occupiedRegion.middle.isScored;
-  // }
 }
 
 export class TileStacker {

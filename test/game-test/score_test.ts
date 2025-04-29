@@ -3,6 +3,7 @@ import {
   createDummyPlayers,
   createPlayer,
   dummyTiles,
+  endGameTile1,
   monasteryTiles,
   monasteryTiles1,
   monasteryTiles2,
@@ -304,5 +305,19 @@ describe("Testing for scoring Roads", () => {
     assertEquals(game.getAllPlayers()[1].points, 0);
     assertEquals(game.getBoard()[42][41].meeple.region, null);
     assertEquals(game.getBoard()[42][44].meeple.region, "right");
+  });
+});
+
+describe("Testing for End Game scenarios", () => {
+  it("should return the score for incomplete monastery", () => {
+    const game = createAndPlaceTiles(endGameTile1, [
+      { row: 43, col: 42, location: Center.MIDDlE },
+      { row: 42, col: 43 },
+      { row: 43, col: 43 },
+      { row: 44, col: 43 },
+    ]);
+
+    assertEquals(game.getAllPlayers()[0].points, 5);
+    assertEquals(game.getAllPlayers()[1].points, 0);
   });
 });

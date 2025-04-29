@@ -248,3 +248,12 @@ export const roadTile9 = () => {
     createDummyTile("4", ["r", "f", "r", "r"], "e"),
   ];
 };
+
+export const endGameTile1 = () => {
+  return [
+    createDummyTile("3", ["f", "f", "f", "f"], "m"),
+    createDummyTile("4", ["r", "f", "r", "f"], "r"),
+    createDummyTile("5", ["f", "f", "c", "f"], "f"),
+    createDummyTile("6", ["f", "f", "f", "c"], "f"),
+  ];
+};

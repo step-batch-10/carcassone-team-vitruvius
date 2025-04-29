@@ -161,6 +161,10 @@ export class ScoreManager {
     this.scorePoints.updateScoreForMonastry(position, new Set<string>());
     this.scorePoints.updateScoreForRoad(position);
   }
+
+  endGame() {
+    this.scorePoints.endGameScore(this.board);
+  }
 }
 
 class Score {
@@ -408,6 +412,28 @@ class Score {
       ) {
         this.updateScoreForMonastry(adjPos, traverse);
       }
+    });
+  }
+
+  noOfAdjTiles(position: Position) {
+    return this.tiles
+      .adjacentPositionArray(position)
+      .reduce(
+        (count, pos) => (this.tiles.getTile(pos) ? (count += 1) : count),
+        0,
+      );
+  }
+
+  endGameScore(board: TileBox[][]) {
+    board.forEach((_, row) => {
+      _.forEach((tile, col) => {
+        const meeple = tile.occupiedRegion.middle;
+        if (meeple.feature === Feature.MONASTERY && !meeple.isScored) {
+          const noOfTiles = this.noOfAdjTiles({ row, col });
+          const players = meeple.occupiedBy;
+          this.updateScoreToPlayers(players, noOfTiles + 1);
+        }
+      });
     });
   }
 }
