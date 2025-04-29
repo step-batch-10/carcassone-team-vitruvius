@@ -87,3 +87,63 @@ button:hover {
 #join-btn {
   margin-top: 10px;
 }
+
+.custom-alert {
+  position: fixed;
+  font-size: 1rem;
+  color: aliceblue;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid goldenrod;
+  padding: 10px 20px;
+  border-radius: 8px;
+  bottom: 13%;
+  overflow: scroll;
+}
+
+#rules-container {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  z-index: -1;
+}
+
+.bg-blur {
+  backdrop-filter: blur(32px);
+  z-index: 1;
+}
+
+#description {
+  z-index: 2;
+}
+
+.background {
+  z-index: -2;
+}
+
+.form-container {
+  position: relative;
+}
+
+#rules {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  position: absolute;
+  top: 20%;
+  left: 88%;
+
+  & > img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+#close-btn {
+  position: absolute;
+  right: 2%;
+}

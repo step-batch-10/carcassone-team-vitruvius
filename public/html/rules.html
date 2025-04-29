@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carcassonne Rules Popup</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f5f0e6; /* Light cream */
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        background-color: #8b4513; /* SaddleBrown */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background-color: #5c3310;
+      }
+      .note {
+        background: #fbe7c6; /* Soft beige */
+        padding: 8px;
+        border-left: 5px solid #d2691e; /* Chocolate */
+        margin: 12px 0;
+        border-radius: 5px;
+        font-size: 0.95em;
+      }
+
+      /* Modal Class */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background-color: #fffaf3; /* Very light cream */
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 12px;
+        border: 3px solid #8b4513; /* Brown border */
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+        position: relative;
+        color: #4b2e19; /* Dark brown text */
+      }
+
+      .modal-content .close-btn {
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #8b4513;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="openRules">Show Rules 📜</button>
+
+    <script>
+      const openBtn = document.getElementById("openRules");
+
+      openBtn.addEventListener("click", () => {
+        const modal = document.createElement("div");
+        modal.classList.add("modal"); // Add modal class
+
+        const modalContent = document.createElement("div");
+        modalContent.classList.add("modal-content"); // Add modal-content class
+
+        // Add close button
+        const closeBtn = document.createElement("span");
+        closeBtn.innerHTML = "&times;";
+        closeBtn.classList.add("close-btn"); // Add close-btn class
+
+        closeBtn.addEventListener("click", () => {
+          modal.classList.remove("modal"); // Remove modal class to hide
+        });
+
+        // Add content to modal
+
+        // Append everything
+        modalContent.appendChild(closeBtn);
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+      });
+    </script>
+  </body>
+</html>
