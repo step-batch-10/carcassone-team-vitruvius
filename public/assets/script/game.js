@@ -160,7 +160,8 @@ const showCurrentPlayer = (interval) => {
   setInterval(async () => {
     const currentPlayer = await API.currentPlayer();
     textLabel.textContent = `${currentPlayer}'s turn`;
-    currentPlayerLabel.style.display = "flex";
+    currentPlayerLabel.classList.remove("hidden");
+    currentPlayerLabel.classList.add("visible");
   }, interval);
 };
 
@@ -187,25 +188,15 @@ const pollTurn = (gameStatePoller, gameState) => {
     const isPlayerTurn = self.username === currentPlayer;
 
     if (isPlayerTurn && gameStatePoller.isPolling()) {
-      loadGame(gameState);
       gameStatePoller.stopPolling();
+
+      setTimeout(() => loadGame(gameState), 1000);
     }
 
     if (!isPlayerTurn && !gameStatePoller.isPolling()) {
       gameStatePoller.startPolling();
     }
   };
-};
-
-const showRemainingTiles = (interval) => {
-  const remainingTiles = document.querySelector(".remaining-tiles");
-  const textLabel = remainingTiles.querySelector("p");
-
-  setInterval(async () => {
-    const numberOfTilesLeft = await API.remainingTiles();
-    textLabel.textContent = `Remaining Tiles: ${numberOfTilesLeft + 1}`;
-    remainingTiles.style.display = "flex";
-  }, interval);
 };
 
 const setUPLastPlacedTileOption = () => {
@@ -266,7 +257,6 @@ const main = async () => {
   addScrollFeatures();
   changeFocusToStartingTile();
   showCurrentPlayer(5000);
-  showRemainingTiles(3000);
   setUpOrientationOptions(board, gameState);
 };
 

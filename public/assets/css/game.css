@@ -300,3 +300,11 @@ td > img {
 .player-name {
   margin: auto;
 }
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: flex;
+}

@@ -85,6 +85,7 @@ class GameState {
     this.#board.registerCells(this.#cells);
     this.#board.build();
     this.showPlayerStatus();
+    await this.showRemainingTiles();
 
     if (this.#self.username === currentPlayer.username) {
       await this.drawTileIfNotDrawn(this.#currentTile);
@@ -94,7 +95,7 @@ class GameState {
     }
   }
 
-  updateGameState(newGameState) {
+  async updateGameState(newGameState) {
     if (!_.isEqual(this.#gameState, newGameState)) {
       this.#gameState = newGameState;
       this.#self = newGameState.self;
@@ -102,12 +103,24 @@ class GameState {
       this.#currentTile = newGameState.currentTile;
       this.#currentPlayer = newGameState.currentPlayer;
 
-      this.renderGameState();
+      await this.renderGameState();
     }
   }
 
   get self() {
     return this.#self;
+  }
+
+  async showRemainingTiles() {
+    const remainingTiles = document.querySelector(".remaining-tiles");
+    const textLabel = remainingTiles.querySelector("p");
+
+    const numberOfTilesLeft = await API.remainingTiles();
+    textLabel.textContent = `Remaining Tiles: ${numberOfTilesLeft}`;
+    remainingTiles.classList.remove("hidden");
+    remainingTiles.classList.add("visible");
+
+    console.log(remainingTiles, textLabel);
   }
 }
 

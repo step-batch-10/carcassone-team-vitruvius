@@ -202,6 +202,7 @@ export class Carcassonne {
       currentPlayer: this.getCurrentPlayer().json(),
       currentTile: this.currentTile,
       players: this.getAllPlayers(),
+      remainingTiles: this.getRemainingTiles(),
     };
   }
 
