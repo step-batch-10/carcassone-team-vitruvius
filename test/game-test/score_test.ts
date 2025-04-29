@@ -12,6 +12,7 @@ import {
   roadTile6,
   roadTile7,
   roadTile8,
+  roadTile9,
   roadTiles,
   roadTiles1,
   roadTiles2,
@@ -293,13 +294,15 @@ describe("Testing for scoring Roads", () => {
   });
 
   it("should not remove the meeple of tile which isn't scored", () => {
-    const game = createAndPlaceTiles(roadTile8, [
-      { row: 42, col: 41, location: Sides.RIGHT },
+    const game = createAndPlaceTiles(roadTile9, [
       { row: 42, col: 43, location: Sides.RIGHT },
+      { row: 42, col: 44, location: Sides.RIGHT },
+      { row: 42, col: 41 },
     ]);
 
-    assertEquals(game.getAllPlayers()[0].points, 3);
+    assertEquals(game.getAllPlayers()[0].points, 4);
     assertEquals(game.getAllPlayers()[1].points, 0);
     assertEquals(game.getBoard()[42][41].meeple.region, null);
+    assertEquals(game.getBoard()[42][44].meeple.region, "right");
   });
 });

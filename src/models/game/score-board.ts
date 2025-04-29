@@ -177,7 +177,7 @@ class Score {
     const meeple = this.tiles.getCell(position)!.meeple;
     const player = this.findPlayer(meeple.playerName);
 
-    if (player) {
+    if (player && this.tiles.isScored(position, meeple.region!)) {
       player.noOfMeeples += 1;
 
       meeple.playerName = null;
