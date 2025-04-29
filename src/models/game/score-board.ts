@@ -61,6 +61,11 @@ export class ScoreManager {
       this.edges.forEach((edge) => {
         if (occupances[edge].feature === Feature.ROAD) {
           tempPlayers = tempPlayers.union(occupances[edge].occupiedBy);
+        }
+      });
+
+      this.edges.forEach((edge) => {
+        if (occupances[edge].feature === Feature.ROAD) {
           occupances[edge].occupiedBy = tempPlayers;
         }
       });

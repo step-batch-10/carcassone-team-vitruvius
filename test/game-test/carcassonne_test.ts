@@ -9,6 +9,7 @@ import {
   dummyTiles2,
   dummyTiles3,
   dummyTiles4,
+  dummyTiles6,
 } from "../dummy-data.ts";
 import { createDummyTile, dummyTiles5, roadTile4 } from "./../dummy-data.ts";
 import { createAndPlaceTiles } from "./score_test.ts";
@@ -190,6 +191,19 @@ describe("Testing place a meeple", () => {
   });
 
   it("should not place when it is already occupied by another player and their meeple count remain unchanged", () => {
+    const game = Carcassonne.initGame(players, shuffler, dummyTiles6());
+
+    game.drawATile();
+    game.placeATile({ row: 41, col: 42 });
+    game.placeAMeeple(Sides.RIGHT);
+    game.drawATile();
+    game.placeATile({ row: 40, col: 42 });
+
+    assertFalse(game.placeAMeeple(Sides.TOP).isPlaced);
+    assertEquals(players[1].noOfMeeples, 7);
+  });
+
+  it("should not place when it's occupied (city in  the center)", () => {
     const game = Carcassonne.initGame(players, shuffler, dummyTiles());
 
     game.drawATile();
