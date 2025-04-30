@@ -115,10 +115,34 @@ export const addFlashEffect = (element) => element.classList.add("flash");
 export const removeFlashEffect = (element) =>
   setTimeout(() => element.classList.remove("flash"), 300);
 
-const setUPLastPlacedTileOption = () => {
-  const lastPlacedTileOption = document.querySelector("#last-placed-tile");
+const registerShortcut = () => {
+  const shortcuts = new Map();
 
-  lastPlacedTileOption.addEventListener("click", async () => {
+  return {
+    addShortcut: (combo, callback) => shortcuts.set(combo, callback),
+    applyShortcuts: () => {
+      document.addEventListener("keydown", (event) => {
+        const keys = [];
+        if (event.ctrlKey) keys.push("ctrl");
+        if (event.shiftKey) keys.push("shift");
+        if (event.altKey) keys.push("alt");
+        if (event.metaKey) keys.push("meta");
+        keys.push(event.key.toLowerCase());
+
+        const combo = keys.sort().join("+");
+        const action = shortcuts.get(combo);
+        if (action) {
+          event.preventDefault();
+          action(event);
+        }
+      });
+    },
+  };
+};
+
+const setUPLastPlacedTileOption = (keyboard) => {
+  const lastPlacedTileOption = document.querySelector("#last-placed-tile");
+  const handler = async () => {
     addFlashEffect(lastPlacedTileOption);
 
     const lastPlacedTilePosition = await API.lastPlacedTilePosition();
@@ -128,43 +152,56 @@ const setUPLastPlacedTileOption = () => {
     }
 
     removeFlashEffect(lastPlacedTileOption);
-  });
+  };
+
+  lastPlacedTileOption.addEventListener("click", handler);
+  keyboard.addShortcut("l", handler);
 };
 
-const setUpLastPlayerTileOption = () => {
+const setUpLastPlayerTileOption = (keyboard) => {
   const lastPlayerTileOption = document.querySelector("#last-player-tile");
 
-  lastPlayerTileOption.addEventListener("click", async () => {
+  const handler = async () => {
     addFlashEffect(lastPlayerTileOption);
     const lastPlacedPosition = await API.lastPlayerTilePosition();
 
     Board.scrollToCellElementOf(lastPlacedPosition);
     removeFlashEffect(lastPlayerTileOption);
-  });
+  };
+  lastPlayerTileOption.addEventListener("click", handler);
+
+  keyboard.addShortcut("ctrl+l", handler);
 };
 
-const setUpWorldRotateOption = (board, gameState) => {
+const setUpWorldRotateOption = (keyboard, board, gameState) => {
   const worldRotateOption = document.querySelector("#world-rotate");
 
-  worldRotateOption.addEventListener("click", async () => {
+  const handler = async () => {
     addFlashEffect(worldRotateOption);
     board.rotateMap();
     await gameState.renderGameState();
     removeFlashEffect(worldRotateOption);
-  });
+  };
+  worldRotateOption.addEventListener("click", handler);
+
+  keyboard.addShortcut("r", handler);
 };
 
-const setUpToggleGrid = () => {
+const setUpToggleGrid = (keyboard) => {
   const toggleBtn = document.querySelector("#toggle");
 
-  toggleBtn.addEventListener("click", () => {
+  const handler = () => {
+    addFlashEffect(toggleBtn);
     document.body.classList.toggle("show-grid-border");
     if (document.body.classList.contains("show-grid-border")) {
       toggleBtn.src = "/assets/images/symbols/toggle-off.png";
     } else {
       toggleBtn.src = "/assets/images/symbols/toggle.png";
     }
-  });
+    removeFlashEffect(toggleBtn);
+  };
+  toggleBtn.addEventListener("click", handler);
+  keyboard.addShortcut("g", handler);
 };
 
 const isTileExist = (cell) => cell.tile;
@@ -219,33 +256,44 @@ const findMiddleCellPosition = (board) => {
   return row === -1 || col === -1 ? null : { row, col };
 };
 
-const setUpScrollToMiddleOption = (gameState) => {
+const setUpScrollToMiddleOption = (keyboard, gameState) => {
   const middleCellPositionOption = document.querySelector("#center");
 
-  middleCellPositionOption.addEventListener("click", () => {
+  const handler = () => {
     addFlashEffect(middleCellPositionOption);
     const middleCellPosition = findMiddleCellPosition(gameState.getBoard());
 
     if (middleCellPosition) Board.scrollToCellElementOf(middleCellPosition);
     removeFlashEffect(middleCellPositionOption);
-  });
+  };
+  middleCellPositionOption.addEventListener("click", handler);
+  keyboard.addShortcut("c", handler);
 };
 
-const setUpThemeOption = () => {
+const setUpThemeOption = (keyboard) => {
   const themeOption = document.querySelector("#theme");
 
-  themeOption.addEventListener("click", () => {
+  const handler = () => {
+    addFlashEffect(themeOption);
     document.body.classList.toggle("dark");
-  });
+    removeFlashEffect(themeOption);
+  };
+
+  themeOption.addEventListener("click", handler);
+  keyboard.addShortcut("t", handler);
 };
 
 const setUpOrientationOptions = (board, gameState) => {
-  setUPLastPlacedTileOption();
-  setUpLastPlayerTileOption();
-  setUpToggleGrid();
-  setUpWorldRotateOption(board, gameState);
-  setUpThemeOption();
-  setUpScrollToMiddleOption(gameState);
+  const keyboard = registerShortcut();
+
+  setUPLastPlacedTileOption(keyboard);
+  setUpLastPlayerTileOption(keyboard);
+  setUpToggleGrid(keyboard);
+  setUpWorldRotateOption(keyboard, board, gameState);
+  setUpThemeOption(keyboard);
+  setUpScrollToMiddleOption(keyboard, gameState);
+
+  keyboard.applyShortcuts();
 };
 
 const main = async () => {
