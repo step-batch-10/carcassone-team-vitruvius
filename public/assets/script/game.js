@@ -231,11 +231,20 @@ const setUpScrollToMiddleOption = (gameState) => {
   });
 };
 
+const setUpThemeOption = () => {
+  const themeOption = document.querySelector("#theme");
+
+  themeOption.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
+};
+
 const setUpOrientationOptions = (board, gameState) => {
   setUPLastPlacedTileOption();
   setUpLastPlayerTileOption();
   setUpToggleGrid();
   setUpWorldRotateOption(board, gameState);
+  setUpThemeOption();
   setUpScrollToMiddleOption(gameState);
 };
 

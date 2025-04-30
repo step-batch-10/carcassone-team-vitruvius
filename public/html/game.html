@@ -14,7 +14,7 @@
     <script type="module" src="/assets/script/game.js"></script>
   </head>
 
-  <body>
+  <body class="light">
     <main>
       <div class="player-turn hidden">
         <p></p>
@@ -28,7 +28,7 @@
           class="arrow"
           src="/assets/images/symbols/arrow.png"
           alt="arrow-top"
-          title="scroll up"
+          title="Scroll Up (Arrow Up)"
         />
       </div>
       <div id="right-navigator">
@@ -36,7 +36,7 @@
           class="arrow"
           src="/assets/images/symbols/arrow.png"
           alt="arrow-right"
-          title="scroll right"
+          title="Scroll Right (Arrow Right)"
         />
       </div>
       <div id="bottom-navigator">
@@ -44,7 +44,7 @@
           class="arrow"
           src="/assets/images/symbols/arrow.png"
           alt="arrow-bottom"
-          title="scroll down"
+          title="Scroll Down (Arrow Down)"
         />
       </div>
       <div id="left-navigator">
@@ -52,7 +52,7 @@
           class="arrow"
           src="/assets/images/symbols/arrow.png"
           alt="arrow-left"
-          title="scroll left"
+          title="Scroll Left (Arrow Left)"
         />
       </div>
       <div class="score-board-container hidden"></div>
@@ -72,36 +72,44 @@
       </template>
     </main>
     <footer>
-      <div id="options" class="footer">
+      <div id="theme-options" class="footer">
+        <img
+          src="/assets/images/symbols/toggle.png"
+          alt="toggle"
+          id="toggle"
+          title="Toggle Grid (G)"
+        />
+        <img
+          src="/assets/images/symbols/theme.png"
+          alt="theme"
+          id="theme"
+          title="Change Theme (T)"
+        />
+      </div>
+      <div id="map-options" class="footer">
         <img
           src="/assets/images/symbols/center.png"
           alt="center"
           id="center"
-          title="center of board"
+          title="Center of Board (C)"
         />
         <img
           src="/assets/images/symbols/last-placed-tile.png"
           alt="last-placed-tile"
           id="last-placed-tile"
-          title="last placed tile"
+          title="Last Placed Tile (L)"
         />
         <img
           src="/assets/images/symbols/last-player-tile.png"
           alt="last-player-tile"
           id="last-player-tile"
-          title="last player's tile"
+          title="Last Player's Tile (ctrl+L)"
         />
         <img
           src="/assets/images/symbols/rotate-map.png"
           alt="rotate-map"
           id="world-rotate"
-          title="world rotate"
-        />
-        <img
-          src="/assets/images/symbols/toggle.png"
-          alt="toggle"
-          id="toggle"
-          title="toggle grid"
+          title="World Rotate (R)"
         />
       </div>
 
