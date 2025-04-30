@@ -62,13 +62,13 @@ class GameState {
     ];
     const [playerNameNode, meepleImage, meepleCount, score] = selectNodes(
       selectors,
-      playerStatusClone
+      playerStatusClone,
     );
 
     playerNameNode.textContent = username;
     meepleImage.firstElementChild.setAttribute(
       "src",
-      `/assets/images/${meepleColor}-meeple.png`
+      `/assets/images/${meepleColor}-meeple.png`,
     );
     meepleCount.textContent = noOfMeeples;
     score.textContent = points;
@@ -82,7 +82,7 @@ class GameState {
     const players = await this.currentAPI()();
     const selfNode = this.createPlayerElement(this.#self);
     const otherPlayers = players.filter(
-      ({ username }) => this.#self.username !== username
+      ({ username }) => this.#self.username !== username,
     );
     const otherPlayerNodes = otherPlayers.map(this.createPlayerElement);
 
@@ -145,13 +145,13 @@ class GameState {
       const playerScoreBoard = template.content.cloneNode(true);
       const [playerStat, username, meepleImg, points] = selectNodes(
         selectors,
-        playerScoreBoard
+        playerScoreBoard,
       );
 
       username.textContent = player.username;
       meepleImg.setAttribute(
         "src",
-        `/assets/images/${player.meepleColor}-meeple.png`
+        `/assets/images/${player.meepleColor}-meeple.png`,
       );
       points.textContent = player.points;
 

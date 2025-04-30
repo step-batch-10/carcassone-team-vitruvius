@@ -25,15 +25,13 @@ const showPopUpOnBoardEdge = (content) => {
   setTimeout(() => removeAlert(popUp), 1000);
 };
 
-const createScrollEvent =
-  ({ predicate, direction, chord }) =>
-  () => {
-    if (!predicate()) {
-      return globalThis.scrollBy({ ...chord, behavior: "smooth" });
-    }
+const createScrollEvent = ({ predicate, direction, chord }) => () => {
+  if (!predicate()) {
+    return globalThis.scrollBy({ ...chord, behavior: "smooth" });
+  }
 
-    showPopUpOnBoardEdge(`You are already in the ${direction} edge`);
-  };
+  showPopUpOnBoardEdge(`You are already in the ${direction} edge`);
+};
 
 const addScrollEvents = (scrollEventHandlers, navigators) => {
   navigators.forEach((navigator, index) => {
