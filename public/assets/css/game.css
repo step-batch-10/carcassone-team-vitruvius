@@ -55,6 +55,7 @@ body {
 }
 
 #top-navigator {
+  z-index: 5;
   position: fixed;
   top: 0px;
   left: 50%;
@@ -62,6 +63,7 @@ body {
 }
 
 #right-navigator {
+  z-index: 5;
   position: fixed;
   top: 50%;
   right: 0px;
@@ -69,6 +71,7 @@ body {
 }
 
 #bottom-navigator {
+  z-index: 5;
   position: fixed;
   bottom: 0px;
   left: 50%;
@@ -76,6 +79,7 @@ body {
 }
 
 #left-navigator {
+  z-index: 5;
   position: fixed;
   top: 50%;
   left: 0px;
@@ -127,6 +131,7 @@ body {
   gap: 16px;
   bottom: 8px;
   left: 460px;
+  z-index: 5;
 }
 
 .options img {
