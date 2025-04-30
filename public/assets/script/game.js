@@ -14,95 +14,6 @@ const placeTile = (cell) => {
   cell.style.opacity = "1";
 };
 
-const showPlacedMeeple = async (event) => {
-  const { meepleColor } = await API.self();
-
-  const meeple = document.createElement("img");
-
-  meeple.classList.add("used-meeple");
-  meeple.setAttribute("src", `/assets/images/${meepleColor}-meeple.png`);
-
-  event.target.appendChild(meeple);
-};
-
-const removeMeepleListeners = (event, listener) => {
-  const placed = event.target;
-  const placedSubgrid = event.target.parentNode.cloneNode(true);
-  const cell = placed.parentNode.parentNode;
-  const subgrids = document.querySelectorAll(".subgrid");
-
-  subgrids.forEach((subgrid) => subgrid.remove());
-  const skipBtn = document.querySelectorAll(".skip")[0];
-  skipBtn.remove();
-
-  cell.appendChild(placedSubgrid);
-  placed.removeEventListener("click", listener);
-};
-
-const handlePlaceMeeple = (side) => {
-  const placeMeeple = async (event) => {
-    const res = await API.claim(side);
-
-    if (res.status === 201) {
-      await showPlacedMeeple(event);
-      removeMeepleListeners(event, placeMeeple);
-    }
-  };
-
-  return placeMeeple;
-};
-
-const rotateMeepleSide = (side, mapOrientation) => {
-  const sideClasses = ["left", "top", "right", "bottom"];
-
-  if (side === "middle") {
-    return "middle";
-  }
-
-  return sideClasses[
-    (sideClasses.indexOf(side) + ((mapOrientation / 90) % 4)) % 4
-  ];
-};
-
-const createSubGrid = async (mapOrientation) => {
-  const sides = await API.claimables();
-
-  return sides.map((side) => {
-    const element = document.createElement("div");
-
-    const ghostMeeple = document.createElement("img");
-    ghostMeeple.setAttribute("src", `/assets/images/ghost-meeple.png`);
-    ghostMeeple.classList.add("ghost");
-    element.appendChild(ghostMeeple);
-
-    const sideClass = rotateMeepleSide(side, mapOrientation);
-
-    element.classList.add("sub-grid");
-    element.classList.add(sideClass);
-    element.addEventListener("click", handlePlaceMeeple(side));
-
-    return element;
-  });
-};
-
-const handleSkip = (cell) => {
-  return async (_) => {
-    await fetch("/game/skip-claim", { method: "PATCH" });
-    const img = cell.querySelector("img");
-    cell.replaceChildren(img);
-  };
-};
-
-const addMeepleOptions = async (cell, mapOrientation) => {
-  const subGrid = await createSubGrid(mapOrientation);
-  const skipButton = document.createElement("button");
-
-  skipButton.classList.add("skip");
-  skipButton.addEventListener("click", handleSkip(cell));
-
-  cell.append(...subGrid, skipButton);
-};
-
 const handleTilePlacement = async (event, board, events) => {
   const cell = event.target.parentNode;
   const position = Cell.parseCellId(cell.id);
@@ -121,7 +32,7 @@ const handleTilePlacement = async (event, board, events) => {
   placeTile(cell, board);
 
   event.target.removeEventListener("dblclick", events.dblclick);
-  addMeepleOptions(cell, board.getMapOrientation());
+  Cell.addMeepleOptions(cell, board.getMapOrientation());
 };
 
 const createCellEvents = (board) => {
@@ -288,19 +199,9 @@ const maxOfCol = (board) => {
   return positions.reduce(max, -1);
 };
 
-const debug = function (arg) {
-  console.log(arg);
-  return arg;
-};
-
 const findMiddleCellPosition = (board) => {
-  // const minOfRow = findMinOfRow(board);
-  // const maxOfRow = findMaxOfRow(board);
-  // const minOfCol = findMinOfCol(board);
-  // const maxOfCol = findMaxOfCol(board);
-
-  const row = Math.floor((debug(minOfRow(board)) + debug(maxOfRow(board))) / 2);
-  const col = Math.floor((debug(minOfCol(board)) + debug(maxOfCol(board))) / 2);
+  const row = Math.floor((minOfRow(board) + maxOfRow(board)) / 2);
+  const col = Math.floor((minOfCol(board) + maxOfCol(board)) / 2);
 
   return row === -1 || col === -1 ? null : { row, col };
 };

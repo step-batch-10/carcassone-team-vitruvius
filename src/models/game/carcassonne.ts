@@ -4,6 +4,7 @@ import Player from "../room/player.ts";
 import {
   CardinalDegrees,
   Center,
+  OccupanceSubGrid,
   Position,
   Sides,
   Tile,
@@ -25,6 +26,8 @@ export class Carcassonne {
   private tileBoxes;
   private scoreBoard;
   private lastPlacedTilePosition: Position;
+  private unclaimables: Set<string>;
+  private isAttemptToPlaceMeeple: boolean;
 
   constructor(
     players: Player[],
@@ -46,6 +49,8 @@ export class Carcassonne {
       players,
     );
     this.lastPlacedTilePosition = { row: 42, col: 42 };
+    this.unclaimables = new Set(["field", "roadEnd"]);
+    this.isAttemptToPlaceMeeple = false;
   }
 
   static getAllUnlockedPosition(board: Board): Position[] {
@@ -153,6 +158,7 @@ export class Carcassonne {
 
   changePlayerTurn() {
     this.turn = (this.turn + 1) % this.players.length;
+    this.isAttemptToPlaceMeeple = false;
   }
 
   placeATile(position: Position) {
@@ -167,6 +173,8 @@ export class Carcassonne {
       if (this.tileManager.remainingTile() === 0) {
         this.scoreAfterGameEnds();
       }
+
+      this.isAttemptToPlaceMeeple = true;
 
       return { isPlaced: true };
     }
@@ -207,28 +215,31 @@ export class Carcassonne {
       currentTile: this.currentTile,
       players: this.getAllPlayers(),
       remainingTiles: this.getRemainingTiles(),
+      isAttemptToPlaceMeeple: this.isAttemptToPlaceMeeple,
     };
   }
 
-  getClaimables() {
-    if (this.tilePlacedAt) {
-      const { row, col } = this.tilePlacedAt;
-      const tileBox: TileBox = this.board.getBoard()[row][col];
-      const unclaimables = new Set(["field", "roadEnd"]);
-      const regions = Object.entries(tileBox.occupiedRegion);
+  private isNotClaimable(obj: OccupanceSubGrid) {
+    return !obj.feature ||
+      this.unclaimables.has(obj.feature) ||
+      obj.occupiedBy.size > 0;
+  }
 
-      return regions.reduce((claimables: Sides[], [side, obj]) => {
-        if (
-          !obj.feature ||
-          unclaimables.has(obj.feature) ||
-          obj.occupiedBy.size > 0
-        ) {
-          return claimables;
-        }
-        claimables.push(side as Sides);
-        return claimables;
-      }, []);
-    }
+  getClaimables() {
+    if (!this.tilePlacedAt) return [];
+    if (this.getCurrentPlayer().noOfMeeples < 1) return [];
+
+    const { row, col } = this.tilePlacedAt;
+    const tileBox: TileBox = this.board.getBoard()[row][col];
+    const regions = Object.entries(tileBox.occupiedRegion);
+
+    return regions.reduce((claimables: Sides[], [side, obj]) => {
+      if (this.isNotClaimable(obj)) return claimables;
+
+      claimables.push(side as Sides);
+
+      return claimables;
+    }, []);
   }
 
   getRemainingTiles() {

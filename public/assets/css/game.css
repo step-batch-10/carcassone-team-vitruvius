@@ -371,3 +371,27 @@ button:hover {
 .visible {
   display: flex;
 }
+
+.blink-border {
+  box-shadow: 1px 1px 30px red;
+  animation: blink-border 2s infinite;
+  z-index: 2;
+  background-color: gold;
+
+  & > img {
+    opacity: 0.5;
+  }
+}
+
+@keyframes blink-border {
+  0%,
+  50% {
+    border-color: goldenrod;
+  }
+  90% {
+    border-color: crimson;
+  }
+  100% {
+    border-color: transparent;
+  }
+}

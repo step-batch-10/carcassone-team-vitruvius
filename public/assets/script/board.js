@@ -74,6 +74,8 @@ class Board {
   }
 
   addGhostEffect() {
+    Cell.addRotateShortcuts();
+
     this.#ghostEffectEvents = {
       mouseenter: (event) => Board.handleGhostTile(event, this.#mapOrientation),
       mouseleave: Board.removeGhostTile,
@@ -87,6 +89,7 @@ class Board {
   }
 
   removeGhostEffect() {
+    Cell.removeRotateShortcuts();
     const emptyCells = document.querySelectorAll(".empty-cell");
 
     emptyCells.forEach((cellElement) => {
@@ -136,13 +139,17 @@ class Board {
   static scrollToCellElementOf(cellPosition) {
     const { row, col } = cellPosition;
     const cellId = Cell.makeCellId(row, col);
-    const lastPlacedTile = document.getElementById(cellId);
+    const cell = document.getElementById(cellId);
 
-    lastPlacedTile.scrollIntoView({
+    cell.scrollIntoView({
       behavior: "smooth",
       block: "center",
       inline: "center",
     });
+
+    cell.classList.add("blink-border");
+
+    setTimeout(() => cell.classList.remove("blink-border"), 2000);
   }
 
   getMapOrientation() {

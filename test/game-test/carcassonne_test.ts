@@ -32,12 +32,12 @@ describe("Testing get Board", () => {
   });
 });
 
-const shuffler = (arr: Tile[]) => arr;
+const testShuffler = (arr: Tile[]) => arr;
 const players = createDummyPlayers();
 
 describe("Testing draw a tile", () => {
   it("should give the first tile when top has a valid tile", () => {
-    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    const game = Carcassonne.initGame(players, testShuffler, dummyTiles());
     assertEquals(
       game.drawATile(),
       createDummyTile("2", ["r", "f", "r", "f"], "r"),
@@ -45,7 +45,7 @@ describe("Testing draw a tile", () => {
   });
 
   it("should give the second tile when top has an invalid tile", () => {
-    const game = Carcassonne.initGame(players, shuffler, dummyTiles2());
+    const game = Carcassonne.initGame(players, testShuffler, dummyTiles2());
     assertEquals(
       game.drawATile(),
       createDummyTile("2", ["c", "c", "c", "c"], "c"),
@@ -54,7 +54,7 @@ describe("Testing draw a tile", () => {
 });
 
 describe("Testing rotateCurrentTile", () => {
-  const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+  const game = Carcassonne.initGame(players, testShuffler, dummyTiles());
 
   it("should rotate the current tile by 90 degree", () => {
     game.drawATile();
@@ -83,7 +83,7 @@ describe("Testing rotateCurrentTile", () => {
 });
 
 describe("Testing place a tile", () => {
-  const game = Carcassonne.initGame(players, shuffler, dummyTiles3());
+  const game = Carcassonne.initGame(players, testShuffler, dummyTiles3());
 
   it("should place the tile when placed at correct postion", () => {
     game.drawATile();
@@ -104,7 +104,7 @@ describe("Testing placablePositions", () => {
   };
 
   beforeEach(() => {
-    game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    game = Carcassonne.initGame(players, testShuffler, dummyTiles());
   });
 
   it("should return object having unlockedPosition and placablePositions", () => {
@@ -142,7 +142,7 @@ describe("Testing place a meeple", () => {
   let game: Carcassonne | undefined;
 
   beforeEach(() => {
-    game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    game = Carcassonne.initGame(players, testShuffler, dummyTiles());
   });
 
   it("should place a meeple when it is not occupied by any player and their meeple count should reduce", () => {
@@ -333,11 +333,32 @@ describe("lastPlayerTilePosition", () => {
   });
 
   it("should return last player's placed tile position", () => {
-    const game = Carcassonne.initGame(players, shuffler, dummyTiles());
+    const game = Carcassonne.initGame(players, testShuffler, dummyTiles());
     game.drawATile();
     const position = game.validPositions().placablePositions[0];
     game.placeATile(position);
 
     assertEquals(game.getLastPlacedTilePosition(), position);
+  });
+});
+
+describe("getClaimables", () => {
+  it("should return empty array when player doesn't have meeples", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, testShuffler, dummyTiles());
+
+    game.drawATile();
+    const placablePositions = game.validPositions().placablePositions;
+    game.placeATile(placablePositions[0]);
+
+    players[0].noOfMeeples = 0;
+    assertEquals(game.getClaimables(), []);
+  });
+
+  it("should return empty array when player didn't place a tile", () => {
+    const players = createDummyPlayers();
+    const game = Carcassonne.initGame(players, testShuffler, dummyTiles());
+
+    assertEquals(game.getClaimables(), []);
   });
 });

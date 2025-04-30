@@ -3,9 +3,7 @@ import API from "./api.js";
 const getJoinRoomId = () => {
   const formData = new FormData();
   const boxes = document.querySelectorAll(".join-box");
-  const roomID = Array.from(boxes)
-    .map((input) => input.value)
-    .join("");
+  const roomID = Array.from(boxes, (input) => input.value).join("");
 
   formData.append("roomID", roomID);
   return formData;
@@ -71,16 +69,14 @@ const focusPrevious = (input, inputs, index) => {
 };
 
 const pasteRoomID = async (event) => {
-  event.preventDefault();
   const inputs = document.querySelectorAll("input");
 
   try {
-    const clipText = await navigator.clipboard.readText();
+    const clipText = await event.clipboardData.getData("text");
     if (clipText.length !== 6) throw { desc: "invalid length" };
 
-    inputs.forEach((input, index) => {
-      input.value = clipText[index];
-    });
+    inputs.forEach((input, index) => (input.value = clipText[index]));
+
     const join = document.querySelector("#join-button");
 
     join.focus();

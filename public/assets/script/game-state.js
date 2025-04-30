@@ -1,5 +1,6 @@
 import Board from "./board.js";
 import API from "./api.js";
+import Cell from "./cell.js";
 
 const selectNodes = (selectors, parentNode) =>
   selectors.map((selector) => parentNode.querySelector(selector));
@@ -15,6 +16,7 @@ class GameState {
   #currentAPIIndex;
   #gameStatePoller;
   #turnPoller;
+  #isAttemptToPlaceMeeple;
 
   constructor(gameState, board, APIs) {
     this.#gameState = gameState;
@@ -25,6 +27,7 @@ class GameState {
     this.#currentPlayer = gameState.currentPlayer;
     this.#APIs = APIs;
     this.#currentAPIIndex = 0;
+    this.#isAttemptToPlaceMeeple = gameState.isAttemptToPlaceMeeple;
   }
 
   registerPollers(gameStatePoller, turnPoller) {
@@ -59,13 +62,13 @@ class GameState {
     ];
     const [playerNameNode, meepleImage, meepleCount, score] = selectNodes(
       selectors,
-      playerStatusClone,
+      playerStatusClone
     );
 
     playerNameNode.textContent = username;
     meepleImage.firstElementChild.setAttribute(
       "src",
-      `/assets/images/${meepleColor}-meeple.png`,
+      `/assets/images/${meepleColor}-meeple.png`
     );
     meepleCount.textContent = noOfMeeples;
     score.textContent = points;
@@ -79,11 +82,18 @@ class GameState {
     const players = await this.currentAPI()();
     const selfNode = this.createPlayerElement(this.#self);
     const otherPlayers = players.filter(
-      ({ username }) => this.#self.username !== username,
+      ({ username }) => this.#self.username !== username
     );
     const otherPlayerNodes = otherPlayers.map(this.createPlayerElement);
 
     statusBody.replaceChildren(...otherPlayerNodes, selfNode);
+  }
+
+  async addOptionToPlaceMeeple() {
+    const { row, col } = await API.lastPlacedTilePosition();
+    const cellElement = Cell.getCell(row, col);
+
+    Cell.addMeepleOptions(cellElement, this.#board.getMapOrientation());
   }
 
   async renderGameState() {
@@ -95,6 +105,8 @@ class GameState {
     await this.showRemainingTiles();
 
     if (this.#self.username === currentPlayer.username) {
+      if (this.#isAttemptToPlaceMeeple) return this.addOptionToPlaceMeeple();
+
       await this.drawTileIfNotDrawn(this.#currentTile);
 
       this.#board.addGhostEffect();
@@ -109,6 +121,7 @@ class GameState {
       this.#cells = newGameState.board;
       this.#currentTile = newGameState.currentTile;
       this.#currentPlayer = newGameState.currentPlayer;
+      this.#isAttemptToPlaceMeeple = newGameState.isAttemptToPlaceMeeple;
 
       await this.renderGameState();
     }
@@ -132,13 +145,13 @@ class GameState {
       const playerScoreBoard = template.content.cloneNode(true);
       const [playerStat, username, meepleImg, points] = selectNodes(
         selectors,
-        playerScoreBoard,
+        playerScoreBoard
       );
 
       username.textContent = player.username;
       meepleImg.setAttribute(
         "src",
-        `/assets/images/${player.meepleColor}-meeple.png`,
+        `/assets/images/${player.meepleColor}-meeple.png`
       );
       points.textContent = player.points;
 

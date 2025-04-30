@@ -127,7 +127,7 @@ const serveRemainingTiles = (ctx: Context) => {
 };
 
 const serveLastPlacedTilePosition = (ctx: Context) => {
-  const game = ctx.get("game");
+  const game: Carcassonne = ctx.get("game");
   const username = getUserOfSessionId(ctx)?.username;
 
   const lastPlacedTilePos = game.lastPlacedTilePositionOf(username);

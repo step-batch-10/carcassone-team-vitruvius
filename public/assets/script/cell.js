@@ -24,37 +24,30 @@ const createTileImg = (tile, mapOrientation) => {
   return img;
 };
 
-const capitalize = (text) =>
-  text.at(0).toUpperCase().concat(text.slice(1).toLowerCase());
-
 const Cell = {
   ghostsCells: [],
 
-  rotateRight: async (event) => {
+  rotateRight: async () => {
     const rotatedTile = await API.rotateTile();
 
     if (rotatedTile) {
-      const cellElement = event.target.parentNode;
+      const ghostImage = document.querySelector(".ghost-img");
 
-      cellElement.querySelector(
-        "img",
-      ).style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
+      ghostImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
 
       await Board.highlightPlaceableCells();
     }
   },
 
-  rotateLeft: async (event) => {
+  rotateLeft: async () => {
     await API.rotateTile();
     await API.rotateTile();
     const rotatedTile = await API.rotateTile();
 
     if (rotatedTile) {
-      const cellElement = event.target.parentNode;
+      const ghostImage = document.querySelector(".ghost-img");
 
-      cellElement.querySelector(
-        "img",
-      ).style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
+      ghostImage.style.transform = `rotateZ(${rotatedTile.orientation}deg)`;
 
       await Board.highlightPlaceableCells();
     }
@@ -71,6 +64,27 @@ const Cell = {
     return imgElement;
   },
 
+  rotateShortcutHandler: (event) => {
+    console.log(event.key);
+    if (event.key === "j") {
+      event.preventDefault();
+      return Cell.rotateLeft();
+    }
+
+    if (event.key === "k") {
+      event.preventDefault();
+      return Cell.rotateRight();
+    }
+  },
+
+  addRotateShortcuts: () => {
+    document.addEventListener("keydown", Cell.rotateShortcutHandler);
+  },
+
+  removeRotateShortcuts: () => {
+    document.removeEventListener("keydown", Cell.rotateShortcutHandler);
+  },
+
   insertGhostTile: (tile, cellElement, mapOrientation) => {
     if (tile) {
       cellElement.innerHTML = "";
@@ -83,8 +97,8 @@ const Cell = {
       );
 
       cellElement.appendChild(ghostImage);
-      Cell.addRotateButton(cellElement, "right");
-      Cell.addRotateButton(cellElement, "left");
+      Cell.addRotateButton(cellElement, "right", Cell.rotateRight);
+      Cell.addRotateButton(cellElement, "left", Cell.rotateLeft);
       Cell.ghostsCells.push(cellElement);
     }
   },
@@ -159,15 +173,13 @@ const Cell = {
     return { row: Number(chord.row), col: Number(chord.col) };
   },
 
-  addRotateButton: (cellElement, direction) => {
+  addRotateButton: (cellElement, direction, handleRotate) => {
     const rotateButton = document.createElement("button");
+
     rotateButton.style.backgroundImage =
       `url('assets/images/symbols/rotate-${direction}.png')`;
     rotateButton.classList.add(`rotate-${direction}`);
-    rotateButton.addEventListener(
-      "click",
-      Cell[`rotate${capitalize(direction)}`],
-    );
+    rotateButton.addEventListener("click", handleRotate);
 
     cellElement.appendChild(rotateButton);
   },
@@ -203,6 +215,83 @@ const Cell = {
     Cell.addClassesToCell(cellInfo, cellElement);
 
     return cellElement;
+  },
+
+  showPlacedMeeple: async (event) => {
+    const { meepleColor } = await API.self();
+
+    const meeple = document.createElement("img");
+
+    meeple.classList.add("used-meeple");
+    meeple.setAttribute("src", `/assets/images/${meepleColor}-meeple.png`);
+
+    event.target.appendChild(meeple);
+  },
+
+  removeMeepleListeners: (event, listener) => {
+    const placed = event.target;
+    const placedSubgrid = event.target.parentNode.cloneNode(true);
+    const cell = placed.parentNode.parentNode;
+    const subgrids = document.querySelectorAll(".subgrid");
+
+    subgrids.forEach((subgrid) => subgrid.remove());
+    const skipBtn = document.querySelectorAll(".skip")[0];
+    skipBtn.remove();
+
+    cell.appendChild(placedSubgrid);
+    placed.removeEventListener("click", listener);
+  },
+
+  handlePlaceMeeple: (side) => {
+    const placeMeeple = async (event) => {
+      const res = await API.claim(side);
+
+      if (res.status === 201) {
+        await Cell.showPlacedMeeple(event);
+        Cell.removeMeepleListeners(event, placeMeeple);
+      }
+    };
+
+    return placeMeeple;
+  },
+
+  handleSkip: (cell) => {
+    return async (_) => {
+      await fetch("/game/skip-claim", { method: "PATCH" });
+      const img = cell.querySelector("img");
+      cell.replaceChildren(img);
+    };
+  },
+
+  createSubGridForMeeplePlacement: async (mapOrientation) => {
+    const sides = await API.claimables();
+
+    return sides.map((side) => {
+      const element = document.createElement("div");
+
+      const ghostMeeple = document.createElement("img");
+      ghostMeeple.setAttribute("src", `/assets/images/ghost-meeple.png`);
+      ghostMeeple.classList.add("ghost");
+      element.appendChild(ghostMeeple);
+
+      const sideClass = rotateMeepleSide(side, mapOrientation);
+
+      element.classList.add("sub-grid");
+      element.classList.add(sideClass);
+      element.addEventListener("click", Cell.handlePlaceMeeple(side));
+
+      return element;
+    });
+  },
+
+  addMeepleOptions: async (cell, mapOrientation) => {
+    const subGrid = await Cell.createSubGridForMeeplePlacement(mapOrientation);
+    const skipButton = document.createElement("button");
+
+    skipButton.classList.add("skip");
+    skipButton.addEventListener("click", Cell.handleSkip(cell));
+
+    cell.append(...subGrid, skipButton);
   },
 };
 
