@@ -223,9 +223,11 @@ const setUpScrollToMiddleOption = (gameState) => {
   const middleCellPositionOption = document.querySelector("#center");
 
   middleCellPositionOption.addEventListener("click", () => {
+    addFlashEffect(middleCellPositionOption);
     const middleCellPosition = findMiddleCellPosition(gameState.getBoard());
 
     if (middleCellPosition) Board.scrollToCellElementOf(middleCellPosition);
+    removeFlashEffect(middleCellPositionOption);
   });
 };
 
