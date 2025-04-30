@@ -135,7 +135,7 @@ body {
   padding: 12px;
   border-radius: 50%;
   background-color: rgb(146, 60, 60);
-  border: 1px solid goldenrod;
+  border: 2px solid goldenrod;
   box-sizing: content-box;
 }
 
@@ -321,6 +321,7 @@ div > .tile {
 }
 
 .score-board-container {
+  z-index: 5;
   border: 2px solid goldenrod;
   border-radius: 10px;
   background: rgba(130, 48, 48, 0.95);

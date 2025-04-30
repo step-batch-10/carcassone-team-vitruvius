@@ -173,7 +173,7 @@ class GameState {
     const sortedPlayers = _.orderBy(allPlayers, "points", "desc");
     const winner = document.createElement("div");
     winner.classList.add("winner");
-    winner.textContent = `${allPlayers[0].username} is the winner`;
+    winner.textContent = `${allPlayers[0].username} won the game`;
     const scoreBoard = this.createScoreBoard(sortedPlayers);
     const buttons = this.createBtn();
     const playAgain = buttons.firstElementChild;
