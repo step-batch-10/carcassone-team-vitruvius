@@ -110,15 +110,24 @@ const pollTurn = (gameStatePoller, gameState) => {
   };
 };
 
+export const addFlashEffect = (element) => element.classList.add("flash");
+
+export const removeFlashEffect = (element) =>
+  setTimeout(() => element.classList.remove("flash"), 300);
+
 const setUPLastPlacedTileOption = () => {
   const lastPlacedTileOption = document.querySelector("#last-placed-tile");
 
   lastPlacedTileOption.addEventListener("click", async () => {
+    addFlashEffect(lastPlacedTileOption);
+
     const lastPlacedTilePosition = await API.lastPlacedTilePosition();
 
     if (lastPlacedTilePosition) {
       Board.scrollToCellElementOf(lastPlacedTilePosition);
     }
+
+    removeFlashEffect(lastPlacedTileOption);
   });
 };
 
@@ -126,9 +135,11 @@ const setUpLastPlayerTileOption = () => {
   const lastPlayerTileOption = document.querySelector("#last-player-tile");
 
   lastPlayerTileOption.addEventListener("click", async () => {
+    addFlashEffect(lastPlayerTileOption);
     const lastPlacedPosition = await API.lastPlayerTilePosition();
 
     Board.scrollToCellElementOf(lastPlacedPosition);
+    removeFlashEffect(lastPlayerTileOption);
   });
 };
 
@@ -136,8 +147,10 @@ const setUpWorldRotateOption = (board, gameState) => {
   const worldRotateOption = document.querySelector("#world-rotate");
 
   worldRotateOption.addEventListener("click", async () => {
+    addFlashEffect(worldRotateOption);
     board.rotateMap();
     await gameState.renderGameState();
+    removeFlashEffect(worldRotateOption);
   });
 };
 
