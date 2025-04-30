@@ -176,6 +176,12 @@ class GameState {
     winner.textContent = `${allPlayers[0].username} is the winner`;
     const scoreBoard = this.createScoreBoard(sortedPlayers);
     const buttons = this.createBtn();
+    const playAgain = buttons.firstElementChild;
+    const quit = buttons.lastElementChild;
+    playAgain.addEventListener("click", (_e) => {
+      globalThis.location = "/game-options";
+    });
+    quit.addEventListener("click", (_e) => (globalThis.location = "/"));
     displayDiv.append(winner, ...scoreBoard, buttons);
     document.body.appendChild(displayDiv);
   }

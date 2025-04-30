@@ -65,7 +65,6 @@ const Cell = {
   },
 
   rotateShortcutHandler: (event) => {
-    console.log(event.key);
     if (event.key === "j") {
       event.preventDefault();
       return Cell.rotateLeft();
