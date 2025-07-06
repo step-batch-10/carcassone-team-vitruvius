@@ -28,6 +28,7 @@ type Move = Position & { location?: Sides | Center };
 export const placeAndDrawTiles = (game: Carcassonne, moves: Move[]) => {
   moves.forEach((move) => {
     game.drawATile();
+
     game.placeATile({ row: move.row, col: move.col });
     if (move.location) game.placeAMeeple(move.location);
   });
@@ -158,9 +159,11 @@ describe("Testing for scoring monastery", () => {
   it("should remove meeple from the tile and increase the meeple count when two monasteries are placed adjacent to each other claimed by different people", () => {
     const game = createAndPlaceTiles(monasteryTiles3, [
       { row: 43, col: 42, location: Center.MIDDLE },
-      { row: 43, col: 43, location: Center.MIDDLE },
+      { row: 44, col: 42, location: Center.MIDDLE },
     ]);
 
+    assertEquals(game.getBoard()[43][42].tile, monasteryTiles3()[0]);
+    assertEquals(game.getBoard()[44][42].tile, monasteryTiles3()[1]);
     assertEquals(game.getAllPlayers()[0].noOfMeeples, 6);
     assertEquals(game.getAllPlayers()[1].noOfMeeples, 6);
   });

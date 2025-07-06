@@ -1,7 +1,7 @@
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Board } from "../../src/models/game/board.ts";
-import { createDummyTile } from "../dummy-data.ts";
+import { createATileBox, createDummyTile } from "../dummy-data.ts";
 
 describe("Testing for creation of Board", () => {
   it("should create an empty board of given size with first tile already present", () => {
@@ -112,5 +112,73 @@ describe("Testing placing of tile", () => {
 describe("Testing isTilePlacable", () => {
   it("should return false if there is no tile", () => {
     assertFalse(Board.create(5, 5).isTilePlaceable(null, { row: 1, col: 1 }));
+  });
+
+  it("should return false if the position is not unlocked", () => {
+    const board = Board.create(5, 5);
+
+    const tile = createDummyTile("2", ["f", "f", "f", "f"], "m");
+
+    // Unlocked positions are [{row:1, col:2}, {row:2, col:1}, {row:2, col:3}, {row:3, col:2}]
+    // Locked position is {row: 2, col: 2}(center of the board)
+
+    assertFalse(board.isTilePlaceable(tile, { row: 0, col: 0 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 0, col: 1 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 0, col: 2 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 0, col: 3 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 0, col: 4 }));
+
+    assertFalse(board.isTilePlaceable(tile, { row: 1, col: 0 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 1, col: 1 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 1, col: 3 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 1, col: 4 }));
+
+    assertFalse(board.isTilePlaceable(tile, { row: 2, col: 0 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 2, col: 4 }));
+
+    assertFalse(board.isTilePlaceable(tile, { row: 3, col: 0 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 3, col: 1 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 3, col: 3 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 3, col: 4 }));
+
+    assertFalse(board.isTilePlaceable(tile, { row: 4, col: 0 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 4, col: 1 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 4, col: 2 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 4, col: 3 }));
+    assertFalse(board.isTilePlaceable(tile, { row: 4, col: 4 }));
+  });
+
+  it("should return true if the tile can be placed", () => {
+    const tile = createDummyTile("2", ["f", "f", "f", "f"], "m");
+    const tileBox = createATileBox();
+    tileBox.tile = tile;
+
+    const board = Board.create(5, 5, () => tileBox);
+
+    // Tile can be placed in the following positions
+    // [{row:1, col:2}, {row:2, col:1}, {row:2, col:3}, {row:3, col:2}]
+    // Locked position is {row: 2, col: 2}(center of the board)([r, c, r, f], r)
+
+    assert(board.isTilePlaceable(tile, { row: 1, col: 2 }));
+    assert(board.isTilePlaceable(tile, { row: 2, col: 1 }));
+    assert(board.isTilePlaceable(tile, { row: 2, col: 3 }));
+    assert(board.isTilePlaceable(tile, { row: 3, col: 2 }));
+  });
+
+  it("should return false when the given position has a tile", () => {
+    const monastery1 = createDummyTile("2", ["f", "f", "f", "f"], "m");
+    const tileBox = createATileBox();
+    tileBox.tile = monastery1;
+
+    const board = Board.create(5, 5, () => tileBox);
+    // Tile can be placed in the following positions
+    // [{row:1, col:2}, {row:2, col:1}, {row:2, col:3}, {row:3, col:2}]
+    // Locked position is {row: 2, col: 2}(center of the board)([r, c, r, f], r)
+
+    assertFalse(board.isTilePlaceable(monastery1, { row: 2, col: 2 }));
+
+    const monastery2 = createDummyTile("2", ["f", "f", "f", "f"], "m");
+    assert(board.placeTile(monastery2, { row: 1, col: 2 }));
+    assertFalse(board.isTilePlaceable(monastery2, { row: 1, col: 2 }));
   });
 });

@@ -125,13 +125,14 @@ export class Carcassonne {
 
   drawATile(): Tile | null {
     const drawnTile = this.tileManager.pickTile();
+    this.unlockedPositions = Carcassonne.getAllUnlockedPosition(this.board);
+
     if (drawnTile && !this.isValidTileToPlace({ ...drawnTile })) {
       this.tileManager.pushTile(drawnTile);
       return this.drawATile();
     }
 
     this.currentTile = drawnTile;
-    this.unlockedPositions = Carcassonne.getAllUnlockedPosition(this.board);
 
     return drawnTile;
   }
@@ -220,9 +221,11 @@ export class Carcassonne {
   }
 
   private isNotClaimable(obj: OccupanceSubGrid) {
-    return !obj.feature ||
+    return (
+      !obj.feature ||
       this.unclaimables.has(obj.feature) ||
-      obj.occupiedBy.size > 0;
+      obj.occupiedBy.size > 0
+    );
   }
 
   getClaimables() {

@@ -23,20 +23,20 @@ export class Board {
     this.edges = ["left", "top", "right", "bottom"];
   }
 
-  private static putCenterTile(tileBoxes: TileBox[][]) {
+  private static putCenterTile(tileBoxes: TileBox[][], firstTileBox: TileBox) {
     const [row, col] = [
       Math.floor(tileBoxes.length / 2),
       Math.floor(tileBoxes[0].length / 2),
     ];
-    return (tileBoxes[row][col] = firstTileBox());
+    return (tileBoxes[row][col] = firstTileBox);
   }
 
-  static create(rows: number, cols: number) {
+  static create(rows: number, cols: number, centerTile = firstTileBox) {
     const board: TileBox[][] = Array.from(
       { length: rows },
       () => Array.from({ length: cols }, () => createTileBox()),
     );
-    Board.putCenterTile(board);
+    Board.putCenterTile(board, centerTile());
 
     return new Board(board);
   }
@@ -79,6 +79,8 @@ export class Board {
 
   isTilePlaceable(tile: Tile | null, position: Position): boolean {
     if (!tile) return false;
+    if (this.tileBoxes.getCell(position)?.tile) return false;
+
     const placingTileEdges = this.tileBoxes.extractEdges(tile);
     const resTiles = this.tileBoxes.adjacentTile(position);
 
